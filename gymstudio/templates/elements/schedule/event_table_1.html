@@ -1,0 +1,70 @@
+{% load static %}
+{% load fetch_user %}
+{% if eventList %}
+<table class="table list-view-table">
+    <thead>
+        <tr>
+            <th scope="col" width="15%">Date</th>
+            <th scope="col" width="19%">Session Time</th>
+            <th scope="col" width="15%">Type of Service</th>
+            <th scope="col" width="17%">Service Name</th>
+            <th scope="col" width="17%">PT Name</th>
+            <th scope="col" width="17%">Client Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for events in eventList%}
+            {% for event1 in events%}   
+                {% for event in event1%}   
+
+                {% change_date event.date_of_booking as date_val %}
+                {% get_data_service event.service type_of_services as serviceData %}
+                {% get_pt event.pt_name as ptData %}
+                {% get_book_time event.time_of_booking as bookTime %}  
+        
+                    <tr id="event-{{event.id}}" onclick="eventPopup('{{event.id}}')">
+                        <td>{{date_val}}</td>
+                        <td>
+                            <div class="ses-tab"><i class="fas fa-circle"></i><span>{{bookTime}}</span></div>
+                        </td>
+                        <td>
+                            <div class="ses-tab">
+                                {% change_type_int event.type_of_services as val %}
+                                {% for key, cat in type_of_service.items%}
+                                {% if key == val%}
+                                    {{cat}}
+                                {% endif %}
+                            {% endfor %}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="ses-tab">{{serviceData}}</div>
+                        </td>
+                        <td>
+                            <div class="ses-tab">{{ptData}}</div>
+                        </td>
+                        <td>
+                            <div class="ses-tab">{{event.client_name}}</div>
+                        </td>
+                    </tr>       
+             
+                {% endfor %}
+            {% endfor %}
+        {% endfor %}
+        
+    </tbody>
+</table>
+
+<script>
+    function editEv() { 
+        $('.disabledField').removeAttr("disabled");
+        $('#event_view_btn').hide();
+        $('#event_edit_btn').show();
+        $('#reassign_id').attr( 'onclick',"reassignPT()");
+        $('#reason_bx').show();
+        $('#reassing_dv').show();
+    }
+</script>
+
+{% endif%}
+

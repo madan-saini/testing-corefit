@@ -1,0 +1,241 @@
+{% load static %}
+{% load fetch_user %}
+<div class="modal modal-top fade calendar-modal" id="edit-modal-ad-slot" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered new-offer-dialog" role="document">
+        <form class="" name='editEvent' id='editEvent' method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="modal-content upload-img-pop new-offer-pop">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Date of booking</label>
+                            <div class="form-field-input  date">
+                                {% change_dat eventData.date_of_booking as date_val %}
+                                <input type="text" name="date_of_booking" value="{{date_val}}" class="datepickerr required disabledField" placeholder="Choose date" id="reservationDatee1" readonly>
+                                <div class="input-group-append"><img src="{% static 'images/noun_Calendar_1611923.svg' %}"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Time of booking</label>
+                            <div class="form-field-input">
+                                <input type="text" name="time_of_booking" value="{{eventData.time_of_booking}}" class="start_timepicker required disabledField" autocomplete='off' readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Location</label>
+                            <div class="form-field-input  icon-overlay">
+                                <input type="text" name="location" class="disabledField1" id="location_event" value="{{eventData.location}}" placeholder="" readonly>
+                                <img src="{% static 'images/metro-location.svg' %}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Client name</label>
+                            <div class="form-field-input">
+                                <input type="text" name="client_name" value="{{eventData.client_name}}" class="disabledField1" placeholder="Name" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">PT name</label>
+                            <div class="drop-down" id="pt_edit" style="display: none;">
+                                <select name="pt_name" id="edit_pt_name" class="multiple-single required disabledField">
+                                    <option value="">Select one</option>
+                                    {% for id, first_name, last_name in ptusers %}
+                                    <option value="{{id}}" {% if id == eventData.pt_name%} selected{% endif%}>{{first_name}} {{last_name}}</option>                                                    
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-field-input" id="pt_datt">
+                                {% get_pt eventData.pt_name as ptData %}
+                                <input type="text" name="pt_val" value="{{ptData}}" placeholder="Smith" class="disabledField1">
+                                <div class="input-over-name" id='reassing_dv' style="display: none;"><a href="javascript:void(0);" id="reassign_id">Reassign PT</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Type of services</label>
+                            <div class="drop-down">
+                                <select name="type_of_services" id="type_of_services" class="single-withoutsearch disabledField1" readonly onchange='updateService(this.value);'>
+                                    <option value="">Select from list</option>
+                                    {% for key, item in type_of_service.items %}
+                                    <option value="{{key}}" {% if key == eventData.type_of_services%} selected{% endif%}>{{item}}</option>                                                    
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Service Name</label>
+                            <div class="drop-down" id="service_data">
+<!--                                <select name="service" id="service" class="single-withoutsearch disabledField1" >
+                                    <option value="">Select from list</option>   
+                                    {% if records%}        
+                                    {% for key, record in records %}
+                                    <option value="{{key}}" {% if key == eventData.service%} selected{% endif%}>{{record}}</option>                                                    
+                                    {% endfor %}
+                                    {% endif%}
+                                </select>-->
+                                {% if not records%}
+                                <select name="service" id="service" class="multiple-single">
+                                    <option value="">Select from list</option>   
+                                    {% if Arecords%}        
+                                    {% for key, record in Arecords %}
+                                    {% get_amenity record as val%}
+                                    <option value="{{key}}" {% if key == eventData.service%} selected{% endif%}>{{val}}</option>                                                    
+                                    {% endfor %}
+                                    {% endif%}
+                                </select>
+
+                                {% else%}
+                                <select name="service" id="service" class="multiple-single">
+                                    <option value="">Select from list</option>   
+                                    {% if records%}        
+                                    {% for key, record in records %}
+                                    <option value="{{key}}" {% if key == eventData.service%} selected{% endif%}>{{record}}</option>                                                    
+                                    {% endfor %}
+                                    {% endif%}
+                                </select>
+                                {% endif%}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6" id="reason_bx" style="display:none;">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Reason for change</label>
+                            <div class="form-field-input">
+                                <input type="text" name="reason" class="required disabledField" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="btn-btm-group btn-grp-without-bg" id="event_view_btn">
+                            <button class="border-btn" type="button" onclick="editEv()">Edit</button>
+                            <button class="btn-pink ml-10" type="button" onclick="deleteEvent('{{eventData.id}}')">Delete</button>
+
+                        </div>
+                        <div class="btn-btm-group btn-grp-without-bg" id="event_edit_btn" style="display: none;">
+                            <button class="border-btn" type='button' onclick="closeEvent()">Discard changes</button>
+                            <button class="btn-pink ml-10 savebtn" type="submit">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="event_id" value="{{eventData.id}}">
+                <input type="hidden" name="type" value="" id="ev_type">
+                <button type="button" class="close-btn-pop" data-dismiss="modal"><img src="{% static 'images/material-cancel.svg' %}"></button>
+            </div>
+        </form>
+    </div>
+
+</div>
+<script>
+    $('.start_timepicker').timepicker({
+        timeFormat: 'h:mm p',
+        interval: 15,
+        minTime: '00',
+        maxTime: '11:45pm',
+        startTime: '00:00',
+        dynamic: false,
+        dropdown: true,
+        scrollbar: true
+    });
+
+    $('.datepickerr').datepicker({
+        clearBtn: false,
+        weekStart: 1,
+        minDate: new Date(Date.now()+1*24*60*60*1000),
+        orientation: "bottom",
+        dateFormat: "dd/mm/yy"
+    });
+
+    $('.multiple-single').multiselect({
+        nonSelectedText: "Select from list",
+        enableFiltering: true,
+        maxHeight: 250,
+        numberDisplayed: 1,
+        enableCaseInsensitiveFiltering: true,
+        onDropdownShown: function (even) {
+            this.$filter.find('.multiselect-search').focus();
+        }
+    });
+
+    function reassignPT() {
+        $('#pt_datt').hide();
+        $('#pt_edit').show();
+    }
+
+    function closeEvent() {
+        $('#event_view_btn').show();
+        $('#event_edit_btn').hide();
+        $('#edit-modal-ad-slot').modal('hide');
+    }
+
+    $("#editEvent").validate({
+
+        submitHandler: function (form) {
+            var token = $("[name=csrfmiddlewaretoken]").val();
+            var form = document.querySelector('#editEvent');
+
+            var formData = new FormData(form);
+
+            formData.append('csrfmiddlewaretoken', token);
+
+            var erro_show = 0
+            var inputP = $('#edit_pt_name').val();
+            if (inputP == '') {
+                swal('', "Please select PT name.", 'error');
+                erro_show = 1;
+            }
+
+            if (erro_show == 0) {
+                $.ajax({
+                    type: 'POST',
+                    url: 'editEvent',
+                    contentType: false,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+//                data: {'serializedData': serializedData, csrfmiddlewaretoken: token},
+                    beforeSend: function () {
+                        $('#payloader').show();
+                    },
+                    success: function (response) {
+                        $('#payloader').hide();
+                        $('#list_view').html(response);
+                        $("#list_view").show()
+                        $("#calender_view").hide()
+                        $("#edit-modal-ad-slot").modal('hide');
+
+                        var ev_type = $('#ev_type').val();
+                        if (ev_type == 'list') {
+
+                        } else {
+                            $("#list_view").hide()
+                            $("#calender_view").show()
+                            $('.calender_cls').trigger('click');
+                            getCal();
+                        }
+                        Command: toastr["success"]("Changes Saved")
+                    },
+                    error: function (response) {
+                        $('#payloader').hide();
+                        console.log('error', response)
+                    }
+                })
+            }
+            return false;
+        }
+    });
+
+</script>
+

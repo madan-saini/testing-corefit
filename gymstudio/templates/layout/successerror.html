@@ -1,0 +1,28 @@
+{% comment %} {% if  messages %}
+    {% for msg  in messages %}
+        <div class="alert alert-{{msg.tags}}">
+            <button data-dismiss="alert" class="close close-sm" type="button"><i class="fa fa-times"></i></button>
+            {{msg}}
+        </div>
+    {% endfor %}
+{% endif %} {% endcomment %}
+
+{% if  messages %}
+    {% for msg  in messages %}
+        {% if msg.tags == 'error' %}
+            <script>
+                $(document).ready(function () { 
+                    swal("", "{{msg}}", "error");
+                });
+            </script>   
+        {% endif %}
+
+        {% if msg.tags == 'success' %}
+            <script>
+                $(document).ready(function () { 
+                    swal("", "{{msg}}", "success");
+                });
+            </script>   
+        {% endif %}
+    {% endfor %}
+{% endif %}

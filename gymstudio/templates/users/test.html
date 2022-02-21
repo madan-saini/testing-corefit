@@ -1,0 +1,13 @@
+<script src="{% static 'js/jquery-ui.min.js' %}"></script>
+<script src="{% static 'js/jquery-ui.multidatespicker.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.multidatespicker.css' %}">
+
+<div id="mdp-demo"></div>
+
+<script>
+var today = new Date();
+$('#mdp-demo').multiDatesPicker({
+	numberOfMonths: [1,2]
+});
+</script>

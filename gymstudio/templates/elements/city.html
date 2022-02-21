@@ -1,0 +1,19 @@
+<select name="city" id="city_id" class='multiple-single required'>
+    <option value="">Choose from list</option>
+    {% for key, city in cities %}
+
+    <option value="{{key}}">{{city}}</option>
+    {% endfor %}
+
+</select>
+<script>
+    $(document).ready(function () {
+        $('.multiple-single').multiselect({
+            nonSelectedText: "Select from list",
+            enableFiltering: true,
+            maxHeight: 250,
+            numberDisplayed: 1,
+            enableCaseInsensitiveFiltering: true,
+        });
+    });
+</script>

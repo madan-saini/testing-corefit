@@ -1,0 +1,175 @@
+<div class="card-main-accord">
+    <div class="card-header collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapsefour">
+        <a class="card-title">
+            Association Details
+        </a>
+    </div>
+    <div id="collapsefour" class="collapse" data-parent="#accordion">
+        {% if empExist %}
+        <form class="" name='associationForm' id='associationForm' method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="media-main">
+                        <div class="row-new">
+                            <div class="col-sm-6">
+                                <div class="form-group form-field-main">
+                                    <label class="label-field">Gym Branch or PT Company Name</label>
+                                    <div class="form-field-input">
+                                        <input type="text" class="" name="name" placeholder="" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group form-field-main">
+                                    <label class="label-field">Gym Branch or PT Company Address</label>
+                                    <div class="form-field-input">
+                                        <input type="text" class="" name="address" placeholder="" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btn-btm-group spece-btwn">
+                            <div></div>
+<!--                            <div> <button class="btn-pink ml-10">Request to disassociate</button></div>-->
+                        </div>
+                    </div>
+                </form>
+        {% else %}
+            <form class="" name='associationForm' id='associationForm' method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="media-main">
+                <div class="row-new">
+                    <div class="col-sm-12 pd-3">
+                        <div class="form-field-main">
+                            <div class="associat-bar">
+                                <span>Are you associated with a facility or PT Company?</span>
+                                <div class="can-toggle" onclick="javascript:associationC(this)">
+                                    <input id="z" class="asoClas" name="chboxSt" type="checkbox">
+                                    <label for="z">
+                                        <div class="can-toggle__switch" data-checked="No" data-unchecked="Yes"></div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-field-main">
+                            <label>Select or Search for Gym Branch or PT Company Name</label>
+
+                            <div class="drop-down nohide"  style="display:none">
+                                <select name="" id="gymslect" class=''>
+                                    <option value="">Please Select option</option>
+
+                                    {% for bran in branc%}
+                                         <option value="{{bran.branch.id}}">{{bran.branch.branch_name|capfirst}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="drop-down yesshow">
+                                <select name="gymslect" id="gymslect" class='selectCls'>
+                                    <option value="">Please Select option</option>
+
+                                    {% for bran in branc%}
+                                         <option value="{{bran.branch.id}}">{{bran.branch.branch_name|capfirst}}</option>
+                                    {% endfor %}
+                                </select>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-btm-group spece-btwn">
+                    <div></div>
+                    <div>
+                        <button class="border-btn ml-10" onclick="changeType('discard')">Discard changes</button>
+                        <button class="btn-pink ml-10" id="sbmbtn" type="submit" onclick="changeType('submit')">Save changes</button>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" id="typesb">
+        </form>
+        {% endif %}
+
+    </div>
+</div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.14/js/bootstrap-multiselect.min.js"></script>
+
+<script>
+function changeType(type){
+$("#typesb").val(type);
+}
+$('.selectCls').multiselect({
+    nonSelectedText: "Select from list",
+    enableFiltering: true,
+    maxHeight: 250,
+    numberDisplayed: 1,
+    enableCaseInsensitiveFiltering: true,
+    onDropdownShown: function(even) {
+      this.$filter.find('.multiselect-search').focus();
+    }
+});
+function associationC(event){
+       var checkbox = event.children["0"];
+       console.log(checkbox['checked'])
+       checkbox['checked']=!checkbox['checked'];
+       console.log(checkbox['checked'])
+       if(checkbox['checked']==true){
+            $("#gymslect").attr('disabled',true)
+            $(".yesshow").hide();
+            $(".nohide").show();
+       }else{
+            $(".nohide").hide();
+            $(".yesshow").show();
+            $("#gymslect").removeAttr('disabled',false)
+       }
+}
+var chc = $(".asoClas").prop("checked");
+if(chc){
+    $("#gymslect").attr('disabled',true)
+}
+$("#associationForm").validate({
+            submitHandler: function (form, event) {
+                var form = document.querySelector("#associationForm");
+                var token = $("[name=csrfmiddlewaretoken]").val();
+                var formData = new FormData(form);
+                formData.append("csrfmiddlewaretoken", token);
+                var chc = $(".asoClas").prop("checked");
+                var typess = $("#typesb").val();
+                if(typess=="submit"){
+                error = 0
+                    if(chc){
+
+                    }else{
+                        var selI = $(".selectCls").val();
+                        if(selI==0 || selI==null || selI == ''){
+                        swal('',"Please Select Gym Branch or PT Company Name.",'error');
+                            error = 1
+                        }
+                }
+                if(error == 0){
+                    $.ajax({
+                            type: "POST",
+                            url: "association",
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            beforeSend: function (xhr) {
+                              $("#payloader").show();
+                            },
+                            success: function (response) {
+                            console.log(response)
+                            if(response==1){
+                                $("#sbmbtn").prop('disabled', true);
+                            }
+                              $("#payloader").hide();
+                                Command: toastr["success"]("Changes Saved")
+                            },
+                            error: function (response) {
+                              $("#payloader").hide();
+                            },
+                          });
+                          }
+                  return false;
+                  }
+
+            }
+        });
+</script>

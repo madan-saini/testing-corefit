@@ -1,0 +1,154 @@
+{% extends 'layout/inner.html' %} 
+{% load static %}
+
+{% block content %}
+
+<div class="loader" id="payloader" style="display: none;"><img src="{% static 'images/loading.gif' %}" alt=""></div>
+
+{% include "layout/successerror.html" %}
+
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+<script>
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-bottom-center",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "1000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+</script>
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/daterangepicker.css' %}">
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.14/js/bootstrap-multiselect.min.js"></script>
+
+<div class="content-page">
+    <div class="page-head-one ">
+        <h2>Employee Requests</h2>
+    </div>
+    <div class="sort-table-block">
+        <div class="search-table d-flex">
+            <div class="search-box-table">
+                <input type="text" name="" placeholder="Search Employee…">
+                <img src="{% static 'images/search-icon.svg' %}">
+            </div>
+            <div class="search-actions-rt shed-main-sort sort-filter-main">
+                <a href="javascript:void(0);" class="btn-green-border filter-click"><img src="{% static 'images/filter.svg' %}">Filters</a>
+                
+                <div class="pop-schedule filter-pop " style="display: none;">
+                    <h4>Filter</h4>
+
+                    <div class="form-group form-field-main">
+                        <label class="label-field">PT Rating:</label>
+                        <div class="drop-down drop-after">
+                            <select name="search_service" id="search_service" class="multiple-checkboxes" multiple="multiple">
+                                {% for item in pt_rating %}
+                                <option value="{{item}}">{{item}}</option>                                                    
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Type of Services:</label>
+                        <div class="drop-down drop-after">
+                            <select name="search_service" id="search_service" class="multiple-checkboxes" multiple="multiple">
+                                {% for key, item in type_of_service.items %}
+                                <option value="{{key}}">{{item}}</option>                                                    
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="btn-btm-group">
+                        <button class="border-btn" type='button' onclick="closeSPop()">Discard</button> 
+                        <button class="btn-pink ml-10">Submit</button>
+                    </div>
+                    <input type="hidden" name="filter_type" id='filter_type' value="list">
+                    <input type="hidden" name="search_start_date" id='search_start_date' value="{{startV}}">
+                    <input type="hidden" name="search_end_date" id='search_end_date' value="{{endV}}">
+                </div>
+                
+                <input class="btn-green-border date-pik list-btn" type="text" name="search_date" value="{{start}} - {{end}}">
+            </div>
+        </div>
+        <div class="table-box table-full">
+            {% include 'elements/employee-request/request-table.html' %}
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    
+    $(document).mouseup(function(e) {
+        var container = $(".filter-pop");
+        // if the target of the click isn't the container nor a descendant of the container
+        if (!container.is(e.target) && container.has(e.target).length === 0) 
+        {
+            container.hide();
+        }
+    });
+    $(".filter-click").click(function () {
+        $(".filter-pop").toggle();
+    });
+    
+    function closeSPop() {
+        $('.filter-pop').hide();
+    }
+    
+    $(function () {
+       $('.date-pik').daterangepicker({
+//            autoUpdateInput: false,
+            opens: 'left',
+            minDate: new Date(),
+            locale: {
+                cancelLabel: 'Clear',
+                format: 'DD/MM/YYYY'
+            }
+
+        });
+
+        $('.date-pik').on('showCalendar.daterangepicker', function (ev, picker) {
+
+            $('.prev span').html('<img src="static/images/left-cal-arrow.svg">');
+            $('.next span').html('<img src="static/images/rt-cal-arrow.svg">');
+        });
+        $('.drp-buttons').html(' <div class="radio-box"><div class="check"></div></div> <button class="applyBtn btn btn-sm btn-primary" type="button">Apply</button>');
+        $('.drp-buttons').addClass('cal-btns');
+        $('.date-pik').on('apply.daterangepicker', function (ev, picker) {
+            $('input[name="datefilter"]').val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+
+            var startDate = picker.startDate.format('YYYY-MM-DD');
+            var endDate = picker.endDate.format('YYYY-MM-DD');
+
+            $('#search_start_date').val(startDate);
+            $('#search_end_date').val(endDate);
+
+            $('.prev span').html('<img src="static/images/left-cal-arrow.svg">');
+            $('.next span').html('<img src="static/images/rt-cal-arrow.svg">');
+
+            $('#searchEvent').submit();
+        });
+
+        $('.date-pik').on('cancel.daterangepicker', function (ev, picker) {
+            $('input[name="datefilter"]').val('');
+        });
+    });
+</script>
+{% endblock content %}

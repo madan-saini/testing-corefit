@@ -1,0 +1,16 @@
+{% load static %}
+{% load fetch_user %}
+
+{% if scheduleList%}
+    {% for scd in scheduleList%}
+    <div class="tag-sch" id="schedule-emp-{{scd.id}}">
+        <span onclick="selectSchedule('{{scd.id}}','{{emp_id}}')">{{scd.schedule_name}} </span>
+        <img onclick="deleteSchedule('{{scd.id}}')" src="{% static 'images/close-tag.svg' %}">
+    </div>
+    {% endfor%}
+{% endif%}
+
+
+
+
+

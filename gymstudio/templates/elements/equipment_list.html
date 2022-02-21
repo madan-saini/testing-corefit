@@ -1,0 +1,214 @@
+
+{% if equipinfo %}
+
+
+<div class="table-box table-w-4">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Equipment name</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Max. KG</th>
+                <th scope="col">Visible to user</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody id="equipment_body">
+            {% for eqRecord_val in equipinfo %}
+            <tr id="eq_recort_row{{eqRecord_val.equipment_id}}" class="eq_count">
+                <td>{{eqRecord_val.equipment}}</td>
+                <td id="eq_edit_box{{eqRecord_val.id}}"> 
+                    <input type="text" id="inp_id{{eqRecord_val.id}}" maxlength="4" min="0" name="eq_quantity[{{eqRecord_val.equipment_id}}]" value="{{eqRecord_val.quantity}}"  class="quan-input digits">
+                </td>
+                <td id="eq1_edit_box{{eqRecord_val.id}}"> 
+                    <input type="text" id="inp1_id{{eqRecord_val.id}}" maxlength="4" min="0" name="eq_max[{{eqRecord_val.equipment_id}}]" value="{{eqRecord_val.max_value}}"  class="quan-input"  onkeypress='return validateFloatKeyPress(this, event);'>
+                </td>
+                <td>
+                    <div class="can-toggle">
+                        <input id="c{{eqRecord_val.id}}" type="checkbox" {% if eqRecord_val.visible_status == 'No'%} checked{% endif%} name="eq_visible_status[{{eqRecord_val.equipment_id}}]" value='No'>
+                        <label for="c{{eqRecord_val.id}}">
+                            <div class="can-toggle__switch" data-checked="No" data-unchecked="Yes"></div>
+                        </label>
+                    </div>
+                </td>
+                <th>
+                    <div class="action-box">
+                        <div class="dropdown drop-more">
+                            <button class="btn-pink " onclick="deleteEquipment('{{eqRecord_val.equipment_id}}')">Delete</button>
+<!--                            <button class="more-btn dropdown-toggle ml-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                More
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="editEquipment('{{eqRecord_val.id}}')">Edit</a>
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="deleteEquipment('{{eqRecord_val.equipment_id}}')">Delete</a>
+                            </div>-->
+                        </div>
+                    </div>
+                </th>
+            </tr>
+            {% endfor%}
+        </tbody>
+    </table>
+</div>
+
+{% else %}
+{% if all == 1 %}
+
+<div class="table-box table-w-4">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Equipment name</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Max. KG</th>
+                <th scope="col">Visible to user</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody id="equipment_body">
+            {% for eqRecord_id, eqRecord_val in eqData %}
+            <tr id="eq_recort_row{{eqRecord_id}}" class="eq_count">
+                <td>{{eqRecord_val}}</td>
+                <td id="eq_edit_box{{eqRecord_id}}"> 
+                    <input type="text" id="inp_id{{eqRecord_id}}" maxlength="4" min="0" name="eq_quantity[{{eqRecord_id}}]" value="0"  class="quan-input digits">
+                </td>
+                <td id="eq1_edit_box{{eqRecord_id}}"> 
+                    <input type="text" id="inp1_id{{eqRecord_id}}" maxlength="4" min="0" name="eq_max[{{eqRecord_id}}]" value="0"  class="quan-input " onkeypress='return validateFloatKeyPress(this, event);'>
+                </td>
+                <td>
+                    <div class="can-toggle">
+                        <input id="c{{eqRecord_id}}" type="checkbox" name="eq_visible_status[{{eqRecord_id}}]" value='No'>
+                        <label for="c{{eqRecord_id}}">
+                            <div class="can-toggle__switch" data-checked="No" data-unchecked="Yes"></div>
+                        </label>
+                    </div>
+                </td>
+                <th>
+                    <div class="action-box">
+                        <div class="dropdown drop-more">
+                            <button class="btn-pink " onclick="deleteEquipment('{{eqRecord_id}}')">Delete</button>
+<!--                            <button class="more-btn dropdown-toggle ml-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                More
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="editEquipment('{{eqRecord_id}}')">Edit</a>
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="deleteEquipment('{{eqRecord_id}}')">Delete</a>
+                            </div>-->
+                        </div>
+                    </div>
+                </th>
+            </tr>
+            {% endfor%}
+        </tbody>
+    </table>
+</div>
+{% else %}
+{% if numItems == 0 %}
+
+<div class="table-box table-w-4">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Equipment name</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Max. KG</th>
+                <th scope="col">Visible to user</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody id="equipment_body">
+            <tr id="eq_recort_row{{id_val}}" class="eq_count">
+                <td>{{eqData.name}}</td>
+                <td id="eq_edit_box{{id_val}}"> 
+                    <input type="text" id="inp_id{{id_val}}" maxlength="4" min="0" name="eq_quantity[{{id_val}}]" value="0"  class="quan-input digits">
+                </td>
+                <td id="eq1_edit_box{{id_val}}"> 
+                    <input type="text" id="inp1_id{{id_val}}" maxlength="4" min="0" name="eq_max[{{id_val}}]" value="0"  class="quan-input " onkeypress='return validateFloatKeyPress(this, event);'>
+                </td>
+                <td>
+                    <div class="can-toggle">
+                        <input id="c{{id_val}}" type="checkbox" name="eq_visible_status[{{id_val}}]" value='No'>
+                        <label for="c{{id_val}}">
+                            <div class="can-toggle__switch" data-checked="No" data-unchecked="Yes"></div>
+                        </label>
+                    </div>
+                </td>
+                <th>
+                    <div class="action-box">
+                        <div class="dropdown drop-more">
+                            <button class="btn-pink " onclick="deleteEquipment('{{id_val}}')">Delete</button>
+<!--                            <button class="more-btn dropdown-toggle ml-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                More
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="editEquipment('{{id_val}}')">Edit</a>
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="deleteEquipment('{{id_val}}')">Delete</a>
+                            </div>-->
+                        </div>
+                    </div>
+                </th>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+{% else %}
+
+<tr id="eq_recort_row{{id_val}}" class="eq_count">
+    <td>{{eqData.name}}</td>
+    <td id="eq_edit_box{{id_val}}"> 
+        <input type="text" id="inp_id{{id_val}}" maxlength="4" min="0" name="eq_quantity[{{id_val}}]" value="0"  class="quan-input digits">
+    </td>
+    <td id="eq1_edit_box{{id_val}}"> 
+        <input type="text" id="inp1_id{{id_val}}" maxlength="4" min="0" name="eq_max[{{id_val}}]" value="0"  class="quan-input " onkeypress='return validateFloatKeyPress(this, event);'>
+    </td>
+                <td>
+                    <div class="can-toggle">
+                        <input id="c{{id_val}}" type="checkbox" name="eq_visible_status[{{id_val}}]" value='No'>
+                        <label for="c{{id_val}}">
+                            <div class="can-toggle__switch" data-checked="No" data-unchecked="Yes"></div>
+                        </label>
+                    </div>
+                </td>
+                <th>
+                    <div class="action-box">
+                        <div class="dropdown drop-more">
+                            <button class="btn-pink " onclick="deleteEquipment('{{id_val}}')">Delete</button>
+<!--                            <button class="more-btn dropdown-toggle ml-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                More
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="editEquipment('{{id_val}}')">Edit</a>
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="deleteEquipment('{{id_val}}')">Delete</a>
+                            </div>-->
+                        </div>
+                    </div>
+                </th>
+</tr>
+
+{% endif %}
+{% endif %}
+
+{% endif %}
+
+<script>
+    function editEquipment(id){
+//        $('#inp_id'+id).attr('readonly',false);
+//        $('#inp1_id'+id).attr('readonly',false);
+        //$('#eq_edit_box'+id).html('<input type="text" name="eq_quantity['+id+']" placeholder="" class="quan-input">');
+        //$('#eq1_edit_box'+id).html('<input type="text" name="eq_max['+id+']" placeholder="" class="quan-input">');
+    }
+
+    function deleteEquipment(id){
+        var numItems = $('.eq_count').length;
+        if(numItems == 1){
+            $('#equipments_tablesec').html('');
+            $('#equipments').multiselect('deselect', [id]);
+        } else{
+            $('#eq_recort_row'+id).remove();
+            $('#equipments').multiselect('deselect', [id]);
+        }
+        
+    }
+    
+</script>

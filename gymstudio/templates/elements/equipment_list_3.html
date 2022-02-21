@@ -1,0 +1,206 @@
+{% if equipinfo %}
+
+<div class="table-box table-w-4">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Equipment name</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Max. KG</th>
+                <th scope="col">Visible to user</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody id="equipment_body_3">
+            {% for eqRecord_val in equipinfo %}
+            <tr id="eq_recort_row{{eqRecord_val.id}}" class="eq_count_3">
+                <td>{{eqRecord_val.equipment}}</td>
+                <td id="eq_edit_box3{{eqRecord_val.id}}"> 
+                    <input type="text" id="inp_id3{{eqRecord_val.id}}" name="eq_quantity_3[{{eqRecord_val.equipment_id}}]" value="{{eqRecord_val.quantity}}" readonly class="quan-input">
+                </td>
+                <td id="eq1_edit_box3{{eqRecord_val.id}}"> 
+                    <input type="text" id="inp1_id3{{eqRecord_val.id}}" name="eq_max_3[{{eqRecord_val.equipment_id}}]" value="{{eqRecord_val.max_value}}" readonly class="quan-input">
+                </td>
+                <td>
+                    <div class="can-toggle">
+                        <input id="c3{{eqRecord_val.id}}" type="checkbox" name="eq_visible_status3[{{eqRecord_val.equipment_id}}]" value='No'>
+                        <label for="c3{{eqRecord_val.id}}">
+                            <div class="can-toggle__switch" data-checked="No" data-unchecked="Yes"></div>
+                        </label>
+                    </div>
+                </td>
+                <th>
+                    <div class="action-box">
+                        <div class="dropdown drop-more">
+                            <button class="more-btn dropdown-toggle ml-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                More
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="editEquipment3('{{eqRecord_val.id}}')">Edit</a>
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="deleteEquipment3('{{eqRecord_val.id}}')">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </th>
+            </tr>
+            {% endfor%}
+        </tbody>
+    </table>
+</div>
+
+{% else %}
+{% if all == 1 %}
+
+<div class="table-box table-w-4">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Equipment name</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Max. KG</th>
+                <th scope="col">Visible to user</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody id="equipment_body_3">
+            {% for eqRecord_id, eqRecord_val in eqData %}
+            <tr id="eq_recort_row3{{eqRecord_id}}" class="eq_count_3">
+                <td>{{eqRecord_val}}</td>
+                <td id="eq_edit_box3{{eqRecord_id}}"> 
+                    <input type="text" id="inp_id3{{eqRecord_id}}" name="eq_quantity_3[{{eqRecord_id}}]" readonly class="quan-input">
+                </td>
+                <td id="eq1_edit_box3{{eqRecord_id}}"> 
+                    <input type="text" id="inp1_id3{{eqRecord_id}}" name="eq_max_3[{{eqRecord_id}}]" readonly class="quan-input">
+                </td>
+                <td>
+                    <div class="can-toggle">
+                        <input id="c3{{eqRecord_id}}" type="checkbox" name="eq_visible_status_3[{{eqRecord_id}}]" value='No'>
+                        <label for="c3{{eqRecord_id}}">
+                            <div class="can-toggle__switch" data-checked="No" data-unchecked="Yes"></div>
+                        </label>
+                    </div>
+                </td>
+                <th>
+                    <div class="action-box">
+                        <div class="dropdown drop-more">
+                            <button class="more-btn dropdown-toggle ml-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                More
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="editEquipment3('{{eqRecord_id}}')">Edit</a>
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="deleteEquipment3('{{eqRecord_id}}')">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </th>
+            </tr>
+            {% endfor%}
+        </tbody>
+    </table>
+</div>
+{% else %}
+{% if numItems == 0 %}
+
+<div class="table-box table-w-4">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Equipment name</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Max. KG</th>
+                <th scope="col">Visible to user</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody id="equipment_body_3">
+            <tr id="eq_recort_row3{{id_val}}" class="eq_count_3">
+                <td>{{eqData.name}}</td>
+                <td id="eq_edit_box3{{id_val}}"> 
+                    <input type="text" id="inp_id3{{id_val}}" name="eq_quantity_3[{{id_val}}]" readonly class="quan-input">
+                </td>
+                <td id="eq1_edit_box3{{id_val}}"> 
+                    <input type="text" id="inp1_id3{{id_val}}" name="eq_max_3[{{id_val}}]" readonly class="quan-input">
+                </td>
+                <td>
+                    <div class="can-toggle">
+                        <input id="c3{{id_val}}" type="checkbox" name="eq_visible_status_3[{{id_val}}]" value='No'>
+                        <label for="c3{{id_val}}">
+                            <div class="can-toggle__switch" data-checked="No" data-unchecked="Yes"></div>
+                        </label>
+                    </div>
+                </td>
+                <th>
+                    <div class="action-box">
+                        <div class="dropdown drop-more">
+                            <button class="more-btn dropdown-toggle ml-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                More
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="editEquipment3('{{id_val}}')">Edit</a>
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="deleteEquipment3('{{id_val}}')">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </th>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+{% else %}
+
+<tr id="eq_recort_row3{{id_val}}" class="eq_count_3">
+    <td>{{eqData.name}}</td>
+    <td id="eq_edit_box3{{id_val}}"> 
+        <input type="text" id="inp_id3{{id_val}}" name="eq_quantity_3[{{id_val}}]" readonly class="quan-input">
+    </td>
+    <td id="eq1_edit_box3{{id_val}}"> 
+        <input type="text" id="inp1_id3{{id_val}}" name="eq_max_3[{{id_val}}]" readonly class="quan-input">
+    </td>
+                <td>
+                    <div class="can-toggle">
+                        <input id="c3{{id_val}}" type="checkbox" name="eq_visible_status_3[{{id_val}}]" value='No'>
+                        <label for="c3{{id_val}}">
+                            <div class="can-toggle__switch" data-checked="No" data-unchecked="Yes"></div>
+                        </label>
+                    </div>
+                </td>
+                <th>
+                    <div class="action-box">
+                        <div class="dropdown drop-more">
+                            <button class="more-btn dropdown-toggle ml-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                More
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="editEquipment3('{{id_val}}')">Edit</a>
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="deleteEquipment3('{{id_val}}')">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </th>
+</tr>
+
+{% endif %}
+{% endif %}
+
+{% endif %}
+
+<script>
+    function editEquipment3(id){
+        $('#inp_id3'+id).attr('readonly',false);
+        $('#inp1_id3'+id).attr('readonly',false);
+        //$('#eq_edit_box'+id).html('<input type="text" name="eq_quantity['+id+']" placeholder="" class="quan-input">');
+        //$('#eq1_edit_box'+id).html('<input type="text" name="eq_max['+id+']" placeholder="" class="quan-input">');
+    }
+
+    function deleteEquipment3(id){
+        var numItems = $('.eq_count_3').length;
+        if(numItems == 1){
+            $('#equipments_tablesec_3').html('');
+        } else{
+            $('#eq_recort_row3'+id).remove();
+        }
+        
+    }
+    
+</script>

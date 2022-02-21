@@ -1,0 +1,105 @@
+{% load static %} {% load fetch_user %}
+
+{% check_ext mediaSoci.data as ext %}
+<div class="modal form-popup fade" data-backdrop="static" id="modalShowMedia" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content upload-img-pop new-offer-pop disable-text-field">
+
+            <form name="mediaSocialMediaEdit"
+                id="mediaSocialMediaEdit{{mediaSoci.id}}"
+                onclick="mediaEdit({{mediaSoci.id}})"
+                method="POST"
+                enctype="multipart/form-data"
+          >
+          {% csrf_token %}
+            <div class="row">
+
+                <div class="col-sm-6">
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Media & SocialMedia</label>
+                        <div class="form-field-input">
+                            <input type="text" class="disabledField required" name="media_title" placeholder="" disabled value="{{mediaSoci.mediaTitle}}">
+                        </div>
+                    </div>
+                </div>
+
+               <div class="col-sm-6">
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Media Upload</label>
+                        <div class="form-field-video">
+                            <div class="video-uploadbox" >
+                                <div class="custom-file media_edit_img" style="display: none;">
+                                    <input type="file" id="edit_media_media" name="edit_media_media" accept="video/mp4,video/x-m4v,video/mov,video/avi,video/,image/*" class="custom-file-input disabledField">
+                                    <label for="edit_award_document" class="custom-file-label placeholder text-truncate">Media Upload</label>
+                                    <input
+                                    multiple
+                                    type="hidden"
+                                    name="myMediaold"
+                                    value="{{mediaSoci.data}}"
+                                  />
+                                </div>
+                                <div class="custom-file media_view_img">
+                                    <label class="custom-file-label placeholder text-truncate">Media Upload</label>
+                                </div>
+                                {% comment %} <div class="custom-file">
+                                    <input class="disabledField" type="file" style="display: none;" id="media_socialmedia_edit_" name="award_document" accept="video/mp4,video/x-m4v,video/mov,video/avi,video/,image/*" fullwidth="" formcontrolname="video" class="custom-file-input required">
+                                    <label for="video" class="custom-file-labell placeholder text-truncate">Media Upload</label>
+                                </div> {% endcomment %}
+                            </div>
+                            {% if ext == ".mp4" %}
+                                <div
+                                    class="upload-box "
+                                    onclick="openVideoPop('media_upload_show_{{mediaSoci.id}}')"
+                                >
+                                    <img
+                                    id="media_upload_show_{{mediaSoci.id}}"
+                                    src="{% static 'images/videoPreview.png' %}"
+                                    data="{% static MEDIA_URL%}{{mediaSoci.data}}"
+                                    />
+                                </div>
+                            {% else %}
+                                <div
+                                    class="upload-box " onclick="mediaView('{{mediaSoci.id}}','{% static MEDIA_URL %}{{mediaSoci.data}}')"
+                                >
+                                    <img
+                                    id="media_upload_show"
+                                    src="{% static MEDIA_URL%}{{mediaSoci.data}}"
+                                    data="{% static MEDIA_URL%}{{mediaSoci.data}}"
+                                    />
+                                </div>
+                            {% endif %}
+                            {% comment %} <div class="upload-box" data-toggle="modal" data-target="#exampleModalCenter">
+                                <img src="{% static 'images/no-image.svg' %}">
+                            </div> {% endcomment %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="action-box  btn-form acpt-rjt-btn action-one">
+                        <div id="view_btn_media{{mediaSoci.id}}" class="view_btn_media">
+                            <button class="border-btn-small" type="button" onclick="editMedia('{{mediaSoci.id}}')">Edit</button>
+                            <button class="btn-red-one" type="button"  onclick="deleteMedia('{{mediaSoci.id}}')">Delete</button>
+                        </div>
+
+                        <div id="edit_btn_media{{mediaSoci.id}}" class="edit_btn_media" style="display: none;">
+                            <button class="border-btn" type='button' onclick="closeMedia('{{mediaSoci.id}}')">Discard changes</button>
+                            <button  class="btn-pink ml-10">Save changes</button>
+                        </div>
+
+
+                        {% comment %} <div >
+                            <button class="border-btn-small" onclick="editMedia()">Edit</button>
+                            <button class="btn-red-one">Delete</button>
+                        </div> {% endcomment %}
+
+                    </div>
+                </div>
+
+            </div>
+          </form>
+            <button type="button" class="close-btn-pop" data-dismiss="modal"><img src="{% static 'images/material-cancel.svg'%}"></button>
+        </div>
+
+    </div>
+</div>

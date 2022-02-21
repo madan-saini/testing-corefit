@@ -1,0 +1,1347 @@
+{% extends 'layout/inner.html' %}
+{% load static %}
+{% load define_action %}
+{% load fetch_user %}
+
+
+{% load split %}
+{% load change_type %}
+{% load getType %}
+
+{% block content %}
+
+
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<style>
+    .limitskill{
+    color:red
+    }
+
+</style>
+<script>
+
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-bottom-center",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "1000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+</script>
+
+<!-- Navigation-->
+<div class="loader" id="payloader" style=""><img src="{% static 'images/loading.gif' %}" alt=""></div>
+
+{% include "layout/successerror.html" %}
+<script src="{% static 'js/jquery-ui.min.js' %}"></script>
+<script src="{% static 'js/jquery-ui.multidatespicker.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.css' %}">
+
+<script>
+
+
+
+    var makeid1 = function (length) {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
+
+    function addSetCal(checked) {
+        var count = $('.cal_sett').length;
+        var vall = $('.cal_sett').html();
+        if (checked == true) {
+            var rand = makeid1(5);
+            if (count == 0 || (count == 1 && vall == '<p>Unavailable</p>')) {
+
+                var nav = '<div class="check-date-input cal_sett" id="cal_sett_' + rand + '"><div><input type="text" id="start_time_' + rand + '" name="over_start_time[]" class="o_start_timepicker">';
+                nav += '<span class="space">-</span>';
+                nav += '<input type="text" id="end_time_' + rand + '" name="over_end_time[]" class="o_end_timepicker">';
+                nav += '<a href="javascript:void(0);" class="trash-check-avail " id="delete_lnk_o_' + rand + '">';
+                nav += '<img src="/static/images/material-delete.svg">';
+                nav += '</a></div></div>';
+
+                $('#delete_lnk_o_'+rand).attr("onclick", "removeSetCal('" + rand + "')");
+
+                $('#cal_update').html(nav);
+                $('#cal_set').show();
+
+                setNumberingCal('9', '17');
+
+            } else {
+                checkValidationCal(rand);
+            }
+//                saveAvailability();
+        } else {
+            $('.cal_sett').html('<p>Unavailable</p>');
+//
+//            saveAvailability();
+        }
+    }
+
+        function checkValidationCal(rand) {
+        var start_var = document.getElementsByName("over_start_time[]");
+        var end_var = document.getElementsByName("over_end_time[]");
+
+        for (var i = 0; i < start_var.length; i++) {
+            var inp = start_var[i];
+//            alert("start_time[" + i + "].value=" + inp.value);
+        }
+        for (var i = 0; i < end_var.length; i++) {
+            var inp = end_var[i];
+            var lst_val = inp.value;
+        }
+
+        if (lst_val != '') {
+//            var next_start_val = lst_val;
+            var time_val = lst_val.split(' ')[0];
+            var time_ex = lst_val.split(' ')[1];
+            var hour_time = time_val.split(':')[0];
+            var min_time = time_val.split(':')[1];
+
+            if (time_ex == 'PM') {
+                hour_time = parseInt(hour_time) + 12;
+            }
+
+            var cont_val1 = (parseInt(hour_time) + 1);
+            var cont_val2 = (parseInt(hour_time) + 2);
+
+//            alert(cont_val1);
+//            alert(cont_val2);
+
+            var prec1 = ' AM';
+            if (cont_val1 >= 12 && cont_val1 < 24) {
+                prec1 = ' PM';
+            }
+            var hours1 = cont_val1 % 12 || 12;
+
+            var prec2 = ' AM';
+            if (cont_val2 >= 12 && cont_val2 < 24) {
+                prec2 = ' PM';
+            }
+            var hours2 = cont_val2 % 12 || 12;
+
+            var fnl_val = hours1 + ':' + min_time + prec1;
+            var fnl_end_val = hours2 + ':' + min_time + prec2;
+
+        }
+
+        var nav = '<div class="check-date-input cal_sett" id="cal_sett_' + rand + '"><div><input type="text" id="start_time_' + rand + '" name="over_start_time[]" class="o_start_timepicker">';
+        nav += '<span class="space">-</span>';
+        nav += '<input type="text" id="end_time_' + rand + '" name="over_end_time[]" class="o_end_timepicker">';
+        nav += '<a href="javascript:void(0);" class="trash-check-avail " id="delete_lnk_o_' + rand + '">';
+        nav += '<img src="/static/images/material-delete.svg">';
+        nav += '</a></div></div>';
+
+
+        $('#cal_update').append(nav);
+
+        $('#delete_lnk_o_'+rand).attr("onclick", "removeSetCal('" + rand + "')");
+
+        setNumberingCal(fnl_val.toString(), fnl_end_val.toString());
+
+    }
+
+
+
+        function setNumberingCal(time, endTime) {
+            $('.o_start_timepicker').timepicker({
+                timeFormat: 'h:mm p',
+                interval: 15,
+                minTime: '00',
+                maxTime: '11:45pm',
+                defaultTime: time,
+                startTime: '00:00',
+                dynamic: false,
+                dropdown: true,
+                scrollbar: true,
+                change: checkValidCal
+            });
+            $('.o_end_timepicker').timepicker({
+                timeFormat: 'h:mm p',
+                interval: 15,
+                minTime: '00',
+                maxTime: '11:45pm',
+                defaultTime: endTime,
+                startTime: '00:00',
+                dynamic: false,
+                dropdown: true,
+                scrollbar: true,
+                change: checkValidCal
+            });
+        }
+
+        function checkValidCal() {
+            var is_error = 0;
+            var start_var = document.getElementsByName("over_start_time[]");
+            var end_var = document.getElementsByName("over_end_time[]");
+
+            var start_array = new Array();
+            var end_array = new Array();
+
+            for (var i = 0; i < start_var.length; i++) {
+                var from = start_var[i].value;
+                var to = end_var[i].value;
+
+                if (moment(from, 'hh:mm a') > moment(to, 'hh:mm a')) {
+                    if (!$('#' + end_var[i].id).hasClass('error_range_o1')) {
+                        is_error = 1;
+                        $('#error_set_' + end_var[i].id).remove();
+                        $('#' + start_var[i].id).removeClass('error_range1');
+                        $('#' + end_var[i].id).addClass('error_range1');
+                        $('#' + end_var[i].id).addClass('error_range_o1');
+                        $('#' + end_var[i].id).parent().parent().append('<p id="error_set1_' + end_var[i].id + '" class="error_box">Choose an end time later than the start time.</p>');
+                    }
+
+                } else {
+                    $('#' + start_var[i].id).removeClass('error_range1');
+                    $('#' + end_var[i].id).removeClass('error_range1');
+                    $('#' + end_var[i].id).removeClass('error_range_o1');
+                    $('#error_set1_' + end_var[i].id).remove();
+//                is_error = is_error - 1;
+                }
+            }
+
+            for (var i = 0; i < start_var.length; i++) {
+                var inp_start = start_var[i];
+                start_array.push(inp_start.value);
+            }
+            for (var i = 0; i < end_var.length; i++) {
+                var inp_end = end_var[i];
+                end_array.push(inp_end.value);
+            }
+
+            $.each(start_array, function (index) {
+                var arr_len = start_array.length;
+                var first_val = start_array[index];
+
+                for (var i = 0; i < start_array.length; i++) {
+                    if (i != index) {
+                        if (moment(first_val, 'hh:mm a') >= moment(start_array[i], 'hh:mm a')) {
+                            if (moment(first_val, 'hh:mm a') < moment(end_array[i], 'hh:mm a')) {
+
+                                if (!$('#' + end_var[index].id).hasClass('error_range1')) {
+                                    is_error = 1;
+                                    $('#' + start_var[index].id).addClass('error_range1');
+                                    $('#' + end_var[index].id).addClass('error_range1');
+
+                                    $('#' + end_var[index].id).parent().parent().append('<p id="error_set1_' + end_var[index].id + '" class="error_box">Times overlap with another set of times.</p>');
+
+                                }
+
+                                if (!$('#' + end_var[i].id).hasClass('error_range1')) {
+                                    is_error = 1;
+                                    $('#' + start_var[i].id).addClass('error_range1');
+                                    $('#' + end_var[i].id).addClass('error_range1');
+
+                                    $('#' + end_var[i].id).parent().parent().append('<p id="error_set1_' + end_var[i].id + '" class="error_box">Times overlap with another set of times.</p>');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            $('#is_error').val(is_error);
+//            if (is_error == 0) {
+//                saveAvailability()
+//            }
+        }
+
+</script>
+<script>
+    function selectBranch(){
+        $('#addBranchCenter').modal('show');
+    }
+
+    function showBranch(val){
+        if(val == 'Yes'){
+            $('#e-option3').prop('checked',true);
+            $("#change-div3").show();
+            $("#change-div1").hide();
+            $("#change-div2").hide();
+            $("#profile_remain").show();
+            $("#option_1").hide();
+        } else{
+            $('#e-option1').prop('checked',true);
+            $("#change-div1").show();
+            $("#change-div2").hide();
+            $("#change-div3").hide();
+            $("#profile_remain").hide();
+            $("#option_1").show();
+        }
+        $('#addBranchCenter').modal('hide');
+    }
+</script>
+<style>
+    .ui-timepicker-standard{
+        z-index: 1100 !important;
+    }
+</style>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4SA7UBi6Yk3_IX3-U3qF7WSiTadRwFJU&libraries=places&sensor=true"></script>
+<div class="content-page">
+    <div id="accordion" class="accordion profile-set-accord">
+
+        <div class="card">
+            <div class="card-main-accord  ">
+
+                <div class="card-header open-ccrord" data-toggle="collapse" href="#collapseOne">
+                    <a class="card-title">
+                        Profile Setup
+                        <i class="fa fa-check" id="profdata" aria-hidden="true" {%if basicinfo %}{%else%} style="display:none" {%endif%} ></i>
+
+                    </a>
+
+                </div>
+                <div id="collapseOne" class="card-body collapse show" data-parent="#accordion">
+                    <form class="" name='profileForm1' id='profileForm1' method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div>
+                        <div class="media-main">
+
+
+                            <h4 class="profile-setup-inner-block-heading">Basic Information</h4>
+                            <div class="profile-form-block">
+                                <div class="row-new">
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">First name[*]</label>
+                                                <div class="form-field-input">
+                                                    <input type="text" class='required' name="first_name" value="{{user.first_name}}" placeholder="Enter your first name">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Last name[*]</label>
+                                                <div class="form-field-input">
+                                                    <input type="text" class='required' name="last_name" value="{{user.last_name}}" placeholder="Enter your last name">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Email address[*]</label>
+                                                <div class="form-field-input">
+                                                    <input type="text" class='required' name="email_address" value="{{user.email_address}}" readonly placeholder="Enter your email here">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Mobile number[*]</label>
+                                                <div class="mobile-num">
+                                                    <input type="text" class='required' id="phone2" name="phone"  value="{{user.contact}}" readonly placeholder="55 400 6998">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                <div class="change-div" id="change-div1" style="">
+                                    <h4 class="profile-setup-inner-block-heading">My profile</h4>
+                                    <div class="row-new">
+                                        <div class="col-sm-6">
+
+                                        <div class="form-group form-field-main">
+                                        <label class="label-field">Nationality[*]</label>
+                                        <div class="drop-down">
+                                            <select class='multiple-single' name="nationality" id="national_id" class='required' onChange="">
+                                                <option value="">Choose from list</option>
+                                                {% for key, country in countries %}
+
+                                                <option value="{{key}}" {% if key == basicinfo.nationality %} selected{% endif %}>{{country}}</option>
+                                                {% endfor %}
+
+                                            </select>
+                                        </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Date of Birth[*]</label>
+                                                <div class="form-field-input">
+                                                    {% if user.dob %}
+                                                    {% change_dat user.dob as dob %}
+                                                    {% endif %}
+                                                    <input type="text" readonly="readonly" value="{{dob}}" name="dob" class="datepickerr required" placeholder="Choose date" id="reservationDate">
+                                                    <div class="input-group-append"><img src="{% static 'images/noun_Calendar_1611923.svg' %}"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Gender[*]</label>
+
+                                                <div class="facility-radiobox">
+                                                    {% if user.gender %}
+                                                    {% for key, gen in gender.items %}
+                                                    <div class="radio-box">
+                                                        <input type="radio" class="e-option11"  {% if key == user.gender %} checked{% endif %} id="e-option{{key}}" value="{{gen}}" name="gender">
+                                                        <label for="e-option{{key}}">{{gen}}</label>
+                                                        <div class="check"></div>
+                                                    </div>
+
+                                                    {% endfor %}
+                                                    {% else %}
+                                                    {% for key, gen in gender.items %}
+                                                    <div class="radio-box">
+                                                        <input type="radio" class="e-option11" {% if gen == "Male" %}checked {% endif %}   id="e-option{{key}}" value="{{gen}}" name="gender">
+                                                        <label for="e-option{{key}}">{{gen}}</label>
+                                                        <div class="check"></div>
+                                                    </div>
+
+                                                    {% endfor %}
+                                                    {% endif %}
+<!--                                                    -->
+<!--                                                    <div class="radio-box"><input type="radio" id="e-option4" name="selector">-->
+<!--                                                        <label for="e-option4">Male</label>-->
+<!--                                                        <div class="check"></div>-->
+<!--                                                    </div>-->
+<!--                                                    <div class="radio-box"><input type="radio" id="e-option5" name="selector">-->
+<!--                                                        <label for="e-option5">Female</label>-->
+<!--                                                        <div class="check"></div>-->
+<!--                                                    </div>-->
+<!--                                                    <div class="radio-box"><input type="radio" id="e-option6" name="selector">-->
+<!--                                                        <label for="e-option6">Others</label>-->
+<!--                                                        <div class="check"></div>-->
+<!--                                                    </div>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Height[*]</label>
+                                                <div class="form-field-input">
+                                                    <div class="swith-overlay">
+                                                        <input type="text" name="height" value="{{basicinfo.height}}" placeholder="" class="required" onkeypress='return validateFloatKeyPress(this, event);' min="1">
+                                                        {%if basicinfo.height_type_1 == "1" %}
+                                                        <div class="taeb-switch taeb-switch1 left text-center">
+
+                                                            <div class="taeb active" taeb-direction="left" onclick="updateHType('In', '1')">In</div>
+                                                            <div class="taeb " taeb-direction="right" onclick="updateHType('Cm', '1')">Cm</div>
+                                                            <input type="hidden" value="1" name="height_type_1" id="height_type_1">
+                                                        </div>
+                                                        {%else%}
+                                                        <div class="taeb-switch taeb-switch1 right text-center">
+                                                            <div class="taeb " taeb-direction="left" onclick="updateHType('In', '1')">In</div>
+                                                            <div class="taeb active" taeb-direction="right" onclick="updateHType('Cm', '1')">Cm</div>
+                                                            <input type="hidden" value="1" name="height_type_1" id="height_type_1">
+                                                        </div>
+                                                         {% endif %}
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Years of experience[*]</label>
+                                                <div class="form-field-input">
+                                                    <input type="text" class='required digits' name="year_of_experince" value="{{user.year_of_experince}}" placeholder="Enter years if experience">
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Weight[*]</label>
+                                                <div class="form-field-input">
+                                                    <div class="swith-overlay">
+                                                        <input type="text" name="weights" value="{{basicinfo.weight}}" placeholder="" class="required" min="1" onkeypress='return validateFloatKeyPress(this, event);'>
+<!--                                                        <input type="text" name="" placeholder="">-->
+                                                        {%if basicinfo.weight_type_1 == "1" %}
+                                                        <div class="taeb-switch2 taeb-switch3 text-center left">
+                                                            <div class="taeb active" taeb-direction="left" onclick="updateWType('Kilo’s', '1')">Kilo’s</div>
+                                                            <div class="taeb " taeb-direction="right" onclick="updateWType('Pounds', '1')">Pounds</div>
+                                                            <input type="hidden" value="1" name="weight_type_1" id="weight_type_1">
+
+                                                        </div>
+                                                        {%else%}
+                                                        <div class="taeb-switch2 taeb-switch3 text-center right">
+                                                            <div class="taeb " taeb-direction="left" onclick="updateWType('Kilo’s', '1')">Kilo’s</div>
+                                                            <div class="taeb active" taeb-direction="right" onclick="updateWType('Pounds', '1')">Pounds</div>
+                                                            <input type="hidden" value="1" name="weight_type_1" id="weight_type_1">
+
+                                                        </div>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row-new bt-gray pt3">
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Language (s)[*]</label>
+                                                <div class="drop-down drop-after">
+                                                    {% if user.languages%}
+                                                    {% with user.languages|split:"," as lang_arr %}
+                                                    <select name="languages" id="langu" class='multiple-checkboxes required' placeholder="Select Languages" multiple>
+                                                        {% for key, language in languages %}
+                                                        <option value="{{key}}" {% if key in lang_arr%} selected{%endif%}> {{language}}</option>
+                                                        {% endfor %}
+
+                                                    </select>
+                                                    {% endwith %}
+                                                    {% else %}
+                                                    <select name="languages" id="langu" class='multiple-checkboxes required' placeholder="Select Languages" multiple>
+                                                        {% for key, language in languages %}
+                                                        <option value="{{key}}"> {{language}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    {% endif %}
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 ">
+                                            <div class="form-group form-field-main bt-gray pt3">
+                                                <label class="label-field">Training restrictions <span> (Our facility can accept…)[*]</span></label>
+                                                <div class="facility-radiobox">
+                                                    {% if basicinfo.training_type %}
+                                                    {% for key, train in training_restriction.items %}
+                                                    <div class="radio-box"><input type="radio" {% if key == basicinfo.training_type %} checked{% endif %} id="e-option{{key}}" value="{{train}}" name="training_type">
+                                                        <label for="e-option{{key}}">{{train}}</label>
+                                                        <div class="check"></div>
+                                                    </div>
+
+                                                    {% endfor %}
+                                                    {% else %}
+                                                    {% for key, train in training_restriction.items %}
+                                                    <div class="radio-box"><input type="radio" {% if train == "Male only" %} checked{% endif %} id="e-option{{key}}" value="{{train}}" name="training_type">
+                                                        <label for="e-option{{key}}">{{train}}</label>
+                                                        <div class="check"></div>
+                                                    </div>
+
+                                                    {% endfor %}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="profile_remain" style="">
+
+                                    <h4 class="profile-setup-inner-block-heading">About me</h4>
+                                    <div class="row-new">
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Introductory video</label>
+                                                <div class="form-field-video">
+                                                    <div class="video-uploadbox">
+                                                        <div class="custom-file">
+                                                            <input type="file" name="bio_video" id="bio_video" accept="video/mp4" fullwidth="" formcontrolname="video" class="custom-file-input">
+                                                            <label for="video" class="custom-file-label placeholder text-truncate">Upload Video</label>
+                                                        </div>
+                                                    </div>
+                                                    {% define "display:none;" as style9 %}
+                                                    {% define "display:none;" as style10 %}
+                                                    {% if basicinfo.bio_video%}
+                                                    {% define "" as style9 %}
+                                                    {% else %}
+                                                    {% define "" as style10 %}
+                                                    {% endif %}
+                                                    <div class="upload-box" id="ShowBioId" style="{{style9}}" onclick="openVideoPop('ShowBio')">
+                                                        <img id="ShowBio" data="{% static BIO_URL %}{{basicinfo.bio_video}}" src="{% static 'images/videoPreview.png' %}">
+                                                    </div>
+                                                    <div class="upload-box" id="ShowBioIdEmpty" style="{{style10}}" >
+                                                        <img id="ShowBio" data="{% static BIO_URL %}{{basicinfo.bio_video}}" src="{% static 'images/videoPreview.png' %}">
+                                                    </div>
+<!--                                                    <div class="upload-box" onclick="openVideoPop('ShowBio')">-->
+<!--                                                        <img id="ShowBio" data="{% static BIO_URL %}{{basicinfo.bio_video}}" src="{% static 'images/videoPreview.png' %}">-->
+<!--                                                    </div>-->
+                                                </div>
+                                                <div class="videolb" style="">{{basicinfo.bio_video}}</div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Website</label>
+                                                <div class="form-field-input">
+                                                    <input type="text" id="websiteurl" class='websiteurl' name="website" value="{{basicinfo.website}}" placeholder="Enter website">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">About me[*]</label>
+                                                <div class="form-field-input">
+                                                    <textarea placeholder="Enter about me" class='required' id="about_id_pt" style="resize: none;" name="about" >{{basicinfo.about}}</textarea>
+                                                    <small id="about_count">0 of 500 words</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Short bio[*]</label>
+                                                <div class="form-field-input">
+                                                    <textarea placeholder="Enter short bio" class='required' id="bio_id" style="resize: none;" name="short_bio" >{{basicinfo.short_bio}}</textarea>
+                                                    <small id="bio_count">0 of 100 words</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h4 class="profile-setup-inner-block-heading">Location</h4>
+                                    <div class="row-new">
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Country[*]</label>
+                                                <div class="drop-down">
+                                                    <select class='multiple-single' name="country" id="country_id" class='required' onChange="updateCity(this.value)">
+                                                        <option value="">Choose from list</option>
+                                                        {% for key, country in countries %}
+
+                                                        <option value="{{key}}" {% if key == basicinfo.country %} selected{% endif %}>{{country}}</option>
+                                                        {% endfor %}
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">City[*]</label>
+                                                <div class="drop-down" id="city_section">
+                                                    {% if basicinfo.city%}
+                                                    {% change_type basicinfo.city as city_type %}
+                                                    <select class='multiple-single' name="city" id="city_id" class='required'>
+                                                        <option value="">Choose from list</option>
+
+                                                        {% for key, city in cities %}
+
+                                                        <option value="{{key}}" {% if key == city_type %} selected{% endif %}>{{city}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    {% else %}
+                                                    <select name="city" id="city_id" class='required'>
+                                                        <option value="">Choose from list</option>
+                                                    </select>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Training location[*]</label>
+                                                <div class="form-field-input">
+                                                    <div class="icon-overlay">
+                                                    <input type="text" class='required' name="location" id="location" value="{{basicinfo.location}}" placeholder="Enter location">
+                                                    <img src="{% static 'images/LocationArrow.svg' %}">
+                                                </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Home address[*]</label>
+                                                <div class="form-field-input">
+                                                    <div class="icon-overlay">
+                                                    <input type="text" class='required' name="homelocation" id="locations" value="{{basicinfo.homelocation}}" placeholder="Enter location">
+                                                    <img src="{% static 'images/LocationArrow.svg' %}">
+                                                </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <h4 class="profile-setup-inner-block-heading">Available Services</h4>
+                                    <div class="row-new">
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Key Services[*]</label>
+                                                <div class="drop-down drop-after">
+                                                    {% if basicinfo.key_skills%}
+                                                    {% with basicinfo.key_skills|split:"," as key_skills_arr %}
+                                                    <select class="" name="key_skills" id="key_skillss" placeholder="Select Key Skills" multiple="multiple">
+                                                        {% for key, service in services %}
+                                                        <option value="{{key}}" {% if key in key_skills_arr%} selected{%endif%}>{{service}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    {% endwith %}
+                                                    {% else %}
+                                                    <select class="" name="key_skills" id="key_skillss" placeholder="Select Key Skills" multiple="multiple">
+                                                        {% for key, service in services %}
+                                                        <option value="{{key}}">{{service}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    {% endif %}
+                                                    <div class="limitskill" style="display:none">You reached Max. 4 selection </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Other Services</label>
+                                                <div class="drop-down drop-after">
+                                                    {% if basicinfo.other_skills%}
+                                                    {% with basicinfo.other_skills|split:"," as other_skills_arr %}
+                                                    <select class="multiple-checkboxes" name="other_skills" id="other_skillss"  placeholder="Select Other Skills"multiple="multiple">
+                                                        {% for key, service in services %}
+                                                        <option value="{{key}}" {% if key in other_skills_arr%} selected{%endif%}>{{service}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    {% endwith %}
+                                                    {% else %}
+                                                    <select class="multiple-checkboxes" name="other_skills" id="other_skillss"  placeholder="Select Other Skills"multiple="multiple">
+                                                        {% for key, service in services %}
+                                                        <option value="{{key}}" >{{service}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <input type='hidden' name='brand_id_3' value="{{basicinfo.brand_id}}">
+                                    <input type='hidden' name='branch_id_2' value="{{basicinfo.branch_id}}">
+                                    <div class="btn-btm-group spece-btwn" id="submit_sec_2">
+                                        <div>
+<!--                                            <button class="btn-gray-two" type="button" onclick="addequipment();">Add Another</button>-->
+                                        </div>
+                                        <div> <button class="border-btn"  type='reset' onclick="resetForm2()">Discard changes</button> <button class="btn-pink ml-10">Save changes</button></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <input type='hidden' id="basic_info_id" name='basic_info_id' value="{{basicinfo.id}}">
+                        <input type='hidden' name='old_bio_video' value="{{basicinfo.bio_video}}">
+                        <input type='hidden' id='maxsercont' value="">
+                    </form>
+
+                </div>
+
+            </div>
+
+            {% include  'elements/myProfile/mediaSocialMedia.html' %}
+
+            {% include 'frelancerTemplates/elements/users/user_awards.html' %}
+            {% include 'elements/users/user_price_section.html' %}
+            {% include  'elements/myProfile/clientTransformation.html' %}
+            {% include  'elements/myProfile/faq.html' %}
+            {% include  'frelancerTemplates/elements/myProfile/association.html' %}
+            {% include 'frelancerTemplates/elements/users/user_identi_section.html' %}
+
+            <div class="card-main-accord">
+                <div class="card-header collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseEight">
+                    <a class="card-title">
+                        Profile Preview
+                    </a>
+                </div>
+                <div id="collapseEight" class="collapse" data-parent="#accordion">
+                    <div class="media-main"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    function validateFloatKeyPress(el, evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            var number = el.value.split('.');
+            if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            //just one dot
+            if (number.length > 1 && charCode == 46) {
+                return false;
+            }
+            //get the carat position
+            var caratPos = getSelectionStart(el);
+            var dotPos = el.value.indexOf(".");
+            if (caratPos > dotPos && dotPos > -1 && (number[1].length > 1)) {
+                return false;
+            }
+            return true;
+        }
+    function getSelectionStart(o) {
+        if (o.createTextRange) {
+            var r = document.selection.createRange().duplicate()
+            r.moveEnd('character', o.value.length)
+            if (r.text == '')
+                return o.value.length
+            return o.value.lastIndexOf(r.text)
+        } else
+            return o.selectionStart
+    }
+    function updateWType(val, id) {
+            if (val == "Pounds") {
+                $('#weight_type_' + id).val('2');
+            } else {
+                $('#weight_type_' + id).val('1');
+            }
+        }
+        function updateHType(val, id) {
+            if (val == "In") {
+                $('#height_type_' + id).val('1');
+            } else {
+                $('#height_type_' + id).val('2');
+            }
+        }
+    function closePop() {
+        $('#modal-overide-date').modal('hide');
+        $('#mdp-demo').multiDatesPicker('resetDates');
+
+        $('#cal_set').hide();
+        $('#cal_update').html('');
+    }
+
+    function resetForm2() {
+        location.reload();
+    }
+
+
+    $(document).ready(function () {
+
+        var multipleCancelButton = new Choices('#key_skills', {
+            removeItemButton: true,
+            maxItemCount: 4,
+            searchResultLimit: 5,
+            renderChoiceLimit: 5
+        });
+
+        var multipleCancelButton = new Choices('#other_skills', {
+            removeItemButton: true,
+//            maxItemCount: 4,
+            searchResultLimit: 5,
+            renderChoiceLimit: 5
+        });
+        var multipleCancelButton = new Choices('#key_skills_3', {
+            removeItemButton: true,
+            maxItemCount: 4,
+            searchResultLimit: 5,
+            renderChoiceLimit: 5
+        });
+
+        var multipleCancelButton = new Choices('#other_skills_3', {
+            removeItemButton: true,
+//            maxItemCount: 4,
+            searchResultLimit: 5,
+            renderChoiceLimit: 5
+        });
+
+        $('#key_skillss').multiselect({
+<!--            includeSelectAllOption: true,-->
+            nonSelectedText: "Select Multiple",
+            moveSelectedToTop: true,
+            numberDisplayed: 1,
+            enableFiltering: true,
+            maxHeight: 250,
+            enableCaseInsensitiveFiltering: true,
+            onDropdownShown: function(even) {
+              this.$filter.find('.multiselect-search').focus();
+            },
+            onChange: function(option, checked , element) {
+                var selectedOptions = jQuery('#key_skillss option:selected').length;
+                var nonSelectedOptions = $('#key_skillss option').filter(function() {
+                        return !$(this).is(':selected');
+                    });
+                if(selectedOptions >= 4){
+                   $("#maxsercont").val(selectedOptions);
+                   var vla = $("#maxsercont").val();
+                    $(".limitskill").show()
+<!--                    nonSelectedOptions.each(function() {-->
+<!--                        var input = $('input[value="' + $(this).val() + '"]');-->
+<!--                        input.prop('disabled', true);-->
+<!--                        input.parent('li').addClass('disabled');-->
+<!--                    });-->
+                }else{
+                $(".limitskill").hide()
+                }
+            }
+        });
+        $('.multiple-checkboxes').multiselect({
+            includeSelectAllOption: true,
+            nonSelectedText: "Select Multiple",
+            moveSelectedToTop: true,
+            numberDisplayed: 1,
+            enableFiltering: true,
+            maxHeight: 250,
+            enableCaseInsensitiveFiltering: true,
+            onDropdownShown: function(even) {
+              this.$filter.find('.multiselect-search').focus();
+            }
+        });
+
+        $('.multiple-single').multiselect({
+            nonSelectedText: "Select from list",
+            enableFiltering: true,
+            maxHeight: 250,
+            numberDisplayed: 1,
+            enableCaseInsensitiveFiltering: true,
+            onDropdownShown: function(even) {
+              this.$filter.find('.multiselect-search').focus();
+            }
+        });
+
+        $('.single-withoutsearch').multiselect({
+            maxHeight: 250,
+            numberDisplayed: 1,
+            nonSelectedText: "Select from list"
+        });
+
+
+    });
+</script>
+
+<script>
+    function dataURLtoBlob(dataURL) {
+        var BASE64_MARKER = ';base64,';
+        if (dataURL.indexOf(BASE64_MARKER) == -1) {
+            var parts = dataURL.split(',');
+            var contentType = parts[0].split(':')[1];
+            var raw = decodeURIComponent(parts[1]);
+
+            return new Blob([raw], {type: contentType});
+        }
+        var parts = dataURL.split(BASE64_MARKER);
+        var contentType = parts[0].split(':')[1];
+        var raw = window.atob(parts[1]);
+        var rawLength = raw.length;
+        var uInt8Array = new Uint8Array(rawLength);
+        for (var i = 0; i < rawLength; ++i) {
+            uInt8Array[i] = raw.charCodeAt(i);
+        }
+
+        return new Blob([uInt8Array], {type: contentType});
+    }
+
+$('#location').on('keypress', function(e) {
+    return e.which !== 13;
+});
+    $("#profileForm1").validate({
+        submitHandler: function (form) {
+
+
+            var token = $("[name=csrfmiddlewaretoken]").val();
+            var form = document.querySelector('#profileForm1');
+
+            var formData = new FormData(form);
+
+            formData.append('imageFile', $('#bio_video')[0].files[0]);
+            formData.append('csrfmiddlewaretoken', token);
+
+                var erro_show = 0
+                 var vla = $("#maxsercont").val();
+                if(vla > 4){
+
+                 swal('',"Please select only 4 key services.",'error');
+                          erro_show = 1;
+                }
+                var inputF = $('#country_id').val();
+                 var inputN = $('#national_id').val();
+                var inputO = $('#other_skillss').val();
+                var inputK = $('#key_skillss').val();
+                var inputLL = $('#langu').val();
+                var inputT = $('#city_id').val();
+                 var inputW = $('#websiteurl').val();
+                var reg =/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
+
+                if(inputN == ''){
+                    swal('',"Please select Nationality.",'error');
+                    erro_show = 1;
+                }else if(inputLL == ''){
+                    swal('',"Please enter Language.",'error');
+                    erro_show = 1;
+                }else if(inputF == ''){
+                    swal('',"Please enter Country.",'error');
+                    erro_show = 1;
+                }else if(inputT==''){
+                    swal('',"Please enter City.",'error');
+                    erro_show = 1;
+                }else if(inputK==''){
+                    swal('',"Please enter Key Services.",'error');
+                    erro_show = 1;
+                }else if(inputW != ''){
+                    if((!reg.test(inputW))) {
+                          swal('',"Please enter valid Website URL.",'error');
+                          erro_show = 1;
+                      }
+                }
+    if(erro_show==0){
+            $.ajax({
+                type: 'POST',
+                url: 'freelancer-basicProfile',
+                contentType: false,
+                data : formData,
+                processData: false,
+                contentType: false,
+//                data: {'serializedData': serializedData, csrfmiddlewaretoken: token},
+                beforeSend: function () {
+                    $('#payloader').show();
+                },
+                success: function (response) {
+                    $("#basic_info_id").val(response[0])
+
+                    $('#ShowBio').attr('data', '/static/uploads/bioVideo/'+response[2]);
+                     $("#ShowBioIdEmpty").hide()
+            $(".videolb").show()
+                    $("#ShowBioId").show()
+                    $('#payloader').hide();
+                    Command: toastr["success"]("Changes Saved")
+                    $('.quan-input').prop('readonly',true);
+                    val = $("#location").val()
+                    $("#training_location_1").val(val);
+                    $("#profdata").show()
+                },
+                error: function (response) {
+                    $('#payloader').hide();
+                    console.log('error', response)
+                }
+            })
+}
+
+            return false;
+        }
+    });
+</script>
+
+<link rel="stylesheet" type="text/css" href="{% static '/css/front/intlTelInput.css' %}">
+<script src="{% static 'js/front/intlTelInput.js' %}"></script>
+
+<script>
+
+
+    var phone_number = window.intlTelInput(document.querySelector("#phone2"), {
+        separateDialCode: true,
+        preferredCountries: false,
+        //onlyCountries: ['iq'],
+        hiddenInput: "phone",
+        utilsScript: "{% static 'js/front/utils.js' %}"
+    });
+
+
+    function setCountryCode()
+    {
+        var coCode = $('.iti__selected-dial-code').html();
+        document.getElementById('contryCode').value = coCode;
+    }
+
+    $(document).ready(function () {
+        $location_input = $("#location");
+        var options = {
+        };
+        autocomplete = new google.maps.places.Autocomplete($location_input.get(0), options);
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            return false;
+        });
+        $location_inputs = $("#locations");
+        var options = {
+        };
+        autocompletes = new google.maps.places.Autocomplete($location_inputs.get(0), options);
+        google.maps.event.addListener(autocompletes, 'place_changed', function () {
+            return false;
+        });
+    });
+    $(document).ready(function () {
+<!--        $location_input = $("#brand_address");-->
+<!--        var options = {-->
+<!--        };-->
+<!--        autocomplete = new google.maps.places.Autocomplete($location_input.get(0), options);-->
+<!--        google.maps.event.addListener(autocomplete, 'place_changed', function () {-->
+<!--            return false;-->
+<!--        });-->
+    });
+    $(document).ready(function () {
+<!--        $location_input = $("#brand_address_3");-->
+<!--        var options = {-->
+<!--        };-->
+<!--        autocomplete = new google.maps.places.Autocomplete($location_input.get(0), options);-->
+<!--        google.maps.event.addListener(autocomplete, 'place_changed', function () {-->
+<!--            return false;-->
+<!--        });-->
+    });
+
+    function show_submit_data(data) {
+        $("#result").html(data);
+    }
+
+    $(document).ready(function () {
+
+        str = $('#about_id_pt').val();
+        str = str.replace(/(^\s*)|(\s*$)/gi, "");
+        str = str.replace(/[ ]{2,}/gi, " ");
+        str = str.replace(/\n /, "\n");
+        words = str.split(/\s/).length;
+        if (words >= 1 && $('#about_id_pt').val() != '')
+        {
+            if (words <= 500) {
+                $('#about_count').html(words + ' of 500 words');
+            } else {
+                if (e.which !== 8)
+                    e.preventDefault();
+                var trimmed = $('#about_id_pt').val().split(/\s+/, 500).join(" ");
+                // Add a space at the end to make sure more typing creates new words
+                $('#about_id_pt').val(trimmed + " ");
+            }
+        } else {
+            $('#about_count').html('0 of 500 words');
+        }
+
+        str = $('#bio_id').val();
+        str = str.replace(/(^\s*)|(\s*$)/gi, "");
+        str = str.replace(/[ ]{2,}/gi, " ");
+        str = str.replace(/\n /, "\n");
+        words = str.split(/\s/).length;
+        if (words >= 1 && $('#bio_id').val() != '')
+        {
+            if (words <= 100) {
+                $('#bio_count').html(words + ' of 100 words');
+            } else {
+                if (e.which !== 8)
+                    e.preventDefault();
+                var trimmed = $('#bio_id').val().split(/\s+/, 100).join(" ");
+                // Add a space at the end to make sure more typing creates new words
+                $('#bio_id').val(trimmed + " ");
+            }
+
+        } else {
+            $('#bio_count').html('0 of 100 words');
+        }
+
+        $('#about_id_pt').on('keyup', function (e) {
+            str = $(this).val();
+            str = str.replace(/(^\s*)|(\s*$)/gi, "");
+            str = str.replace(/[ ]{2,}/gi, " ");
+            str = str.replace(/\n /, "\n");
+            words = str.split(/\s/).length;
+            if (words >= 1 && $(this).val() != '')
+            {
+                if (words <= 500) {
+                    $('#about_count').html(words + ' of 500 words');
+                } else {
+                    if (e.which !== 8)
+                        e.preventDefault();
+                    var values = $(this).val().split(" ").splice(0,500).join(" ")
+                    $(this).val(values)
+                    var trimmed = $(this).val().split(/\s+/, 500).join(" ");
+                    // Add a space at the end to make sure more typing creates new words
+                    $(this).val(trimmed + " ");
+                }
+            } else {
+                $('#about_count').html('0 of 500 words');
+            }
+        });
+
+        $('#bio_id').on('keyup', function (e) {
+            str = $(this).val();
+            str = str.replace(/(^\s*)|(\s*$)/gi, "");
+            str = str.replace(/[ ]{2,}/gi, " ");
+            str = str.replace(/\n /, "\n");
+            words = str.split(/\s/).length;
+            if (words >= 1 && $(this).val() != '')
+            {
+                if (words <= 100) {
+                    $('#bio_count').html(words + ' of 100 words');
+                } else {
+                    if (e.which !== 8)
+                        e.preventDefault();
+
+                    var values = $(this).val().split(" ").splice(0,100).join(" ")
+                    $(this).val(values)
+                    var trimmed = $(this).val().split(/\s+/, 100).join(" ");
+                    // Add a space at the end to make sure more typing creates new words
+                    $(this).val(trimmed + " ");
+                }
+
+            } else {
+                $('#bio_count').html('0 of 100 words');
+            }
+        });
+
+        $('#about_id_3').on('keyup', function () {
+            str = $(this).val();
+            str = str.replace(/(^\s*)|(\s*$)/gi, "");
+            str = str.replace(/[ ]{2,}/gi, " ");
+            str = str.replace(/\n /, "\n");
+            words = str.split(' ').length;
+            if (words >= 1 && $(this).val() != '')
+            {
+                if (words <= 500) {
+                    $('#about_count_3').html(words + ' of 500 words');
+                } else {
+                    if (e.which !== 8)
+                        e.preventDefault();
+                    var trimmed = $(this).val().split(/\s+/, 500).join(" ");
+                    // Add a space at the end to make sure more typing creates new words
+                    $(this).val(trimmed + " ");
+                }
+            } else {
+                $('#about_count_3').html('0 of 500 words');
+            }
+        });
+
+        $('#bio_id_3').on('keydown', function (e) {
+            str = $(this).val();
+            str = str.replace(/(^\s*)|(\s*$)/gi, "");
+            str = str.replace(/[ ]{2,}/gi, " ");
+            str = str.replace(/\n /, "\n");
+            words = str.split(' ').length;
+            if (words >= 1 && $(this).val() != '')
+            {
+                if (words <= 100) {
+                    $('#bio_count_3').html(words + ' of 100 words');
+                } else {
+                    if (e.which !== 8)
+                        e.preventDefault();
+                    var trimmed = $(this).val().split(/\s+/, 100).join(" ");
+                    // Add a space at the end to make sure more typing creates new words
+                    $(this).val(trimmed + " ");
+                }
+
+            } else {
+                $('#bio_count_3').html('0 of 100 words');
+            }
+        });
+    });
+
+    function updateCity(value) {
+        var token = $("[name=csrfmiddlewaretoken]").val();
+        $.ajax({
+            type: 'POST',
+            url: 'getCityList',
+            data: {'country_id': value, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+                $('#city_section').html(response);
+            },
+            error: function (response) {
+                $('#payloader').hide();
+                console.log('error', response)
+            }
+        })
+    }
+
+    function updateCity3(value) {
+        var token = $("[name=csrfmiddlewaretoken]").val();
+        $.ajax({
+            type: 'POST',
+            url: 'getCityList',
+            data: {'country_id': value, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+                $('#city_section_3').html(response);
+            },
+            error: function (response) {
+                $('#payloader').hide();
+                console.log('error', response)
+            }
+        })
+    }
+
+</script>
+
+<script>
+//    $(".datepickerr").click(function(){
+        $('.datepickerr').datepicker({
+            clearBtn: false,
+            weekStart: 1,
+            maxDate: new Date(),
+            orientation: "bottom",
+            dateFormat: "dd/mm/yy",
+            changeYear: true,
+            yearRange: '1970:' + new Date().getFullYear().toString()
+        });
+//    });
+
+
+
+</script>
+
+<script>
+    function openVideoPop(id){
+        var data = $('#'+id).attr('data');
+        if(data != ''){
+            var video = document.getElementById('video_bx');
+            $('#videoModalCenter').modal('show');
+            $('#video_bx source').attr('src', data);
+            video.load();
+  video.play();
+        }
+    }
+
+
+
+    $("#bio_video").change(function (e) {
+        if (bioValidation("bio_video") != false) {
+//            readURL1(this);
+        }
+         swal('',"Video will reflect after click on save changes.");
+        var name = e.target.files[0].name;
+
+        $(".videolb").html(name)
+    });
+
+
+    function in_array(needle, haystack) {
+        for (var i = 0, j = haystack.length; i < j; i++) {
+            if (needle == haystack[i])
+                return true;
+        }
+        return false;
+    }
+
+    function getExt(filename) {
+        var dot_pos = filename.lastIndexOf(".");
+        if (dot_pos == -1)
+            return "";
+        return filename.substr(dot_pos + 1).toLowerCase();
+    }
+
+    function bioValidation(imageId) {
+        var filename = document.getElementById(imageId).value;
+        var filetype = ['mp4','mov'];
+        if (filename != '') {
+            var ext = getExt(filename);
+            ext = ext.toLowerCase();
+            var checktype = in_array(ext, filetype);
+            if (!checktype) {
+                alert(ext + " file not allowed.");
+                document.getElementById(imageId).value = '';
+                return false;
+            } else {
+
+
+            }
+        }
+    }
+    $(window).on('load', function () {
+    $('#payloader').hide();
+  })
+    </script>
+
+
+
+
+{% endblock content %}

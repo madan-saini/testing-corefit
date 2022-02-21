@@ -1,0 +1,68 @@
+{% load static %}
+{% load fetch_user %}
+<table class="table table-bordered table-cs table-subs">
+    <thead>
+        <tr>
+            <th scope="col" width="70%">Features</th>
+            <th scope="col" width="15%" class="text-center">Basic Plan</th>
+            <th scope="col" width="15%" class="text-center">Premium Plan</th>
+        </tr>
+    </thead>
+    <tbody>
+        {%for feature in features%}
+        {% splitArray basicPlan.features as fbasic_arr %}
+        {% splitArray premiumPlan.features as fPre_arr %}
+        <tr>
+            <td>{{feature.title}}</td>
+            <td class="text-center">
+                
+                {% if feature.id in fbasic_arr%}
+                    <img src="{% static 'images/line-red.svg' %}">
+                {% else%}
+                    <img src="{% static 'images/close-one.svg' %}">
+                {% endif%}
+                
+            </td>
+            <td class="text-center">
+                {% if feature.id in fPre_arr%}
+                    <img src="{% static 'images/line-red.svg' %}">
+                {% else%}
+                    <img src="{% static 'images/close-one.svg' %}">
+                {% endif%}
+            </td>
+        </tr>
+        {% endfor%}
+        <tr>
+            <td>Amount:</td> 
+            
+            <td class="text-center">{{curr}} {{basicPlanPrice.price|floatformat:2}}/{{type}}</td>
+            <td class="text-center">{{curr}} {{premiumPlanPrice.price|floatformat:2}}/{{type}}</td>
+        </tr>
+    </tbody>
+</table>
+<table width="100%" class="mb-4 table-one" bgcolor="#fff">
+    <tr>
+        <td width="70%"></td>
+        <td width="15%" class="text-center"><a href="#" class="ex-plan">Existing Plan</a></td>
+        <td width="15%" class="text-center"><a href="#" class="up-plan">Upgrade</a></td>
+    </tr>
+</table>
+
+<script>
+    $(document).ready(function () {
+        var html = ''
+        html += '<div class="subs-plan-inr">';
+        html += '<small>BASIC</small>';
+        html += '<h6>{{basicPlan.description}}</h6>';
+        html += '<h5>{{curr}} {{basicPlanPrice.price|floatformat:2}} <small>/{{type}}</small></h5>';
+        html += '</div>';
+        html += '<div class="subs-plan-inr">';
+        html += '<small>PREMIUM</small>';
+        html += '<h6>{{premiumPlan.description}}</h6>';
+        html += '<h5>{{curr}} {{premiumPlanPrice.price|floatformat:2}} <small>/{{type}}</small></h5>';
+        html += '<a href="#" class="bg-sm-btn">Upgrade to Premium</a>';
+        html += '</div>';
+                    
+        $('#plan_details').html(html);
+    });
+</script>

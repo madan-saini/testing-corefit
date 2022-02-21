@@ -1,0 +1,169 @@
+{% load static %}
+{% load fetch_user %}
+{% if priceList %}
+<div class="table-box table-w-3">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Type</th>
+                <th scope="col">Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Validity</th>
+                <th scope="col">Location</th>
+                <th scope="col">Additional Notes</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody class="price-box">
+            {% for priceData in priceList %}
+            <tr id="price-{{priceData.id}}">
+                <td>
+                    {% change_type_int priceData.session_category as val %}
+                    
+                    {% for key, cat in pricing_category.items%}
+                        {% if key == val%}
+                            {{cat}}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    {% if priceData.session_name == ''%}
+                        {% for key, amenityType in amenityTypes %}
+                            {% if key == priceData.type_of_amenity%}
+                                {{amenityType}}
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        {{priceData.session_name}}
+                    {% endif %}                    
+                </td>
+                <td>{{priceData.price|floatformat:2}} {{priceData.currency}}</td>
+                <td>
+                    {% if priceData.validity != 0%}
+                    {{priceData.validity}} 
+                    {% if priceData.validity_type == 1%}
+                        Days
+                    {% else %}
+                        Months
+                    {% endif %}      
+                    {% else %}
+                        -
+                    {% endif %}                    
+                </td>
+                <td>{{priceData.location}}</td>
+                <td>
+                    {% if priceData.notes%}
+                    {% truncate_str priceData.notes as val %}
+                    {{val}}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="action-box">
+                        <div class="dropdown drop-more">
+                            <button class="more-btn dropdown-toggle ml-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                More
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="viewPrice('{{priceData.id}}')">View</a>
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="deletePrice('{{priceData.id}}')">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function closePrice(id) {
+        $('#price_view_btn').show();
+        $('#price_edit_btn').hide();
+        $('#viewPriceModel').modal('hide');
+    }
+    
+    function editPrice() {
+        $('.disabledField').removeAttr("disabled");
+        $('#viewPriceModel .multiselect').prop("disabled", false);
+//        $('.disabledDv').addClass("taeb-switch-11");
+        $('#price_view_btn').hide();
+        $('#price_edit_btn').show();
+        $('.price_view_img').hide();
+        $('.price_edit_img').show();
+        
+        $('.view_valid').hide();
+        $('.edit_valid').show();
+    }
+    
+    function viewPrice(id) {
+        
+        var token = $("[name=csrfmiddlewaretoken]").val();
+        
+        $.ajax({
+            type: 'POST',
+            url: 'viewPrice',
+            data: {'id': id, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) { 
+                $('#payloader').hide();
+                $('#price_model').html(response);
+                $('#viewPriceModel').modal('show');
+                $('.disabledField').prop("disabled", true);
+                $('.disabledField1').prop("disabled", true);
+//                $('.disabledDv').removeClass("taeb-switch-11");
+                $('.price_view_img').show();
+                $('#viewPriceModel .multiselect').prop("disabled", true);
+                $('.price_edit_img').hide();
+            },
+            error: function (response) {
+                $('#payloader').hide();
+                console.log('error', response)
+            }
+        });
+    }
+    
+    function deletePrice(id){
+        swal({
+            title: "Are you sure?",
+            text: "You want to delete this record!",
+            icon: "warning",
+            buttons: [
+              'No',
+              'Yes'
+            ],
+            dangerMode: true,
+        }).then(function(isConfirm) {
+        if(isConfirm){
+        var token = $("[name=csrfmiddlewaretoken]").val();
+        
+        $.ajax({
+            type: 'POST',
+            url: 'deletePrice',
+            data: {'id': id, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+                $('#price_table').html(response)
+                $('#price-'+id).remove();
+                $('#viewPriceModel').modal('hide');
+                Command: toastr["success"]("Changes Saved")
+            },
+            error: function (response) {
+                $('#payloader').hide();
+                console.log('error', response)
+            }
+        })
+        }
+        })
+    }
+</script>
+
+{% endif%}
+

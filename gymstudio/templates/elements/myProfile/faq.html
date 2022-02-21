@@ -1,0 +1,359 @@
+{% load static %}
+
+<div class="card-main-accord" id="faq-section-main">
+    <div class="card-header collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseSix">
+        <a class="card-title">
+            FAQs
+            <i class="fa fa-check" id="faqssdata" aria-hidden="true" {%if faq_tabless %}{%else%} style="display:none" {%endif%} ></i>
+        </a>
+    </div>
+    <div id="collapseSix" class="collapse" data-parent="#accordion">
+        <div class="media-main">
+            <form name="faqForm" id="faqForm" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+                <div class="row-new">
+                    <input type="hidden" name="faqType" id="faqType" value="existingFaqs">
+
+                    <div class="col-sm-12">
+                        <div class="form-group form-field-main">
+                            <div class="taeb-switch taeb-switch1  left text-center ml-0">
+                                <div class="taeb list_cls active" id="existingFaqs" taeb-direction="left" onclick="resetFormFaq()">Existing FAQs</div>
+                                <div class="taeb calender_cls " id="customFaqs" taeb-direction="right" onclick="resetFormFaq()">Custom FAQs</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="form-field-main">
+                            <label>Question[*]</label>
+                            <div id="list_view">
+                                <div class="drop-down " >
+                                    <select class="single-withoutsearch required" name="faqquestionSelect" >
+                                       {% for exfaq in existingFaq %}
+                                        <option id="{{exfaq.id}}" value="{{exfaq.question}}">{{exfaq.question}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                 <div class="ans-faq" id="faqanswererror">
+                                    <label>Answer[*]</label>
+                                    <textarea id="faqanswer" placeholder="Type Answer..." name="faqanswer" class="required"></textarea>
+                                    <small id="faqanswer_count">0 of 500 words</small>
+                                 </div>
+                            </div>
+                            <div id="calender_view" style="display: none;">
+                                <div class="form-field-input ans-faq" id="faqquestionerror" >
+                                    <textarea id="faqquestion" placeholder="Type Question..." name="faqquestion" class="required"></textarea>
+
+<!--                                    <input type="text" id="faqquestion" name="faqquestion" class="required" placeholder="Type Question..">-->
+                                    <small id="faqquestion_count">0 of 100 words</small>
+                                </div>
+                                <div class="ans-faq" id="faqanswer2error">
+                                    <label>Answer[*]</label>
+                                    <textarea id="faqanswer2" placeholder="Type Answer..." name="faqanswer2" class="required"></textarea>
+                                    <small id="faqanswer_count2">0 of 500 words</small>
+                                 </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="col-sm-12 border-table" id="faq_table_update">
+                        {% include  'elements/users/faq_table.html' %}
+                    </div>
+
+                </div>
+                <div class="btn-btm-group spece-btwn">
+                    <div> <button class="btn-gray-two" onclick="return submitTypeFaq('add')">Add Another</button></div>
+                    <div> <button class="border-btn ml-10" onclick="return submitTypeFaq('save')">Save</button> <button class="btn-pink ml-10" onclick="return submitTypeFaq('submit')">Submit & Proceed</button></div>
+                </div>
+                <input type="hidden" id="faq_submit_type">
+            </form>
+        </div>
+    </div>
+</div>
+<div id="faqmodel">
+
+</div>
+<style>
+    .drop-down select{
+    appearance: button !important;
+    }
+</style>
+<script>
+
+    function resetFormFaq(){
+        var form = document.querySelector("#faqForm");
+<!--        form.reset();-->
+    }
+    
+function submitTypeFaq(type){
+        $('#faq_submit_type').val(type);
+    }
+function deleteFaq(id){
+ swal({
+            title: "Are you sure?",
+            text: "You want to delete this record!",
+            icon: "warning",
+            buttons: [
+              'No',
+              'Yes'
+            ],
+            dangerMode: true,
+        }).then(function(isConfirm) {
+if(isConfirm){
+        var token = $("[name=csrfmiddlewaretoken]").val();
+
+        $.ajax({
+            type: 'POST',
+            url: 'deleteFaq',
+            data: {'id': id, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+                $("#faq_table_update").html(response)
+                $("#modalShowFaq").modal('hide')
+<!--                $("#viewclientTransformationData-"+id).modal('hide');-->
+
+            },
+            error: function (response) {
+                $('#payloader').hide();
+<!--                console.log('error', response)-->
+            }
+        })
+        }
+        })
+    }
+    function viewFaq(id){
+        var token = $("[name=csrfmiddlewaretoken]").val();
+
+        $.ajax({
+            type: 'POST',
+            url: 'viewFaq',
+            data: {'id': id, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+                $("#faqmodel").html(response)
+                $("#modalShowFaq").modal('show')
+            },
+            error: function (response) {
+                $('#payloader').hide();
+<!--                console.log('error', response)-->
+            }
+        })
+    }
+    function editfaq(id){
+        $('.disabledField').removeAttr("disabled");
+        $('.edit_btn_faq').show()
+        $('.view_btn_faq').hide();
+    }
+    function closeFaq(){
+        $("#modalShowFaq").modal('hide')
+    }
+$('#customFaqs').click(function(){
+    $('#list_view').hide();
+    $('#faqType').val("customFaqs")
+    $('#calender_view').show();
+  //do something
+});
+$('#existingFaqs').click(function(){
+    $('#faqType').val("existingFaqs")
+    $('#calender_view').hide();
+    $('#list_view').show();
+  //do something
+});
+
+$("#faqForm").validate({
+errorPlacement: function (error, element) {
+            console.log('dd', element.attr("name"))
+            if (element.attr("name") == "faqquestion") {
+            $("#faqquestion").focus()
+                error.appendTo("#faqquestionerror");
+            }
+         if (element.attr("name") == "faqanswer") {
+            $("#faqanswer").focus()
+                error.appendTo("#faqanswererror");
+            }
+            if (element.attr("name") == "faqanswer2") {
+            $("#faqanswer2").focus()
+                error.appendTo("#faqanswer2error");
+            }
+
+        },
+    submitHandler: function (form, event) {
+       var submitType =  $('#faq_submit_type').val();
+      var form = document.querySelector("#faqForm");
+      var token = $("[name=csrfmiddlewaretoken]").val();
+      var formData = new FormData(form);
+      formData.append("csrfmiddlewaretoken", token);
+      $.ajax({
+        type: "POST",
+        url: "faqSend",
+        data: formData,
+        contentType: false,
+        processData: false,
+        beforeSend: function (xhr) {
+          $("#payloader").show();
+        },
+        success: function (response) {
+          $("#payloader").hide();
+                          Command: toastr["success"]("Changes Saved")
+            $("#faqssdata").show()
+          $('#faqquestion_count').html('0 of 100 words');
+          $('#faqanswer_count').html('0 of 500 words');
+          $('#faqanswer_count2').html('0 of 500 words');
+          if(submitType == 'add'){
+                        $("#faq_table_update").html(response)
+                        form.reset();
+                        $([document.documentElement, document.body]).animate({
+                            scrollTop: $("#faq-section-main").offset().top
+                        }, 500);
+                    } else if(submitType == 'submit'){
+<!--                          console.log("response", response);-->
+
+                          $("#faq_table_update").html(response)
+                          form.reset()
+                            $("#collapseSeven").collapse("toggle");
+<!--                        $([document.documentElement, document.body]).animate({-->
+<!--                            scrollTop: $("#faq-section-main").offset().top-->
+<!--                        }, 500);-->
+                    }
+          $("#faq_table_update").html(response)
+            form.reset();
+<!--            $("#faqquestion").val('')-->
+<!--          console.log("response", response);-->
+
+        },
+        error: function (response) {
+          $("#payloader").hide();
+<!--          console.log("error", response);-->
+        },
+      });
+
+      return false;
+    },
+  });
+
+  $('#faqquestion').on('keyup', function (e) {
+            str = $(this).val();
+            str = str.replace(/(^\s*)|(\s*$)/gi, "");
+            str = str.replace(/[ ]{2,}/gi, " ");
+            str = str.replace(/\n /, "\n");
+            words = str.split(/\s/).length;
+            if (words >= 1 && $(this).val() != '')
+            {
+                if (words <= 100) {
+                    $('#faqquestion_count').html(words + ' of 100 words');
+                } else {
+                    if (e.which !== 8)
+                        e.preventDefault();
+                    var values = $(this).val().split(" ").splice(0,100).join(" ")
+                    $(this).val(values)
+                    var trimmed = $(this).val().split(/\s+/, 100).join(" ");
+                    // Add a space at the end to make sure more typing creates new words
+                    $(this).val(trimmed + " ");
+                }
+            } else {
+                $('#faqquestion_count').html('0 of 100 words');
+            }
+     });
+      $('#faqanswer').on('keyup', function (e) {
+            str = $(this).val();
+            str = str.replace(/(^\s*)|(\s*$)/gi, "");
+            str = str.replace(/[ ]{2,}/gi, " ");
+            str = str.replace(/\n /, "\n");
+            words = str.split(/\s/).length;
+            if (words >= 1 && $(this).val() != '')
+            {
+                if (words <= 500) {
+                    $('#faqanswer_count').html(words + ' of 500 words');
+                } else {
+                    if (e.which !== 8)
+                        e.preventDefault();
+                        var values = $(this).val().split(" ").splice(0,500).join(" ")
+                        $(this).val(values)
+                        var trimmed = $(this).val().split(/\s+/, 500).join(" ");
+                        // Add a space at the end to make sure more typing creates new words
+                        $(this).val(trimmed + " ");
+                }
+            } else {
+                $('#faqanswer_count').html('0 of 500 words');
+            }
+     });
+     $('#faqanswer2').on('keyup', function (e) {
+            str = $(this).val();
+            str = str.replace(/(^\s*)|(\s*$)/gi, "");
+            str = str.replace(/[ ]{2,}/gi, " ");
+            str = str.replace(/\n /, "\n");
+            words = str.split(/\s/).length;
+            if (words >= 1 && $(this).val() != '')
+            {
+                if (words <= 500) {
+                    $('#faqanswer_count2').html(words + ' of 500 words');
+                } else {
+<!--                    console.log('e',e)-->
+                    if (e.which !== 8)
+                        e.preventDefault();
+                        var values = $(this).val().split(" ").splice(0,500).join(" ")
+                        $(this).val(values)
+                        var trimmed = $(this).val().split(/\s+/, 500).join(" ");
+                        // Add a space at the end to make sure more typing creates new words
+                        $(this).val(trimmed + " ");
+                }
+            } else {
+                $('#faqanswer_count2').html('0 of 500 words');
+            }
+     });
+<!--    $('#faqanswer').on('click', function () {-->
+<!--            str = $(this).val();-->
+<!--            str = str.replace(/(^\s*)|(\s*$)/gi, "");-->
+<!--            str = str.replace(/[ ]{2,}/gi, " ");-->
+<!--            str = str.replace(/\n /, "\n");-->
+<!--            words = str.split(' ').length;-->
+<!--            alert(words)-->
+<!--     });-->
+function updatedFaq(id){
+    $("#faqEditForm").validate({
+        submitHandler: function (form, event) {
+
+          var form = document.querySelector("#faqEditForm");
+          var token = $("[name=csrfmiddlewaretoken]").val();
+          var formData = new FormData(form);
+          formData.append("csrfmiddlewaretoken", token);
+          formData.append("id", id);
+          $.ajax({
+            type: "POST",
+            url: "updateFaq",
+            data: formData,
+            contentType: false,
+            processData: false,
+            beforeSend: function (xhr) {
+              $("#payloader").show();
+            },
+            success: function (response) {
+              $("#payloader").hide();
+                              Command: toastr["success"]("Changes Saved")
+
+<!--              console.log("response", response);-->
+              $("#faq_table_update").html(response)
+              $("#modalShowFaq").modal('hide')
+
+            },
+            error: function (response) {
+              $("#payloader").hide();
+<!--              console.log("error", response);-->
+            },
+          });
+        return false;
+        }
+        })
+        return false;
+}
+
+
+
+</script>

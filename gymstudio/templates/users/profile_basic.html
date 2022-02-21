@@ -1,0 +1,303 @@
+{% load static %}
+{% load define_action %}
+
+
+{% load split %}
+{% load change_type %}
+{% load getType %}
+<div class="row-new">
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Facility type[*]</label>
+                                                <div class="drop-down">
+                                                    <select name='facility_type_2' class='required'>
+                                                        <option value="">Select Facility Type</option>                                                    
+                                                        {% for facility_type in facility_types %}
+                                                        <option value="{{facility_type}}" {% if facility_type == basicinfo.facility_type %} selected{% endif %}>{{facility_type}}</option>                                                    
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Branch name[*]</label>
+                                                <div class="form-field-input">
+                                                    <input type="text" class='required' value="{{basicinfo.branch.branch_name}}" name="branch_name" placeholder="Add name here">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Association with a Brand</label>
+                                                <div class="drop-down">
+                                                    <select name="brand_id_2" class=''>
+                                                        <option value="">Choose from list</option>
+                                                        {% for key, brandRecord in brandRecords %}
+
+                                                        <option value="{{key}}">{{brandRecord}}</option>
+                                                        {% endfor %}
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h4 class="profile-setup-inner-block-heading">Primary Contact</h4>
+                                    <div class="row-new">
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">First name[*]</label>
+                                                <div class="form-field-input">
+                                                    <input type="text" class='required' name="first_name_2" value="{{user.first_name}}" placeholder="Enter your first name">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Last name[*]</label>
+                                                <div class="form-field-input">
+                                                    <input type="text" class='required' name="last_name_2" value="{{user.last_name}}" placeholder="Enter your last name">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Email address[*]</label>
+                                                <div class="form-field-input">
+                                                    <input type="text" class='required' name="email_address_2" value="{{user.email_address}}" readonly placeholder="Enter your email here">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Mobile number[*]</label>
+                                                <div class="mobile-num">
+                                                    <input type="text" class='required' id="phone" name="phone_2"  value="{{user.contact}}" readonly placeholder="55 400 6998">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h4 class="profile-setup-inner-block-heading">My profile</h4>
+                                    <div class="row-new">
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Years in business[*]</label>
+                                                <div class="form-field-input">
+                                                    <input type="text" class='required digits' name="year_of_experince" value="{{user.year_of_experince}}" placeholder="Enter business years">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Language (s)[*]</label>
+                                                <div class="drop-down">
+                                                    {% with user.languages|split:"," as lang_arr %}
+                                                    <select name="languages" id="choices-multiple-remove-button" class='required' placeholder="Select Languages" multiple>
+                                                        {% for key, language in languages %}                                                            
+                                                        <option value="{{key}}" {% if key in lang_arr%} selected{%endif%}> {{language}}</option>
+                                                        {% endfor %}
+
+                                                    </select>
+                                                    {% endwith %}
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row-new">
+                                        <div class="col-sm-12 ">
+                                            <div class="form-group form-field-main bt-gray pt3">
+                                                <label class="label-field">Training restrictions <span> (Our facility can accept…)[*]</span></label>
+                                                <div class="facility-radiobox">
+                                                    {% for key, train in training_restriction.items %}
+                                                    <div class="radio-box"><input type="radio" {% if key == basicinfo.training_type %} checked{% endif %} id="e-option{{key}}" value="{{train}}" name="training_type">
+                                                        <label for="e-option{{key}}">{{train}}</label>
+                                                        <div class="check"></div>
+                                                    </div>
+
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h4 class="profile-setup-inner-block-heading">About us</h4>
+                                    <div class="row-new">
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Introductory video</label>
+                                                <div class="form-field-video">
+                                                    <div class="video-uploadbox">
+                                                        <div class="custom-file">
+                                                            <input type="file" name="bio_video" id="video" accept="video/mp4,video/x-m4v,video/mov,video/avi,video/*" fullwidth="" formcontrolname="video" class="custom-file-input">
+                                                            <label for="video" class="custom-file-label placeholder text-truncate">Upload Video</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="upload-box" data-toggle="modal" data-target="#exampleModalCenter">
+                                                        <img src="{% static 'images/victor-freitas-hOuJYX2K5DA-unsplash.png' %}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Website</label>
+                                                <div class="form-field-input">
+                                                    <input type="text" class='required url' name="website" value="{{basicinfo.website}}" placeholder="Enter website">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">About me[*]</label>
+                                                <div class="form-field-input">
+                                                    <textarea placeholder="Enter about me" class='required' id="about_id" style="resize: none;" name="about" >{{basicinfo.about}}</textarea>
+                                                    <small id="about_count">0 of 500 words</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Short bio[*]</label>
+                                                <div class="form-field-input">
+                                                    <textarea placeholder="Enter short bio" class='required' id="bio_id" style="resize: none;" name="short_bio" >{{basicinfo.short_bio}}</textarea>
+                                                    <small id="bio_count">0 of 100 words</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h4 class="profile-setup-inner-block-heading">Branch location</h4>
+                                    <div class="row-new">
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Country[*]</label>
+                                                <div class="drop-down">
+                                                    <select name="country" id="country_id" class='required' onChange="updateCity(this.value)">
+                                                        <option value="">Choose from list</option>
+                                                        {% for key, country in countries %}
+
+                                                        <option value="{{key}}" {% if key == basicinfo.country %} selected{% endif %}>{{country}}</option>
+                                                        {% endfor %}
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">City[*]</label>
+                                                <div class="drop-down" id="city_section">
+                                                    {% change_type basicinfo.city as city_type %}
+                                                    <select name="city" id="city_id" class='required'>
+                                                        <option value="Option One">Choose from list</option>
+
+                                                        {% for key, city in cities %}
+
+                                                        <option value="{{key}}" {% if key == city_type %} selected{% endif %}>{{city}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Facility location[*]</label>
+                                                <div class="form-field-input">
+                                                    <input type="text" class='required' name="location" id="location" value="{{basicinfo.location}}" placeholder="Enter location">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h4 class="profile-setup-inner-block-heading">Available Services</h4>
+                                    <div class="row-new">
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Key Services[*]</label>
+                                                <div class="drop-down">
+
+                                                    {% with basicinfo.key_skills|split:"," as key_skills_arr %}    
+
+                                                    <select class="multiple-checkboxess" name="key_skills" id="key_skills" placeholder="Select Key Skills" multiple="multiple">
+                                                        {% for key, service in services %}
+                                                        <option value="{{key}}" {% if key in key_skills_arr%} selected{%endif%}>
+
+                                                            {{service}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    {% endwith %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Other Services[*]</label>
+                                                <div class="drop-down">
+                                                    {% with basicinfo.other_skills|split:"," as other_skills_arr %}
+                                                    <select class="multiple-checkboxess" name="other_skills" id="other_skills"  placeholder="Select Other Skills"multiple="multiple">
+                                                        {% for key, service in services %}
+                                                        <option value="{{key}}" {% if key in other_skills_arr%} selected{%endif%}>{{service}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    {% endwith %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h4 class="profile-setup-inner-block-heading">Opening/Closing Times</h4>
+
+
+                                    {% include 'elements/calender.html' %}
+                                    <h4 class="profile-setup-inner-block-heading">Amenities & Equipment</h4>
+                                    <div class="row-new" id="amenities_sec">
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Amenities</label>
+                                                <div class="drop-down drop-after">
+                                                    <select class="multiple-checkboxess" id="amenities" name="amenities" multiple="multiple" >
+                                                        {% for key, amenity in amenities %}
+
+                                                        <option value="{{key}}" {% if key in amenityList %}
+                                                                selected
+                                                                {% endif %}>{{amenity}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12" id="amenities_tablesec">
+                                            {% if ameniinfo%}
+                                            {% include 'elements/amenity_list.html' %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="btn-btm-group btn-left">
+                                        <button class="btn-gray-one" type="button" onclick="addAmenity();">Add Another</button>
+                                    </div>
+                                    <div class="row-new mt-5" id="equipment_sec">
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Equipment</label>
+                                                <div class="drop-down drop-after">
+                                                    <select class="multiple-checkboxess" id="equipments" name="equipments" multiple="multiple">
+                                                        {% for key, equipment in equipments %}
+                                                        <option value="{{key}}" {% if key in equipList %}
+                                                                selected
+                                                                {% endif %}>{{equipment}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12" id="equipments_tablesec">
+                                            {% if equipinfo%}
+                                            {% include 'elements/equipment_list.html' %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <input type='hidden' name='branch_id_2' value="{{basicinfo.branch_id}}">
+                                    <div class="btn-btm-group spece-btwn" id="submit_sec_2">
+                                        <div> <button class="btn-gray-two" type="button" onclick="addequipment();">Add Another</button></div>
+                                        <div> <button class="border-btn"  type='reset' onclick="resetForm2()">Discard changes</button> <button class="btn-pink ml-10">Save changes</button></div>
+                                    </div>

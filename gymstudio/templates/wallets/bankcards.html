@@ -1,0 +1,516 @@
+{% extends 'layout/inner.html' %} 
+{% load static %}
+
+{% block content %}
+
+<div class="loader" id="payloader" style="display: none;"><img src="{% static 'images/loading.gif' %}" alt=""></div>
+
+{% include "layout/successerror.html" %}
+
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+<script>
+
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-bottom-center",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "1000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+</script>
+<div class="content-page">
+    <div class="page-head-one">
+        <h2 class="bnk-info-head">Bank Information</h2>
+        <h2 class="pay-math-head" style="display: none;">Payment Method</h2>
+        <div class="taeb-switch left text-center taeb-switch1">
+            <div class="taeb list_cls taeb1 active" taeb-direction="left">Bank</div>
+            <div class="taeb calender_cls  taeb1" taeb-direction="right">Card</div>
+        </div>
+    </div>
+
+    <div class="change-tab" id="list_view">
+        <form class="" name='bankSubmit' id='bankSubmit' method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-page disable-text-field">
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Account Name:</label>
+                            <div class="form-field-input">
+                                <input type="text" name="account_name" class="hide_field required alphanumeric" data-id="{{bankInfo.account_name}}" placeholder='' disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Bank Name:</label>
+                            <div class="form-field-input">
+                                <input type="text" name="bank_name"  class="hide_field required alphanumeric" data-id="{{bankInfo.bank_name}}" placeholder='' disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Routing Number</label>
+                            <div class="form-field-input">
+                                <input type="text" name="routing_number"  class="hide_field required digits" disabled data-id="{{bankInfo.routing_number}}" placeholder='' minlength="8" maxlength="16">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Account Number</label>
+                            <div class="form-field-input">
+                                <input type="text" name="account_number"  class="hide_field1 required digits" data-id="{{bankInfo.account_number}}" placeholder='' disabled minlength="8" maxlength="16">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Account Type</label>
+                            <div class="form-field-input">
+                                <input type="text" name="account_type"  class="hide_field required alphanumeric" data-id="{{bankInfo.account_type}}" placeholder='' disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Sort Code</label>
+                            <div class="form-field-input">
+                                <input type="text" name="sort_code"  class="hide_field required digits" data-id="{{bankInfo.sort_code}}"  placeholder="" disabled minlength="8" maxlength="16">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">IBAN</label>
+                            <div class="form-field-input">
+                                <input type="text" name="iban_number"  class="hide_field required digits" data-id="{{bankInfo.iban_number}}" placeholder='' disabled minlength="8" maxlength="16">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="btn-btm-group bg-border" id="view_btn">
+                <button class="btn-pink ml-10" type="button" onclick="updateBank()">Update</button>
+            </div>
+            <div class="btn-btm-group btn-grp-without-bg" id="edit_btn" style="display: none;">
+                <button class="border-btn" type="button" onclick="cancelEdit();">Discard</button> 
+                <button class="btn-pink ml-10" type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+    <div class="change-tab" id="calender_view" style="display:none">
+
+        <form class="" name='cardSubmit' id='cardSubmit' method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-page disable-text-field">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group form-field-main">
+                            <img src="{% static 'images/cards-brand.svg' %}">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Card Holder Name:</label>
+                            <div class="form-field-input">
+                                <input type="text" name="card_holder_name" class="card_field required" data-id="{{cardInfo.card_holder_name}}" placeholder="" disabled autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Card number:</label>
+                            <div class="form-field-input">
+                                <input type="text" name="card_number" id="card_number" class="card_field required" minlength="12" maxlength="19" data-id="{{cardInfo.card_number}}" placeholder="" disabled autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Card type:</label>
+                            <div class="drop-down">
+                                <select name="card_type" class='single-withoutsearch card_fieldd' id="card_type"  >
+                                    <option value="">Select from list</option>
+                                    {% for key, cat in card_type.items %}
+                                    <option value="{{key}}" {% if key == cardInfo.card_type%} selected{%endif%}>{{cat}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">CVV:</label>
+                            <div class="form-field-input">
+                                <input type="text" name="card_cvv" class="card_field required" data-id="{{cardInfo.card_cvv}}" placeholder="" minlength="3" maxlength="3" disabled autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Expiry Date:</label>
+                            <div class="form-field-input  date">
+                                <input type="text" name="expiry_date" id="expiry_date" data-id="{{cardInfo.expiry_date}}" placeholder="" class='card_fieldE required expiry  ' disabled  autocomplete="off">
+                                <div class="input-group-append disable-icon"><img src="{% static 'images/noun_Calendar_1611923.svg' %}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-btm-group bg-border" id="card_view_btn">
+                <button class="btn-pink ml-10" type="button" onclick="updateCard()">Update</button>
+            </div>
+            <div class="btn-btm-group btn-grp-without-bg" id="card_edit_btn" style="display: none;">
+                <button class="border-btn" type="button" onclick="cancelCardEdit();">Discard</button> 
+                <button class="btn-pink ml-10" type="submit">Save</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
+<script>
+    $.validator.addMethod("alphanumeric", function (value, element) {
+        return this.optional(element) || /^[A-Za-z0-9 ]+$/i.test(value);
+    }, "Special characters not allowed.");
+    $.validator.addMethod("expiry", function (value, element) {
+        return this.optional(element) || /^(0[1-9]|1[0-2])\/?([0-9]{4}|[0-9]{2})$/mg.test(value);
+    }, "Expiry date is not valid.");
+//    $.validator.addMethod("routing", function (value, element) {
+//            return this.optional(element) || /^[0-9]{7,16}$/i.test(value);
+//        }, "Only numbers are allowed for routing number.");
+//    $.validator.addMethod("account", function (value, element) {
+//            return this.optional(element) || /^[0-9]{7,16}$/i.test(value);
+//        }, "Only numbers are allowed for account number.");
+    $("#bankSubmit").validate({
+
+        submitHandler: function (form) {
+
+            var token = $("[name=csrfmiddlewaretoken]").val();
+            var form = document.querySelector('#bankSubmit');
+
+            var formData = new FormData(form);
+            formData.append('csrfmiddlewaretoken', token);
+
+            $.ajax({
+                type: 'POST',
+                url: 'bankSubmit',
+                contentType: false,
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $('#payloader').show();
+                },
+                success: function (response) {
+                    $('#payloader').hide();
+                    Command: toastr["success"]("Details saved");
+                    
+                    $('.hide_field').each(function (index) {
+                        var stripped = $(this).val().replace(/[A-Za-z0-9_~\-!@#\$%\^&\*\(\)={\}[\]:"<>,.?/X`]/gi, 'X');
+                        $(this).attr('data-id',stripped);
+                        $(this).attr('placeholder',stripped);
+                        $(this).val('');
+                    });
+                    
+                    var vv = $('.hide_field1').val();
+                    var lastFour = vv.substr(vv.length - 4);
+                    var str = vv.slice(0, -4);
+                    var stripped = str.replace(/[A-Za-z0-9_~\-!@#\$%\^&\*\(\)={\}[\]:"<>,.?/X`]/gi, 'X');
+                    $('.hide_field1').attr('data-id',stripped + lastFour);
+                    $('.hide_field1').attr('placeholder',stripped + lastFour);
+                    $('.hide_field1').val('');
+                    
+                    $('#view_btn').show();
+                    $('#edit_btn').hide();
+                    $('.hide_field').attr('disabled', true);
+                    $('.hide_field1').attr('disabled', true);
+
+                    $('.hide_field').removeClass('error');
+                    $('.hide_field1').removeClass('error');
+                    $('label[class="error"]').remove();
+                    
+                },
+                error: function (response) {
+                    $('#payloader').hide();
+                    console.log('error', response)
+                }
+            });
+
+            return false;
+        }
+    });
+
+
+    $('#cardSubmit').validate({
+        submitHandler: function (form) {
+            var token = $("[name=csrfmiddlewaretoken]").val();
+            var form = document.querySelector('#cardSubmit');
+
+            var formData = new FormData(form);
+            formData.append('csrfmiddlewaretoken', token);
+
+            $.ajax({
+                type: 'POST',
+                url: 'cardSubmit',
+                contentType: false,
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $('#payloader').show();
+                },
+                success: function (response) {
+                    $('#payloader').hide();
+                    Command: toastr["success"]("Details saved");
+                    
+                    $('.card_field').each(function (index) {
+                        var stripped = $(this).val().replace(/[A-Za-z0-9_~\-!@#\$%\^&\*\(\)={\}[\]:"<>,.?/X`]/gi, 'X');
+                        $(this).attr('data-id',stripped);
+                        $(this).attr('placeholder',stripped);
+                        $(this).val('');
+                    });
+                    
+                    var stripped = $('#expiry_date').val().replace(/[A-Za-z0-9_~\-!@#\$%\^&\*\(\)={\}[\]:"<>,.?X`]/gi, 'X');
+                    $('#expiry_date').attr('data-id',stripped);
+                    $('#expiry_date').attr('placeholder',stripped);
+                    $('#expiry_date').val('');
+                    
+                    $('#card_view_btn').show();
+                    $('#card_edit_btn').hide();
+                    $('.card_field').attr('disabled', true);
+                    $('.card_fieldE').attr('disabled', true);
+
+                    $('.card_field').removeClass('error');
+                    $('.card_fieldE').removeClass('error');
+                    $('label[class="error"]').remove();
+
+                    $('.multiselect').attr('disabled', true);
+                    $('.multiselect').addClass('disabled');
+                },
+                error: function (response) {
+                    $('#payloader').hide();
+                    console.log('error', response)
+                }
+            });
+
+            return false;
+        }
+    })
+
+
+    function cancelEdit() {
+        $('#view_btn').show();
+        $('#edit_btn').hide();
+        $('.hide_field').attr('disabled', true);
+        $('.hide_field1').attr('disabled', true);
+        
+        $('.hide_field').removeClass('error');
+        $('.hide_field1').removeClass('error');
+        $('label[class="error"]').remove();
+        
+        $('.hide_field1').val('')
+        $('.hide_field1').attr('placeholder',$('.hide_field1').attr('data-id'))
+        
+        $('.hide_field').each(function (index) {            
+            $(this).val('')
+            $(this).attr('placeholder',$(this).attr('data-id'))
+        });
+        
+    }
+
+    function updateBank() {
+        $('#view_btn').hide();
+        $('#edit_btn').show();
+        $('.hide_field').attr('disabled', false);
+        $('.hide_field1').attr('disabled', false);
+        $('.hide_field').val('')
+        $('.hide_field').attr('placeholder','')
+        $('.hide_field1').val('')
+        $('.hide_field1').attr('placeholder','')
+    }
+    function cancelCardEdit() {
+        $('#card_view_btn').show();
+        $('#card_edit_btn').hide();
+        $('.card_field').attr('disabled', true);
+        $('.card_fieldE').attr('disabled', true);
+        
+        $('.card_field').removeClass('error');
+        $('.card_fieldE').removeClass('error');
+        $('label[class="error"]').remove();
+        
+        $('.multiselect').attr('disabled', true);
+        $('.multiselect').addClass('disabled');
+        
+        $('.card_field').each(function (index) {
+            $(this).val('');
+            $(this).attr('placeholder', $(this).attr('data-id'));
+        });
+        
+        $('#expiry_date').val('');
+        $('#expiry_date').attr('placeholder', $('#expiry_date').attr('data-id'));
+    }
+
+    function updateCard() {
+        $('#card_view_btn').hide();
+        $('#card_edit_btn').show();
+        $('.card_field').attr('disabled', false);
+        $('.card_fieldE').attr('disabled', false);
+        $('.multiselect').attr('disabled', false);
+        $('.multiselect').removeClass('disabled');
+        
+        $('.card_field').val('')
+        $('.card_field').attr('placeholder','')
+        $('.card_fieldE').val('')
+        $('.card_fieldE').attr('placeholder','')
+    }
+    
+    $('#card_number').on('keyup', function (e) {        
+        $('#card_number').mask('0000 0000 0000 0000 000');
+    });
+    $('#expiry_date').on('keyup', function (e) {        
+        $('#expiry_date').mask('00/00');
+    });
+
+    $(document).ready(function () {
+        
+        
+        $('.single-withoutsearch').multiselect({
+            nonSelectedText: "Select from list",
+            maxHeight: 250,
+        });
+
+        $(".list_cls").click(function () {
+            $('#calender_view').hide();
+            $('#list_view').show();
+            $('#calender_view').removeClass('active');
+            $('#list_view').addClass('active');
+
+            $('.list-btn').show();
+            $('.cal-btn').hide();
+
+            $('.bnk-info-head').show();
+            $('.pay-math-head').hide();
+            
+            $('.hide_field').removeClass('error');
+            $('.hide_field1').removeClass('error');
+            $('label[class="error"]').remove();
+            
+            $('.hide_field1').val('')
+            $('.hide_field1').attr('placeholder',$('.hide_field1').attr('data-id'))
+
+            $('.hide_field').each(function (index) {            
+                $(this).val('')
+                $(this).attr('placeholder',$(this).attr('data-id'))
+            });
+        });
+
+        $(".calender_cls").click(function () {
+            $('#list_view').hide();
+            $('#calender_view').show();
+            $('#list_view').removeClass('active');
+            $('#calender_view').addClass('active');
+
+            $('.list-btn').hide();
+            $('.cal-btn').show();
+
+            $('.bnk-info-head').hide();
+            $('.pay-math-head').show();
+
+            $('#view_btn').show();
+            $('#edit_btn').hide();
+            $('#card_view_btn').show();
+            $('#card_edit_btn').hide();
+            $('.hide_field').attr('disabled', true);
+            $('.hide_field1').attr('disabled', true);
+            
+            $('.card_field').prop("disabled", true)
+            $('.card_fieldE').prop("disabled", true)
+            
+            $('.card_field').removeClass('error');
+            $('.card_fieldE').removeClass('error');
+            $('label[class="error"]').remove();
+            
+            $('.multiselect').attr('disabled', true);
+            $('.multiselect').addClass('disabled');
+            
+            $('.card_field').each(function (index) {
+                $(this).val('');
+                $(this).attr('placeholder', $(this).attr('data-id'));
+            });
+
+            $('#expiry_date').val('');
+            $('#expiry_date').attr('placeholder', $('#expiry_date').attr('data-id'));
+        });
+
+        var place = $('.hide_field').attr('data-id');
+
+        $('.hide_field').each(function (index) {
+            var stripped = $(this).attr('data-id').replace(/[A-Za-z0-9_~\-!@#\$%\^&\*\(\)={\}[\]:"<>,.?/X`]/gi, 'X');
+            $(this).attr('placeholder', stripped);
+            $(this).attr('data-id', stripped);
+        });
+        
+        $('.card_field').each(function (index) {
+            var stripped = $(this).attr('data-id').replace(/[A-Za-z0-9_~\-!@#\$%\^&\*\(\)={\}[\]:"<>,.?/X`]/gi, 'X');
+            $(this).attr('placeholder', stripped);
+            $(this).attr('data-id', stripped);
+        });
+        
+        var stripped = $('#expiry_date').attr('data-id').replace(/[A-Za-z0-9_~\-!@#\$%\^&\*\(\)={\}[\]:"<>,.?X`]/gi, 'X');
+        $('#expiry_date').attr('placeholder', stripped);
+        $('#expiry_date').attr('data-id', stripped);
+        
+        
+
+        var vv = $('.hide_field1').attr('data-id');
+        var lastFour = vv.substr(vv.length - 4);
+        var str = vv.slice(0, -4);
+        var stripped = str.replace(/[A-Za-z0-9_~\-!@#\$%\^&\*\(\)={\}[\]:"<>,.?/X`]/gi, 'X');
+        $('.hide_field1').attr('placeholder', stripped + lastFour);
+        $('.hide_field1').attr('data-id', stripped + lastFour);
+
+    });
+</script>
+<script type="text/javascript">
+    $(".ad-she-btn").click(function () {
+        $(".pop-schedule").toggle();
+    });
+
+
+</script>
+
+<script src="{% static 'js/jquery-ui.min.js' %}"></script>
+<script src="{% static 'js/jquery-ui.multidatespicker.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.css' %}">
+
+<script>
+    $('.datepickerr').datepicker({
+        clearBtn: false,
+        weekStart: 1,
+        minDate: new Date(),
+        orientation: "bottom",
+        dateFormat: "dd/mm/yy",
+        changeYear: true,
+        yearRange: "0:+40"
+    });
+</script>
+{% endblock content %}

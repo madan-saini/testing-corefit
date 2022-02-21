@@ -1,0 +1,44 @@
+{% load static %}
+{% load fetch_user %}
+
+{% if not records%}
+<select name="service" id="service" class="multiple-single">
+    <option value="">Select from list</option>   
+    {% if Arecords%}        
+        {% for key, record in Arecords %}
+            {% get_amenity record as val%}
+            <option value="{{key}}">{{val}}</option>                                                    
+        {% endfor %}
+    {% endif%}
+</select>
+
+{% else%}
+<select name="service" id="service" class="multiple-single">
+    <option value="">Select from list</option>   
+    {% if records%}        
+        {% for key, record in records %}
+            <option value="{{key}}">{{record}}</option>                                                    
+        {% endfor %}
+    {% endif%}
+</select>
+{% endif%}
+
+<script>
+    $(document).ready(function () {
+        $('.multiple-single').multiselect({
+            nonSelectedText: "Select from list",
+            enableFiltering: true,
+            maxHeight: 250,
+            numberDisplayed: 1,
+            enableCaseInsensitiveFiltering: true,
+            onDropdownShown: function(even) {
+              this.$filter.find('.multiselect-search').focus();
+            }
+        });
+    });
+</script>
+
+
+
+
+

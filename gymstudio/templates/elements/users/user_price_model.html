@@ -1,0 +1,766 @@
+{% load static %}
+{% load fetch_user %}
+{% load split %}
+<style>
+    .view-switch::after{
+        width: 100% !important;
+    }
+</style>
+<div class="modal fade" id="viewPriceModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered new-offer-dialog" role="document">
+        <div class="modal-content upload-img-pop new-offer-pop disable-text-field">
+            <form class="" name='editPricing' id='editPricing' method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+                {% change_type_int priceRecord.session_category as val %}
+                <script>
+    $(function() {
+        updateEditNum('{{priceRecord.session_type}}','{{val}}');
+    });
+    </script>
+                {% if val == 1%}
+                <div class="select-div1 session-section" id='section-1'>
+                    <h4 class="profile-setup-inner-block-heading">Session</h4>
+                    <div class="row-new">
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Type of session[*]</label>
+                                <div class="drop-down">
+
+                                    <select name="type_of_session_1" class='multiple-single disabledField required' id="type_of_session">
+                                        <option value="">Choose from list</option>
+                                        {% for key, sesstionType in sesstionTypes %}
+                                        <option value="{{key}}" {% if key == priceRecord.type_of_session%} selected{% endif%}>{{sesstionType}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Individual or group session[*]</label>
+                                <div class="drop-down">
+                                    <select name="session_type_1" class='single-withoutsearch disabledField required' id="session_type" onchange="updateEditNum(this.value, '1')">
+                                        <!--<option value="">Choose from list</option>-->
+                                        {% for key, grp in individual_group.items %}
+                                        <option value="{{key}}" {% if key == priceRecord.session_type%} selected{% endif%}>{{grp}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Number of people[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="number_of_people_1" value="{{priceRecord.number_of_people}}" class="digits disabledField required" id="edit_number_of_people_1" min="2">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Session name[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="session_name_1" value="{{priceRecord.session_name}}" class="disabledField required">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Number of sessions[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="number_of_session_1" value="{{priceRecord.number_of_session}}" placeholder="" class="digits disabledField required" min="1">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Duration(in minutes)[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="duration_1" value="{{priceRecord.duration}}" placeholder="" class="digits disabledField required" min="1">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Validity(from date of purchase)[*]</label>
+                                <div class="form-field-input">
+                                    <div class="swith-overlay ">
+                                        <input type="text" name="validity_1" placeholder="" value="{{priceRecord.validity}}" class="digits disabledField required" min="1">
+                                        <div class="view_valid disabledDv view-switch text-center">
+                                            {% if priceRecord.validity_type == 1%}
+                                            <div class="view-tabb" taeb-direction="left">Days</div>
+                                            {% else%}
+                                            <div class="view-tabb" taeb-direction="right">Months</div>
+                                            {% endif%}
+                                        </div> 
+                                        
+                                        <div style = 'display:none;' class="edit_valid disabledDv taeb-switch taeb-switch1 taeb-switch-11 {% if priceRecord.validity_type == 1%} left {% else%} right{% endif%} text-center">
+                                            <div class="taeb  {% if priceRecord.validity_type == 1%} active{% endif%}" taeb-direction="left" onclick="updateVTypeEdit('Days', '1')">Days</div>
+                                            <div class="taeb  {% if priceRecord.validity_type == 2%} active{% endif%} " taeb-direction="right" onclick="updateVTypeEdit('Months', '1')">Months</div>
+                                            <input type="hidden" value="1" name="validity_type_1" id="validity_type_edit_1">
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Price[*]</label>
+                                <div class="flex-input">
+                                    <div class="drop-down">                                        
+                                        <select name="currency_1" class='single-withoutsearch disabledField required' value="{{priceRecord.currency}}" id="currency">
+                                            {% for key, curr in currency.items %}
+                                            <option value="{{key}}" {% if key == priceRecord.currency%} selected{% endif%}>{{curr}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-field-input">
+                                        <input type="text" name="price_1" placeholder="" class="disabledField required" value="{{priceRecord.price|floatformat:2}}" onkeypress='return validateFloatKeyPress(this, event);'>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Training location[*]</label>
+                                <div class="form-field-input icon-overlay">
+                                    <input type="text" name="location_1" value="{{basicinfo.location}}" id="training_location_1" placeholder="" class="disabledField training_location" readonly>
+                                    <img src="{% static 'images/LocationArrow.svg' %}">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Assign Employee(s)[*]</label>
+                                <div class="drop-down drop-after">
+                                    <select name="assign_employee_1" class='multiple-single disabledField required' id="assign_employee">
+                                        <option value="">Choose from list</option>                                        
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Additional Notes</label>
+                                <div class="form-field-input">
+                                    <textarea placeholder="Enter additional notes" name="notes_1" class="disabledField" id="edit_notes_1" style="resize: none;">{{priceRecord.notes}}</textarea>
+                                    <small id="edit_notes_count_1">0 of 100 words</small>
+                                </div>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>
+                
+                {% elif val == 2%}
+
+                <div class="select-div2 session-section" id='section-2'>
+                    <h4 class="profile-setup-inner-block-heading">Services</h4>
+                    <div class="row-new">
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Type of Service [*]</label>
+                                <div class="drop-down">
+                                    <select name="type_of_service_2" class='multiple-single disabledField required' id="type_of_service">
+                                        <option value="">Choose from list</option>
+                                        {% for key, serviceType in services %}
+                                        <option value="{{key}}" {% if key == priceRecord.type_of_session%} selected{% endif%}>{{serviceType}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Individual or Group Service[*]</label>
+                                <div class="drop-down">
+                                    <select name="session_type_2" class='single-withoutsearch disabledField required' id="session_type_2" onchange="updateEditNum(this.value, '2')">
+                                        <!--<option value="">Choose from list</option>-->
+                                        {% for key, grp in individual_group.items %}
+                                        <option value="{{key}}" {% if key == priceRecord.session_type%} selected{% endif%}>{{grp}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Number of people[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="number_of_people_2" value="{{priceRecord.number_of_people}}" class="digits disabledField required" id="edit_number_of_people_2" min="2">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Service Name[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="service_name_2" value="{{priceRecord.session_name}}" class="required disabledField">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Number of services[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="number_of_services_2" value="{{priceRecord.number_of_session}}" placeholder="" class="digits disabledField required" min="1">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Duration(in minutes)[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="duration_2" placeholder="" value="{{priceRecord.duration}}" class="digits disabledField required" min="1">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Validity(from date of purchase)[*]</label>
+                                <div class="form-field-input">
+                                    <div class="swith-overlay">
+                                        <input type="text" name="validity_2" placeholder="" value="{{priceRecord.validity}}" class="digits disabledField required" min="1">
+                                        
+                                        <div class="view_valid disabledDv view-switch text-center">
+                                            {% if priceRecord.validity_type == 1%}
+                                            <div class="view-tabb" taeb-direction="left">Days</div>
+                                            {% else%}
+                                            <div class="view-tabb" taeb-direction="right">Months</div>
+                                            {% endif%}
+                                        </div>
+                                        
+                                        <div style = 'display:none;' class="edit_valid disabledDv taeb-switch taeb-switch1 taeb-switch-11 {% if priceRecord.validity_type == 1%} left {% else%} right{% endif%} text-center">
+                                            <div class="taeb  {% if priceRecord.validity_type == 1%} active {% endif%}" taeb-direction="left" onclick="updateVTypeEdit('Days', '2')">Days</div>
+                                            <div class="taeb {% if priceRecord.validity_type == 2%} active {% endif%}" taeb-direction="right" onclick="updateVTypeEdit('Months', '2')">Months</div>
+                                            <input type="hidden" value="1" name="validity_type_2" id="validity_type_edit_2">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Price[*]</label>
+                                <div class="flex-input">
+                                    <div class="drop-down">                                        
+                                        <select name="currency_2" class='single-withoutsearch disabledField required' id="currency_2">
+                                            {% for key, curr in currency.items %}
+                                            <option value="{{key}}" {% if key == priceRecord.currency%} selected{% endif%}>{{curr}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-field-input">
+                                        <input type="text" name="price_2" placeholder="" class="required disabledField" value="{{priceRecord.price|floatformat:2}}" onkeypress='return validateFloatKeyPress(this, event);'>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Training location[*]</label>
+                                <div class="form-field-input icon-overlay">
+                                    <input type="text" name="location_2" value="{{basicinfo.location}}" id="training_location_2" placeholder="" class="training_location  disabledField" readonly>
+                                    <img src="{% static 'images/LocationArrow.svg' %}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Assign Employee(s)[*]</label>
+                                <div class="drop-down">
+                                    <select name="assign_employee_2" class='multiple-single disabledField required' id="assign_employee_2">
+                                        <option value="">Choose from list</option>                                        
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Additional Notes</label>
+                                <div class="form-field-input">
+                                    <textarea placeholder="Enter additional notes" name="notes_2" class="disabledField" id="edit_notes_1" style="resize: none;">{{priceRecord.notes}}</textarea>
+                                    <small id="edit_notes_count_1">0 of 100 words</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                {% elif val == 3%}
+                <div class="select-div3 session-section" id='section-3'>
+                    <h4 class="profile-setup-inner-block-heading">Day Pass</h4>
+                    <div class="row-new">
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Individual or Group Day Pass[*]</label>
+                                <div class="drop-down">
+                                    <select name="session_type_3" class='single-withoutsearch disabledField required' id="session_type_3" onchange="updateEditNum(this.value, '3')">
+                                        <!--<option value="">Choose from list</option>-->
+                                        {% for key, grp in individual_group.items %}
+                                        <option value="{{key}}" {% if key == priceRecord.session_type%} selected{% endif%}>{{grp}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Number of people[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="number_of_people_3" value="{{priceRecord.number_of_people}}" class="digits disabledField required" id="edit_number_of_people_3" min="2">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Day Pass Name[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="day_pass_name_3" value="{{priceRecord.session_name}}" placeholder="" class="required disabledField">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Price[*]</label>
+                                <div class="flex-input">
+                                    <div class="drop-down">                                        
+                                        <select name="currency_3" class='single-withoutsearch required disabledField' id="currency_3">
+                                            {% for key, curr in currency.items %}
+                                            <option value="{{key}}" {% if key == priceRecord.currency%} selected{% endif%}>{{curr}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-field-input">
+                                        <input type="text" name="price_3" placeholder="" class="required disabledField" value="{{priceRecord.price|floatformat:2}}" onkeypress='return validateFloatKeyPress(this, event);'>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Validity(from date of purchase)[*]</label>
+                                <div class="form-field-input">
+                                    <div class="swith-overlay">
+                                        <input type="text" name="validity_3" placeholder="" value="{{priceRecord.validity}}" class="digits required disabledField" min="1">
+                                        <div class="view_valid disabledDv view-switch text-center">
+                                            {% if priceRecord.validity_type == 1%}
+                                            <div class="view-tabb" taeb-direction="left">Days</div>
+                                            {% else%}
+                                            <div class="view-tabb" taeb-direction="right">Months</div>
+                                            {% endif%}
+                                        </div>
+                                        
+                                        <div style = 'display:none;' class="edit_valid disabledDv taeb-switch taeb-switch1 taeb-switch-11 {% if priceRecord.validity_type == 1%} left {% else%} right{% endif%} text-center">
+                                            <div class="taeb {% if priceRecord.validity_type == 1%} active {% endif%}" taeb-direction="left" onclick="updateVTypeEdit('Days', '3')">Days</div>
+                                            <div class="taeb {% if priceRecord.validity_type == 2%} active {% endif%}" taeb-direction="right" onclick="updateVTypeEdit('Months', '3')">Months</div>
+                                            <input type="hidden" value="1" name="validity_type_3" id="validity_type_edit_3">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">What's Included[*]</label>
+                                <div class="drop-down">
+                                    {% with priceRecord.what_included|split:"," as in_arr %}
+                                    <select name="what_included_3" class='multiple-checkboxes required disabledField' id="what_included_3" multiple="multiple">
+                                        <!--<option value="">Choose from list</option>-->
+                                        {% for key, serviceType in serviceAmenityTypes %}
+                                        <option value="{{key}}" {% if key in in_arr%} selected{%endif%}>{{serviceType}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    {% endwith %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Training location[*]</label>
+                                <div class="form-field-input icon-overlay">
+                                    <input type="text" name="location_3" value="{{basicinfo.location}}" id="training_location_3" placeholder="" class="training_location  disabledField" readonly>
+                                    <img src="{% static 'images/LocationArrow.svg' %}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Inclusive of Classes:</label>
+                                <div class="can-toggle">
+                                    <input id="k31" name="inclusive_class_3" class=" disabledField" value="No" type="checkbox" {% if priceRecord.inclusive_class == 'No'%} checked{% endif%}>
+                                    <label for="k31">
+                                        <div class="can-toggle__switch" data-checked="No" data-unchecked="Yes"></div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Additional Notes</label>
+                                <div class="form-field-input">
+                                    <textarea placeholder="Enter additional notes" name="notes_3" id="edit_notes_1" class=" disabledField" style="resize: none;">{{priceRecord.notes}}</textarea>
+                                    <small id="edit_notes_count_1">0 of 100 words</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                {% elif val == 4%}
+                <div class="select-div4 session-section" id='section-4'>
+                    <h4 class="profile-setup-inner-block-heading">Membership</h4>
+                    <div class="row-new">
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Individual or Group Membership[*]</label>
+                                <div class="drop-down">
+                                    <select name="session_type_4" class='single-withoutsearch required disabledField' id="session_type_4" onchange="updateEditNum(this.value, '4')">
+                                        <!--<option value="">Choose from list</option>-->
+                                        {% for key, grp in individual_group.items %}
+                                        <option value="{{key}}" {% if key == priceRecord.session_type%} selected{% endif%}>{{grp}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Number of people[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="number_of_people_4" value="{{priceRecord.number_of_people}}" class="digits required disabledField" id="edit_number_of_people_4" min="2">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Membership Name[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="membership_name_4" value="{{priceRecord.session_name}}" placeholder="" class="required disabledField">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Price[*]</label>
+                                <div class="flex-input">
+                                    <div class="drop-down">                                        
+                                        <select name="currency_4" class='single-withoutsearch required disabledField' id="currency_4">
+                                            {% for key, curr in currency.items %}
+                                            <option value="{{key}}" {% if key == priceRecord.currency%} selected{% endif%}>{{curr}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-field-input">
+                                        <input type="text" name="price_4" placeholder="" class="required disabledField" value="{{priceRecord.price|floatformat:2}}" onkeypress='return validateFloatKeyPress(this, event);'>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Validity(from date of purchase)[*]</label>
+                                <div class="form-field-input">
+                                    <div class="swith-overlay">
+                                        <input type="text" name="validity_4" placeholder="" value="{{priceRecord.validity}}" class="digits required disabledField" min="1">
+                                        <div class="view_valid disabledDv view-switch text-center">
+                                            {% if priceRecord.validity_type == 1%}
+                                            <div class="view-tabb" taeb-direction="left">Days</div>
+                                            {% else%}
+                                            <div class="view-tabb" taeb-direction="right">Months</div>
+                                            {% endif%}
+                                        </div>
+                                        
+                                        <div style = 'display:none;' class="edit_valid disabledDv taeb-switch taeb-switch1 taeb-switch-11 {% if priceRecord.validity_type == 1%} left {% else%} right{% endif%} text-center">
+                                            <div class="taeb {% if priceRecord.validity_type == 1%} active {% endif%}" taeb-direction="left" onclick="updateVTypeEdit('Days', '4')">Days</div>
+                                            <div class="taeb {% if priceRecord.validity_type == 2%} active {% endif%}" taeb-direction="right" onclick="updateVTypeEdit('Months', '4')">Months</div>
+                                            <input type="hidden" value="1" name="validity_type_4" id="validity_type_edit_4">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">What's Included[*]</label>
+                                <div class="drop-down">
+                                    {% with priceRecord.what_included|split:"," as in_arr %}
+                                    <select name="what_included_4" class='multiple-checkboxes disabledField required' id="what_included_4" multiple="multiple">
+                                        <!--<option value="">Choose from list</option>-->
+                                        {% for key, serviceType in serviceAmenityTypes %}
+                                        <option value="{{key}}" {% if key in in_arr%} selected{%endif%}>{{serviceType}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    {% endwith %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Training location[*]</label>
+                                <div class="form-field-input icon-overlay">
+                                    <input type="text" name="location_4" value="{{basicinfo.location}}" id="training_location_4" placeholder="" class="training_location  disabledField" readonly>
+                                    <img src="{% static 'images/LocationArrow.svg' %}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Inclusive of Classes:</label>
+                                <div class="can-toggle">
+                                    <input id="k41" name="inclusive_class_4" class=" disabledField" value="No" type="checkbox"{% if priceRecord.inclusive_class == 'No'%} checked{% endif%}>
+                                    <label for="k41">
+                                        <div class="can-toggle__switch" data-checked="No" data-unchecked="Yes"></div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Additional Notes</label>
+                                <div class="form-field-input">
+                                    <textarea placeholder="Enter additional notes" name="notes_4" class=" disabledField" id="edit_notes_1" style="resize: none;">{{priceRecord.notes}}</textarea>
+                                    <small id="edit_notes_count_1">0 of 100 words</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                {% elif val == 5%}
+                <div class="select-div5 session-section" id='section-5'>
+                    <h4 class="profile-setup-inner-block-heading">Amenity Booking</h4>
+                    <div class="row-new">
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Type of Amenity[*]</label>
+                                <div class="drop-down">
+                                    <select name="type_of_amenity" class='multiple-single required disabledField' id="type_of_amenity">
+                                        <option value="">Choose from list</option>
+                                        {% for key, amenityType in amenityTypes %}
+                                        <option value="{{key}}" {% if key == priceRecord.type_of_amenity%} selected{%endif%}>{{amenityType}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Sports Type[*]:</label>
+                                <div class="drop-down">
+                                    <select name="sport_type" class='multiple-single required disabledField' id="sport_type">
+                                        <option value="">Choose from list</option>
+                                        {% for key, sport in sports %}
+                                        <option value="{{key}}" {% if key == priceRecord.sport_type%} selected{%endif%}>{{sport}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Number of Participants[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="number_of_participant" placeholder="" value="{{priceRecord.number_of_participant}}" class="digits required disabledField" min="1" maxlength="4">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Booking Length[*]</label>
+                                <div class="drop-down">
+                                    <select name="booking_length" class='multiple-single required disabledField' id="booking_length">
+                                        <option value="">Choose from list</option>
+                                        
+                                        {% for booking_len in booking_length %}
+                                        <option value="{{booking_len}}" {% if booking_len == priceRecord.booking_length%} selected{%endif%}>{{booking_len}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Price[*]</label>
+                                <div class="flex-input">
+                                    <div class="drop-down">                                        
+                                        <select name="currency_5" class='single-withoutsearch required disabledField' id="currency_2">
+                                            {% for key, curr in currency.items %}
+                                            <option value="{{key}}" {% if key == priceRecord.currency%} selected{% endif%}>{{curr}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-field-input">
+                                        <input type="text" name="price_5" placeholder="" class="required disabledField" value="{{priceRecord.price|floatformat:2}}" onkeypress='return validateFloatKeyPress(this, event);'>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Training location[*]</label>
+                                <div class="form-field-input icon-overlay">
+                                    <input type="text" name="location_5" value="{{basicinfo.location}}" id="training_location_5" placeholder="" class="training_location  disabledField" readonly>
+                                    <img src="{% static 'images/LocationArrow.svg' %}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Additional Notes</label>
+                                <div class="form-field-input">
+                                    <textarea placeholder="Enter additional notes" name="notes_5" class=" disabledField" id="edit_notes_1" style="resize: none;">{{priceRecord.notes}}</textarea>
+                                    <small id="edit_notes_count_1">0 of 100 words</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                {% endif%}
+                
+                <input type="hidden" value="{{val}}" name="categroy_type">
+                <input type="hidden" value="{{priceRecord.id}}" name="price_id">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="action-box  btn-form acpt-rjt-btn action-one">
+                            <div id="price_view_btn" class="view-btn">
+                                <button class="border-btn-small" type="button" onclick="editPrice()">Edit</button>
+                                <button class="btn-red-one" type="button" onclick="deletePrice('{{priceRecord.id}}')">Delete</button>
+                            </div>
+
+                            <div id="price_edit_btn" class="edit-btn" style="display: none;">
+                                <button class="border-btn" type='button' onclick="closePrice()">Discard changes</button>
+                                <button class="btn-pink ml-10 savebtn" type="submit">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+        </form>
+            <button type="button" class="close-btn-pop" data-dismiss="modal"><img src="{% static 'images/material-cancel.svg'%}"></button>
+        </div>
+    </div>
+</div>
+<script>
+    function updateVTypeEdit(val, id) { 
+        if (val == "Days") {
+            $('#validity_type_edit_' + id).val('1');
+        } else {
+            $('#validity_type_edit_' + id).val('2');
+        }
+    }
+    
+    function updateEditNum(val, id) {
+        if (val == "Individual") {
+            $('#edit_number_of_people_' + id).val('');
+            $('#edit_number_of_people_' + id).attr('readonly', true);
+            $('#edit_number_of_people_' + id).attr('min', 1);
+            $('#edit_number_of_people_' + id).val('1');
+        } else {
+            $('#edit_number_of_people_' + id).attr('readonly', false);
+            $('#edit_number_of_people_' + id).attr('min', 2);
+        }
+    }    
+
+    strs = $('#edit_notes_1').val();    
+    strs = strs.replace(/(^\s*)|(\s*$)/gi, "");    
+    strs = strs.replace(/[ ]{2,}/gi, " ");    
+    strs = strs.replace(/\n /, "\n");
+    
+    if(strs == ''){
+        wordss = 0;
+    } else{
+        wordss = strs.split(/\s/).length;
+    }
+    
+    $('#edit_notes_count_1').html(wordss + ' of 100 words');
+    $('#edit_notes_1').on('keydown', function (e) {
+        str = $(this).val();
+
+        str = str.replace(/(^\s*)|(\s*$)/gi, "");
+        str = str.replace(/[ ]{2,}/gi, " ");
+        str = str.replace(/\n /, "\n");
+        words = str.split(/\s/).length;
+        if (words >= 1 && $(this).val() != '')
+        {
+            if (words <= 100) {
+                $('#edit_notes_count_1').html(words + ' of 100 words');
+            } else {
+                if (e.which !== 8)
+                    e.preventDefault();
+                var trimmed = $(this).val().split(/\s+/, 100).join(" ");
+                // Add a space at the end to make sure more typing creates new words
+                $(this).val(trimmed + " ");
+            }
+
+        } else {
+            $('#edit_notes_count_1').html('0 of 100 words');
+        }
+    });
+    
+    
+    $('.multiple-checkboxes').multiselect({
+        includeSelectAllOption: true,
+        nonSelectedText: "Select Multiple",
+        enableFiltering: true,
+        maxHeight: 250,
+        enableCaseInsensitiveFiltering: true,
+    });
+
+    $('.multiple-single').multiselect({
+        nonSelectedText: "Select from list",
+        enableFiltering: true,
+        maxHeight: 250,
+        enableCaseInsensitiveFiltering: true,
+    });
+
+    $('.single-withoutsearch').multiselect({
+        nonSelectedText: "Select from list",
+        maxHeight: 250,
+    });
+    
+    $("#editPricing").validate({
+        submitHandler: function (form) {
+            var token = $("[name=csrfmiddlewaretoken]").val();
+            var form = document.querySelector('#editPricing');
+            var formData = new FormData(form);
+            
+            formData.append('csrfmiddlewaretoken', token);
+            console.log('error', formData)
+            $.ajax({
+                type: 'POST',
+                url: 'editPricing',
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $('#payloader').show();
+                },
+                success: function (response) {
+                    $('#payloader').hide();
+                    $('#price_table').html(response);
+                    $('#viewPriceModel').modal('hide');
+                    Command: toastr["success"]("Changes Saved")
+                },
+            })
+        }
+    });
+    
+    $(function() {
+        var taeb1 = $(".taeb-switch-11");
+        taeb1.find(".taeb").on("click", function() {
+            var $this = $(this);
+
+            if ($this.hasClass("active")) return;
+
+            var direction = $this.attr("taeb-direction");
+
+            taeb1.removeClass("left right").addClass(direction);
+            taeb1.find(".taeb.active").removeClass("active");
+            $this.addClass("active");
+        });
+    });
+
+</script>
+

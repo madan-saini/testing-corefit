@@ -1,0 +1,63 @@
+{% load static fetch_user %}
+{% if records %}
+<table class="table table-bordered table-stip table-cs">
+    <thead>
+        <tr>
+            <th scope="col" width="16.66%">User ID <img src="{% static 'images/sort-arrow.svg' %}" style="margin-left: 5px;"></th>
+            <th scope="col" width="16.66%">PT Name</th>
+            <th scope="col" width="16.66%">Email</th>
+            <th scope="col" width="16.66%">Request <br> Status</th>
+            <th scope="col" width="16.66%">Request <br> Date</th>
+            <th scope="col" width="16.66%">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in records%}
+        <tr>
+            <td>{{record.id}}</td>
+            <td>{{record.freelancer_user.first_name}} {{record.freelancer_user.last_name}}</td>
+            <td>{{record.freelancer_user.email_address}}</td>
+            <td><span class="ref-btn">Pending</span></td>
+            <td>{% convert_date record.created_at as date_val %}
+                {{date_val}}</td>
+            <td>
+                <div class="action-box">
+                    <a href="#" class="border-btn-small">View</a>
+                    <div class="dropdown drop-more ml-3">
+                        <button class="more-btn dropdown-toggle ml-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            More
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">Message</a>
+                            <a class="dropdown-item" href="#">Accept</a>
+                            <a class="dropdown-item" href="#">Reject</a>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td data-toggle="modal" data-target="#exampleModalCenter">0153487</td>
+            <td data-toggle="modal" data-target="#exampleModalCenter">John</td>
+            <td data-toggle="modal" data-target="#exampleModalCenter">John@gmail.com</td>
+            <td data-toggle="modal" data-target="#exampleModalCenter"><span class="coll-btn">Approved</span></td>
+            <td data-toggle="modal" data-target="#exampleModalCenter">10/09/2021</td>
+            <td>
+                <div class="action-box">
+                    <a href="#" class="border-btn-small">View</a>
+                    <div class="dropdown drop-more ml-3">
+                        <button class="more-btn dropdown-toggle ml-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            More
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">Message</a>
+
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+{% endif%}

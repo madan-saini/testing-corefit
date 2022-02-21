@@ -1,0 +1,139 @@
+{% extends 'layout/inner.html' %} 
+{% load static %}
+
+{% block content %}
+<div class="loader" id="payloader" style="display: none;"><img src="{% static 'images/loading.gif' %}" alt=""></div>
+
+{% include "layout/successerror.html" %}
+<div class="content-page">
+    <div class="page-head-one">
+        <h2 class="bnk-info-head">List of Bolt-Ons</h2>
+    </div>
+    <div class="row blot-main">
+        {% for bolt in boltons %}
+        <div class="col-sm-6">
+            <div class="blot-thumbs">
+                <h4>{{bolt.title}}</h4>
+                <p>{{bolt.description}}</p>
+                <div class="flex-bolt">
+                    <a href="#" class="btn-green-border">Apply to My Package</a>
+                    <span>AED {{bolt.price}}/{{bolt.duration}}</span>
+                </div>
+            </div>
+        </div>
+        {% endfor%}
+
+        <div class="col-sm-12 pd-bes">
+            <div class="Bespoke-Bolt-Ons">
+                <h4>Bespoke Bolt-Ons</h4>
+                <a href="javascript:void(0);" class="btn-red-one btn-red-big enq-tgl">Enquire Now</a>
+            </div>
+            <div class="enq-tgle-pop" style="display: none;">
+                <form class="" name='enquireSubmit' id='enquireSubmit' method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="Bespoke-Bolt-Ons bes-toggle " >
+                        <div class="col-sm-6">
+                            <div class="drop-down pd-drop">
+                                <select class="single-withoutsearch required" name="subject" id="subject">
+                                    <option value="">Subject</option>
+                                    <option value="Marketing Campaign">Marketing Campaign</option>
+                                    <option value="Email Marketing Campaign"> Email Marketing Campaign</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Message</label>
+                                <div class="form-field-input">
+                                    <textarea placeholder="Enter Message" name="message" class="required" style="resize: none"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-btm-group col-sm-12">
+                        <div> <button class="border-btn" type="button">Discard </button> <button class="btn-pink ml-10">Send </button></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+<script>
+
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-bottom-center",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "1000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+</script>
+<script>
+
+    $("#enquireSubmit").validate({
+
+        submitHandler: function (form) {
+            var subject = $('#subject').val();
+            if (subject == '') {
+                swal('',"Please select subject.",'error');
+            } else {
+                var token = $("[name=csrfmiddlewaretoken]").val();
+                var form = document.querySelector('#enquireSubmit');
+
+                var formData = new FormData(form);
+                formData.append('csrfmiddlewaretoken', token);
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'enquireSubmit',
+                    contentType: false,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function () {
+                        $('#payloader').show();
+                    },
+                    success: function (response) {
+                        Command: toastr["success"]("Enquire send successfully")
+                        form.reset();
+                        $('#subject').multiselect('refresh');
+                        $('#payloader').hide();
+                    },
+                    error: function (response) {
+                        $('#payloader').hide();
+                        console.log('error', response)
+                    }
+                });
+                return false;
+            }
+        }
+    });
+
+    $(document).ready(function () {
+        $('.single-withoutsearch').multiselect({
+            maxHeight: 250,
+            numberDisplayed: 1,
+            nonSelectedText: "Select from list"
+        });
+    });
+
+    $(".enq-tgl").click(function () {
+        $(".enq-tgle-pop").toggle();
+    });
+</script>
+{% endblock content %}

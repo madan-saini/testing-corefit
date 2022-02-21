@@ -1,0 +1,1076 @@
+{% load static %}
+{% load fetch_user %}
+
+<div class="card-main-accord" id="price-section-main">
+    <div class="card-header collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
+        <a class="card-title">
+            My Pricing Details[*]
+        <i class="fa fa-check" id="priceListdata" aria-hidden="true" {%if priceList %}{%else%} style="display:none" {%endif%} ></i>
+
+        </a>
+    </div>
+    <div id="collapseFour" class="collapse" data-parent="#accordion">
+        <form class="" name='addPricing' id='addPricing' method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="media-main">
+                <div class="row-new">
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Pricing Category</label>
+                            <div class="drop-down">
+                                <select name="categroy_type" class='single-withoutsearch' id="purpose" onchange='updateSet(this.value)'>
+                                    {% for key, cat in pricing_category.items %}
+                                    <option value="{{key}}">{{cat}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="select-div1 session-section" id='section-1'>
+                    <h4 class="profile-setup-inner-block-heading">Session</h4>
+                    <div class="row-new">
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Type of session[*]</label>
+                                <div class="drop-down">
+
+                                    <select name="type_of_session_1" class='multiple-single required' id="type_of_session">
+                                        <option value="">Choose from list</option>
+                                        {% for key, sesstionType in sesstionTypes %}
+                                        <option value="{{key}}">{{sesstionType}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Individual or group session[*]</label>
+                                <div class="drop-down">
+                                    <select name="session_type_1" class='single-withoutsearch required' id="session_type" onchange="updateNum(this.value, '1')">
+                                        <!--<option value="">Choose from list</option>-->
+                                        {% for key, grp in individual_group.items %}
+                                        <option value="{{key}}">{{grp}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Number of people[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="number_of_people_1" class="digits required" id="number_of_people_1" min="1" value="1" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Session name[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="session_name_1" class="required">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Number of sessions[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="number_of_session_1" placeholder="" class="digits required" min="1">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Duration(in minutes)[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="duration_1" placeholder="" class="digits required" min="1">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Validity(from date of purchase)[*]</label>
+                                <div class="form-field-input">
+                                    <div class="swith-overlay">
+                                        <input type="text" name="validity_1" placeholder="" class="digits required" min="1">
+                                        <div class="taeb-switch taeb-switch1 taeb-switch-1 left text-center">
+                                            <div class="taeb active" taeb-direction="left" onclick="updateVType('Days', '1')">Days</div>
+                                            <div class="taeb " taeb-direction="right" onclick="updateVType('Months', '1')">Months</div>
+                                            <input type="hidden" value="1" name="validity_type_1" id="validity_type_1">
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Price[*]</label>
+                                <div class="flex-input">
+                                    <div class="drop-down">                                        
+                                        <select name="currency_1" class='single-withoutsearch required' id="currency">
+                                            {% for key, curr in currency.items %}
+                                            <option value="{{key}}">{{curr}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-field-input">
+                                        <input type="text" name="price_1" placeholder="" class="required" onkeypress='return validateFloatKeyPress(this, event);'>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Training location[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="location_1" value="{{basicinfo.location}}" id="training_location_1" placeholder="" class="training_location" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Assign Employees(s)[*]</label>
+                                <div class="drop-down drop-after">
+                                    <select name="assign_employee_1" class='multiple-single required' id="assign_employee">
+                                        <option value="">Choose from list</option>                                        
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Additional Notes</label>
+                                <div class="form-field-input">
+                                    <textarea placeholder="Enter additional notes" name="notes_1" id="add_notes_1" style="resize: none;"></textarea>
+                                    <small id="add_notes_count_1">0 of 100 words</small>
+                                </div>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>
+
+                <div class="select-div2 session-section" style="display: none;" id='section-2'>
+                    <h4 class="profile-setup-inner-block-heading">Services</h4>
+                    <div class="row-new">
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Type of Service [*]</label>
+                                <div class="drop-down">
+                                    <select name="type_of_service_2" class='multiple-single required' id="type_of_service">
+                                        <option value="">Choose from list</option>
+                                        {% for key, serviceType in services %}
+                                        <option value="{{key}}">{{serviceType}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Individual or Group Service[*]</label>
+                                <div class="drop-down">
+                                    <select name="session_type_2" class='single-withoutsearch required' id="session_type_2" onchange="updateNum(this.value, '2')">
+                                        <!--<option value="">Choose from list</option>-->
+                                        {% for key, grp in individual_group.items %}
+                                        <option value="{{key}}">{{grp}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Number of people[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="number_of_people_2" class="digits required" id="number_of_people_2" min="1" value="1" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Service Name[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="service_name_2" class="required">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Number of services[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="number_of_services_2" placeholder="" class="digits required" min="1">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Duration(in minutes)[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="duration_2" placeholder="" class="digits required" min="1">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Validity(from date of purchase)[*]</label>
+                                <div class="form-field-input">
+                                    <div class="swith-overlay">
+                                        <input type="text" name="validity_2" placeholder="" class="digits required" min="1">
+                                        <div class="taeb-switch taeb-switch1 taeb-switch-2 left text-center">
+                                            <div class="taeb active" taeb-direction="left" onclick="updateVType('Days', '2')">Days</div>
+                                            <div class="taeb " taeb-direction="right" onclick="updateVType('Months', '2')">Months</div>
+                                            <input type="hidden" value="1" name="validity_type_2" id="validity_type_2">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Price[*]</label>
+                                <div class="flex-input">
+                                    <div class="drop-down">                                        
+                                        <select name="currency_2" class='single-withoutsearch required' id="currency_2">
+                                            {% for key, curr in currency.items %}
+                                            <option value="{{key}}">{{curr}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-field-input">
+                                        <input type="text" name="price_2" placeholder="" class="required" onkeypress='return validateFloatKeyPress(this, event);'>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Training location[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="location_2" value="{{basicinfo.location}}" id="training_location_2" placeholder="" class="training_location " readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Assign Employees(s)[*]</label>
+                                <div class="drop-down">
+                                    <select name="assign_employee_2" class='multiple-single required' id="assign_employee_2">
+                                        <option value="">Choose from list</option>                                        
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Additional Notes</label>
+                                <div class="form-field-input">
+                                    <textarea placeholder="Enter additional notes" name="notes_2" class="required" id="add_notes_2" style="resize: none;"></textarea>
+                                    <small id="add_notes_count_2">0 of 100 words</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="select-div3 session-section" style="display: none;" id='section-3'>
+                    <h4 class="profile-setup-inner-block-heading">Day Pass</h4>
+                    <div class="row-new">
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Individual or Group Day Pass[*]</label>
+                                <div class="drop-down">
+                                    <select name="session_type_3" class='single-withoutsearch required' id="session_type_3" onchange="updateNum(this.value, '3')">
+                                        <!--<option value="">Choose from list</option>-->
+                                        {% for key, grp in individual_group.items %}
+                                        <option value="{{key}}">{{grp}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Number of people[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="number_of_people_3" class="digits required" id="number_of_people_3" min="1" value="1" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Day Pass Name[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="day_pass_name_3" placeholder="" class="required">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Price[*]</label>
+                                <div class="flex-input">
+                                    <div class="drop-down">                                        
+                                        <select name="currency_3" class='single-withoutsearch required' id="currency_3">
+                                            {% for key, curr in currency.items %}
+                                            <option value="{{key}}">{{curr}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-field-input">
+                                        <input type="text" name="price_3" placeholder="" class="required" onkeypress='return validateFloatKeyPress(this, event);'>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Validity(from date of purchase)[*]</label>
+                                <div class="form-field-input">
+                                    <div class="swith-overlay">
+                                        <input type="text" name="validity_3" placeholder="" class="digits required" min="1">
+                                        <div class="taeb-switch taeb-switch1 taeb-switch-3 left text-center">
+                                            <div class="taeb active" taeb-direction="left" onclick="updateVType('Days', '3')">Days</div>
+                                            <div class="taeb " taeb-direction="right" onclick="updateVType('Months', '3')">Months</div>
+                                            <input type="hidden" value="1" name="validity_type_3" id="validity_type_3">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">What's Included[*]</label>
+                                <div class="drop-down">
+                                    <select name="what_included_3" class='multiple-checkboxes required' id="what_included_3" multiple="multiple">
+                                        <!--<option value="">Choose from list</option>-->
+                                        {% for key, serviceType in serviceAmenityTypes %}
+                                        <option value="{{key}}">{{serviceType}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Training location[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="location_3" value="{{basicinfo.location}}" id="training_location_3" placeholder="" class="training_location " readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Inclusive of Classes:</label>
+                                <div class="can-toggle">
+                                    <input id="k3" name="inclusive_class_3" value="No" type="checkbox">
+                                    <label for="k3">
+                                        <div class="can-toggle__switch" data-checked="No" data-unchecked="Yes"></div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Additional Notes</label>
+                                <div class="form-field-input">
+                                    <textarea placeholder="Enter additional notes" name="notes_3" id="add_notes_3" style="resize: none;"></textarea>
+                                    <small id="add_notes_count_3">0 of 100 words</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="select-div4 session-section" style="display: none;" id='section-4'>
+                    <h4 class="profile-setup-inner-block-heading">Membership</h4>
+                    <div class="row-new">
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Individual or Group Membership[*]</label>
+                                <div class="drop-down">
+                                    <select name="session_type_4" class='single-withoutsearch required' id="session_type_4" onchange="updateNum(this.value, '4')">
+                                        <!--<option value="">Choose from list</option>-->
+                                        {% for key, grp in individual_group.items %}
+                                        <option value="{{key}}">{{grp}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Number of people[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="number_of_people_4" class="digits required" id="number_of_people_4" min="1" value="1" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Membership Name[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="membership_name_4" placeholder="" class="required">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Price[*]</label>
+                                <div class="flex-input">
+                                    <div class="drop-down">                                        
+                                        <select name="currency_4" class='single-withoutsearch required' id="currency_4">
+                                            {% for key, curr in currency.items %}
+                                            <option value="{{key}}">{{curr}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-field-input">
+                                        <input type="text" name="price_4" placeholder="" class="required" onkeypress='return validateFloatKeyPress(this, event);'>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Validity(from date of purchase)[*]</label>
+                                <div class="form-field-input">
+                                    <div class="swith-overlay">
+                                        <input type="text" name="validity_4" placeholder="" class="digits required" min="1">
+                                        <div class="taeb-switch taeb-switch1 taeb-switch-4 left text-center">
+                                            <div class="taeb active" taeb-direction="left" onclick="updateVType('Days', '4')">Days</div>
+                                            <div class="taeb " taeb-direction="right" onclick="updateVType('Months', '4')">Months</div>
+                                            <input type="hidden" value="1" name="validity_type_4" id="validity_type_4">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">What's Included[*]</label>
+                                <div class="drop-down">
+                                    <select name="what_included_4" class='multiple-checkboxes required' id="what_included_4" multiple="multiple">
+                                        <!--<option value="">Choose from list</option>-->
+                                        {% for key, serviceType in serviceAmenityTypes %}
+                                        <option value="{{key}}">{{serviceType}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Training location[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="location_4" value="{{basicinfo.location}}" id="training_location_4" placeholder="" class="training_location " readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Inclusive of Classes:</label>
+                                <div class="can-toggle">
+                                    <input id="k4" name="inclusive_class_4" value="No" type="checkbox">
+                                    <label for="k4">
+                                        <div class="can-toggle__switch" data-checked="No" data-unchecked="Yes"></div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Additional Notes</label>
+                                <div class="form-field-input">
+                                    <textarea placeholder="Enter additional notes" name="notes_4" id="add_notes_4" style="resize: none;"></textarea>
+                                    <small id="add_notes_count_4">0 of 100 words</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="select-div5 session-section" style="display: none;" id='section-5'>
+                    <h4 class="profile-setup-inner-block-heading">Amenity Booking</h4>
+                    <div class="row-new">
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Type of Amenity[*]</label>
+                                <div class="drop-down">
+                                    <select name="type_of_amenity" class='multiple-single required' id="type_of_amenity">
+                                        <option value="">Choose from list</option>
+                                        {% for key, amenityType in amenityTypes %}
+                                        <option value="{{key}}">{{amenityType}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Sports Type[*]:</label>
+                                <div class="drop-down">
+                                    <select name="sport_type" class='multiple-single required' id="sport_type">
+                                        <option value="">Choose from list</option>
+                                        {% for key, sport in sports %}
+                                        <option value="{{key}}">{{sport}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Number of Participants[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="number_of_participant" placeholder="" class="digits required" min="1" maxlength="4">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Booking Length[*]</label>
+                                <div class="drop-down">
+                                    <select name="booking_length" class='multiple-single required' id="booking_length">
+                                        <option value="">Choose from list</option>
+                                        
+                                        {% for booking_len in booking_length %}
+                                        <option value="{{booking_len}}">{{booking_len}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Price[*]</label>
+                                <div class="flex-input">
+                                    <div class="drop-down">                                        
+                                        <select name="currency_5" class='single-withoutsearch required' id="currency_2">
+                                            {% for key, curr in currency.items %}
+                                            <option value="{{key}}">{{curr}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-field-input">
+                                        <input type="text" name="price_5" placeholder="" class="required" onkeypress='return validateFloatKeyPress(this, event);'>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Training location[*]</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="location_5" value="{{basicinfo.location}}" id="training_location_5" placeholder="" class="training_location " readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Additional Notes</label>
+                                <div class="form-field-input">
+                                    <textarea placeholder="Enter additional notes" name="notes_5" id="add_notes_5" style="resize: none;"></textarea>
+                                    <small id="add_notes_count_5">0 of 100 words</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12 border-table" id="price_table">
+                    {% include 'elements/users/user_price_table.html' %}
+                </div>
+
+                <div class="btn-btm-group spece-btwn">
+                    <input type="hidden" name="price_submit_type" id="price_submit_type">
+                    <div> 
+                        <button class="btn-gray-two" onclick="return submitTypePrice('add')">Add Another</button>
+                    </div>
+                    <div> 
+                        <a class="green-border-btn border-btn" href='new-offer' target="_blank">Promotion Offer</a> 
+                        <button class="border-btn ml-10" onclick="return submitTypePrice('save')">Save</button> 
+                        <button class="btn-pink ml-10" onclick="return submitTypePrice('submit')">Submit & Proceed</button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div id="price_model">
+    
+</div>
+</div>
+
+
+<script>
+    function submitTypePrice(type){
+        $('#price_submit_type').val(type);
+//        $("#collapseFour").collapse('toggle');
+//        $("#collapseFive").collapse('toggle');
+    }
+    
+    function validateFloatKeyPress(el, evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        var number = el.value.split('.');
+        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        //just one dot
+        if (number.length > 1 && charCode == 46) {
+            return false;
+        }
+        //get the carat position
+        var caratPos = getSelectionStart(el);
+        var dotPos = el.value.indexOf(".");
+        if (caratPos > dotPos && dotPos > -1 && (number[1].length > 1)) {
+            return false;
+        }
+        return true;
+    }
+
+    function getSelectionStart(o) {
+        if (o.createTextRange) {
+            var r = document.selection.createRange().duplicate()
+            r.moveEnd('character', o.value.length)
+            if (r.text == '')
+                return o.value.length
+            return o.value.lastIndexOf(r.text)
+        } else
+            return o.selectionStart
+    }
+    
+
+    
+
+    str = $('#add_notes_1').val();
+    str = str.replace(/(^\s*)|(\s*$)/gi, "");
+    str = str.replace(/[ ]{2,}/gi, " ");
+    str = str.replace(/\n /, "\n");
+    words = str.split(/\s/).length;
+    if (words >= 1 && $('#add_notes_1').val() != '')
+    {
+        if (words <= 100) {
+            $('#add_notes_count_1').html(words + ' of 100 words');
+        } else {
+            if (e.which !== 8)
+                e.preventDefault();
+            var trimmed = $('#add_notes_1').val().split(/\s+/, 100).join(" ");
+            // Add a space at the end to make sure more typing creates new words
+            $('#add_notes_1').val(trimmed + " ");
+        }
+    } else {
+        $('#add_notes_count_1').html('0 of 100 words');
+    }
+
+    str = $('#add_notes_2').val();
+    str = str.replace(/(^\s*)|(\s*$)/gi, "");
+    str = str.replace(/[ ]{2,}/gi, " ");
+    str = str.replace(/\n /, "\n");
+    words = str.split(' ').length;
+    if (words >= 1 && $('#add_notes_2').val() != '')
+    {
+        if (words <= 100) {
+            $('#add_notes_count_2').html(words + ' of 100 words');
+        } else {
+            if (e.which !== 8)
+                e.preventDefault();
+            var trimmed = $('#add_notes_2').val().split(/\s+/, 100).join(" ");
+            // Add a space at the end to make sure more typing creates new words
+            $('#add_notes_2').val(trimmed + " ");
+        }
+    } else {
+        $('#add_notes_count_2').html('0 of 100 words');
+    }
+
+    str = $('#add_notes_3').val();
+    str = str.replace(/(^\s*)|(\s*$)/gi, "");
+    str = str.replace(/[ ]{2,}/gi, " ");
+    str = str.replace(/\n /, "\n");
+    words = str.split(' ').length;
+    if (words >= 1 && $('#add_notes_3').val() != '')
+    {
+        if (words <= 100) {
+            $('#add_notes_count_3').html(words + ' of 100 words');
+        } else {
+            if (e.which !== 8)
+                e.preventDefault();
+            var trimmed = $('#add_notes_3').val().split(/\s+/, 100).join(" ");
+            // Add a space at the end to make sure more typing creates new words
+            $('#add_notes_3').val(trimmed + " ");
+        }
+    } else {
+        $('#add_notes_count_3').html('0 of 100 words');
+    }
+
+    str = $('#add_notes_4').val();
+    str = str.replace(/(^\s*)|(\s*$)/gi, "");
+    str = str.replace(/[ ]{2,}/gi, " ");
+    str = str.replace(/\n /, "\n");
+    words = str.split(' ').length;
+    if (words >= 1 && $('#add_notes_4').val() != '')
+    {
+        if (words <= 100) {
+            $('#add_notes_count_4').html(words + ' of 100 words');
+        } else {
+            if (e.which !== 8)
+                e.preventDefault();
+            var trimmed = $('#add_notes_4').val().split(/\s+/, 100).join(" ");
+            // Add a space at the end to make sure more typing creates new words
+            $('#add_notes_4').val(trimmed + " ");
+        }
+    } else {
+        $('#add_notes_count_4').html('0 of 100 words');
+    }
+
+    str = $('#add_notes_5').val();
+    str = str.replace(/(^\s*)|(\s*$)/gi, "");
+    str = str.replace(/[ ]{2,}/gi, " ");
+    str = str.replace(/\n /, "\n");
+    words = str.split(' ').length;
+    if (words >= 1 && $('#add_notes_5').val() != '')
+    {
+        if (words <= 100) {
+            $('#add_notes_count_5').html(words + ' of 100 words');
+        } else {
+            if (e.which !== 8)
+                e.preventDefault();
+            var trimmed = $('#add_notes_5').val().split(/\s+/, 100).join(" ");
+            // Add a space at the end to make sure more typing creates new words
+            $('#add_notes_5').val(trimmed + " ");
+        }
+    } else {
+        $('#add_notes_count_5').html('0 of 100 words');
+    }
+
+    $('#add_notes_1').on('keydown', function (e) {
+        str = $(this).val();
+
+        str = str.replace(/(^\s*)|(\s*$)/gi, "");
+        str = str.replace(/[ ]{2,}/gi, " ");
+        str = str.replace(/\n /, "\n");
+        words = str.split(' ').length;
+        if (words >= 1 && $(this).val() != '')
+        {
+            if (words <= 100) {
+                $('#add_notes_count_1').html(words + ' of 100 words');
+            } else {
+                if (e.which !== 8)
+                    e.preventDefault();
+                var trimmed = $(this).val().split(/\s+/, 100).join(" ");
+                // Add a space at the end to make sure more typing creates new words
+                $(this).val(trimmed + " ");
+            }
+
+        } else {
+            $('#add_notes_count_1').html('0 of 100 words');
+        }
+    });
+
+    $('#add_notes_2').on('keydown', function (e) {
+        str = $(this).val();
+
+        str = str.replace(/(^\s*)|(\s*$)/gi, "");
+        str = str.replace(/[ ]{2,}/gi, " ");
+        str = str.replace(/\n /, "\n");
+        words = str.split(' ').length;
+        if (words >= 1 && $(this).val() != '')
+        {
+            if (words <= 100) {
+                $('#add_notes_count_2').html(words + ' of 100 words');
+            } else {
+                if (e.which !== 8)
+                    e.preventDefault();
+                var trimmed = $(this).val().split(/\s+/, 100).join(" ");
+                // Add a space at the end to make sure more typing creates new words
+                $(this).val(trimmed + " ");
+            }
+
+        } else {
+            $('#add_notes_count_2').html('0 of 100 words');
+        }
+    });
+    $('#add_notes_3').on('keydown', function (e) {
+        str = $(this).val();
+
+        str = str.replace(/(^\s*)|(\s*$)/gi, "");
+        str = str.replace(/[ ]{2,}/gi, " ");
+        str = str.replace(/\n /, "\n");
+        words = str.split(' ').length;
+        if (words >= 1 && $(this).val() != '')
+        {
+            if (words <= 100) {
+                $('#add_notes_count_3').html(words + ' of 100 words');
+            } else {
+                if (e.which !== 8)
+                    e.preventDefault();
+                var trimmed = $(this).val().split(/\s+/, 100).join(" ");
+                // Add a space at the end to make sure more typing creates new words
+                $(this).val(trimmed + " ");
+            }
+
+        } else {
+            $('#add_notes_count_3').html('0 of 100 words');
+        }
+    });
+    $('#add_notes_4').on('keydown', function (e) {
+        str = $(this).val();
+
+        str = str.replace(/(^\s*)|(\s*$)/gi, "");
+        str = str.replace(/[ ]{2,}/gi, " ");
+        str = str.replace(/\n /, "\n");
+        words = str.split(' ').length;
+        if (words >= 1 && $(this).val() != '')
+        {
+            if (words <= 100) {
+                $('#add_notes_count_4').html(words + ' of 100 words');
+            } else {
+                if (e.which !== 8)
+                    e.preventDefault();
+                var trimmed = $(this).val().split(/\s+/, 100).join(" ");
+                // Add a space at the end to make sure more typing creates new words
+                $(this).val(trimmed + " ");
+            }
+
+        } else {
+            $('#add_notes_count_4').html('0 of 100 words');
+        }
+    });
+    $('#add_notes_5').on('keydown', function (e) {
+        str = $(this).val();
+
+        str = str.replace(/(^\s*)|(\s*$)/gi, "");
+        str = str.replace(/[ ]{2,}/gi, " ");
+        str = str.replace(/\n /, "\n");
+        words = str.split(' ').length;
+        if (words >= 1 && $(this).val() != '')
+        {
+            if (words <= 100) {
+                $('#add_notes_count_5').html(words + ' of 100 words');
+            } else {
+                if (e.which !== 8)
+                    e.preventDefault();
+                var trimmed = $(this).val().split(/\s+/, 100).join(" ");
+                // Add a space at the end to make sure more typing creates new words
+                $(this).val(trimmed + " ");
+            }
+
+        } else {
+            $('#add_notes_count_5').html('0 of 100 words');
+        }
+    });
+
+    function updateSet(val) {
+        $('.session-section').hide();
+        $('#section-' + val).show();
+    }
+
+    function updateNum(val, id) {
+        if (val == "Individual") {
+            $('#number_of_people_' + id).val('');
+            $('#number_of_people_' + id).attr('readonly', true);
+            $('#number_of_people_' + id).attr('min', 1);
+            $('#number_of_people_' + id).val('1');
+        } else {
+            $('#number_of_people_' + id).attr('readonly', false);
+            $('#number_of_people_' + id).attr('min', 2);
+        }
+    }
+
+    function updateVType(val, id) {
+        if (val == "Days") {
+            $('#validity_type_' + id).val('1');
+        } else {
+            $('#validity_type_' + id).val('2');
+        }
+    }
+    
+    $(function() {
+        var taeb1 = $(".taeb-switch-1");
+        taeb1.find(".taeb").on("click", function() {
+            var $this = $(this);
+
+            if ($this.hasClass("active")) return;
+
+            var direction = $this.attr("taeb-direction");
+
+            taeb1.removeClass("left right").addClass(direction);
+            taeb1.find(".taeb.active").removeClass("active");
+            $this.addClass("active");
+        });
+        
+        var taeb2 = $(".taeb-switch-2");
+        taeb2.find(".taeb").on("click", function() {
+            var $this = $(this);
+
+            if ($this.hasClass("active")) return;
+
+            var direction = $this.attr("taeb-direction");
+
+            taeb2.removeClass("left right").addClass(direction);
+            taeb2.find(".taeb.active").removeClass("active");
+            $this.addClass("active");
+        });
+        
+        var taeb3 = $(".taeb-switch-3");
+        taeb3.find(".taeb").on("click", function() {
+            var $this = $(this);
+
+            if ($this.hasClass("active")) return;
+
+            var direction = $this.attr("taeb-direction");
+
+            taeb3.removeClass("left right").addClass(direction);
+            taeb3.find(".taeb.active").removeClass("active");
+            $this.addClass("active");
+        });
+        
+        var taeb4 = $(".taeb-switch-4");
+        taeb4.find(".taeb").on("click", function() {
+            var $this = $(this);
+
+            if ($this.hasClass("active")) return;
+
+            var direction = $this.attr("taeb-direction");
+
+            taeb4.removeClass("left right").addClass(direction);
+            taeb4.find(".taeb.active").removeClass("active");
+            $this.addClass("active");
+        });
+    });
+
+    $("#addPricing").validate({
+        submitHandler: function (form) {
+            
+            var price_submit_type = $('#price_submit_type').val();
+
+            var categroy_type = $('#categroy_type').val();
+            categroy_type = $('#purpose').find(":selected").val();
+            
+            var is_err = 0;
+            if(categroy_type == 1 ){
+                var type_of_session = $('#type_of_session').val();
+                if(type_of_session == ''){
+                    swal('', "Please select type of session", "error");
+                    is_err = 1;
+                }
+            } else if(categroy_type == 2){
+                var type_of_service = $('#type_of_service').val();
+                if(type_of_service == ''){
+                    swal('', "Please select type of service", "error");
+                    is_err = 1;
+                }
+                
+            } else if(categroy_type == 3){
+                var what_included = $('#what_included_3').val();
+                
+                if(what_included == ''){
+                    swal('', "Please select what's included", "error");
+                    is_err = 1;
+                }
+            } else if(categroy_type == 4){
+                var what_included = $('#what_included_4').val();
+                
+                if(what_included == ''){
+                    swal('', "Please select what's included", "error");
+                    is_err = 1;
+                }
+            } else if(categroy_type == 5){
+                var type_of_amenity = $('#type_of_amenity').val();
+                var sport_type = $('#sport_type').val();
+                var booking_length = $('#booking_length').val();
+                if(type_of_amenity == ''){
+                    swal('', "Please select type of amenity", "error");
+                    is_err = 1;
+                }
+                if(sport_type == ''){
+                    swal('', "Please select sport type", "error");
+                    is_err = 1;
+                }
+                if(booking_length == ''){
+                    swal('', "Please select booking length", "error");
+                    is_err = 1;
+                }
+            }
+            
+//            var img_data = $('#bio_video').get(0).files[0];
+//            var token = $("[name=csrfmiddlewaretoken]").val();
+//            var form = $("#profileForm1");
+
+if(is_err == 0){
+            var token = $("[name=csrfmiddlewaretoken]").val();
+            var form = document.querySelector('#addPricing');
+
+            var formData = new FormData(form);
+//            formData.append('imageFile', $('#bio_video')[0].files[0]);
+
+            formData.append('csrfmiddlewaretoken', token);
+
+            $.ajax({
+                type: 'POST',
+                url: 'addPricing',
+                contentType: false,
+                data: formData,
+                processData: false,
+                contentType: false,
+//                data: {'serializedData': serializedData, csrfmiddlewaretoken: token},
+                beforeSend: function () {
+                    $('#payloader').show();
+                },
+                success: function (response) {
+                    $('#payloader').hide();
+                    $("#priceListdata").show()
+                    $('#price_table').html(response);
+                    Command: toastr["success"]("Changes Saved")
+                    
+                    
+                        
+                    if(price_submit_type == 'add'){
+                        $('.multiple-single option:selected').each(function() {
+                            $(this).prop('selected', false);
+                        });
+                        $('.multiple-checkboxes option:selected').each(function() {
+                            $(this).prop('selected', false);
+                        });
+                        
+                        $('.multiple-single').multiselect("refresh");
+                        $('.multiple-checkboxes').multiselect("refresh");
+                        
+                        form.reset();
+                        $([document.documentElement, document.body]).animate({
+                            scrollTop: $("#price-section-main").offset().top
+                        }, 500);
+                        
+                        
+                        
+                    } else if(price_submit_type == 'submit'){
+                        $('.multiple-single option:selected').each(function() {
+                            $(this).prop('selected', false);
+                        });
+                        $('.multiple-checkboxes option:selected').each(function() {
+                            $(this).prop('selected', false);
+                        });
+                        
+                        $('.multiple-single').multiselect("refresh");
+                        $('.multiple-checkboxes').multiselect("refresh");
+                        
+                        form.reset();
+                        $("#collapseFive").collapse("toggle");
+
+                        $([document.documentElement, document.body]).animate({
+                            scrollTop: $("#price-section-main").offset().top
+                        }, 500);
+                        
+                        
+                    }
+                    
+
+                },
+                error: function (response) {
+                    $('#payloader').hide();
+                    console.log('error', response)
+                }
+            })
+            }
+
+            return false;
+        }
+    });
+</script>

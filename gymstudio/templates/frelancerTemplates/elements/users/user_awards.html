@@ -1,0 +1,258 @@
+{% load static %}
+
+<form class="" name='awardForm' id='awardForm' method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="card-main-accord" id="award-section-main">
+        <div class="card-header collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+            <a class="card-title">
+                Accreditation Details
+            <i class="fa fa-check" id="Awardssdata" aria-hidden="true" {%if awardList %}{%else%} style="display:none" {%endif%} ></i>
+
+            </a>
+        </div>
+        <div id="collapseThree" class="collapse " data-parent="#accordion">
+            <div class="media-main">
+            <div class="row-new">
+                <div class="col-sm-6">
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Accreditation Title</label>
+                        <div class="form-field-input ">
+                            <input type="text" name="award_name" class="required" placeholder="Add name here">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Location obtained</label>
+                        <div class="drop-down">
+                            <select name="award_location" id="location_id" class='multiple-single scls required' >
+                                <option value="">Choose from list</option>
+                                {% for key, country in countries %}
+                                <option value="{{key}}">{{country}}</option>
+                                {% endfor %}
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Document Upload</label>
+                        <div class="form-field-video">
+                            <div class="video-uploadbox">
+                                <div class="custom-file">
+                                    <input type="file" id="award_document" name="award_document" accept=".jpg, .pdf, .png" fullwidth="" formcontrolname="video" class="custom-file-input ">
+                                    <label for="video" class="custom-file-label placeholder text-truncate">Document Upload</label>
+                                </div>
+                            </div>
+                           <div id="award_document_box" onclick="idiView('0','{% static 'images/no-image.svg' %}')" class="upload-box" data-toggle="modal" data-target="">
+                                <img id="imgch" src="{% static 'images/no-image.svg' %}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Held since</label>
+                        <div class="form-field-input  date">
+                            <input type="text" class="datepickerr required" readonly="readonly" name="award_date" placeholder="Choose date">
+                            <div class="input-group-append"><img src="{% static 'images/noun_Calendar_1611923.svg' %}"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-sm-12 border-table" id="award_table">
+                    {% include 'frelancerTemplates/elements/users/award_table.html' %}
+                </div>
+                
+            </div>
+            <div class="btn-btm-group spece-btwn">
+                <input type="hidden" name="award_submit_type" id="award_submit_type">
+                <div> <button class="btn-gray-two" onclick="return submitAwardType('add')">Add Another</button></div>
+                <div> <button class="border-btn ml-10" onclick="return submitAwardType('save')">Save</button> 
+                    <button class="btn-pink ml-10" onclick="return submitAwardType('submit')">Submit & Proceed</button></div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+<div id="award_model">
+    
+</div>
+<script>
+    function userVisibleAward(event,id){
+       var checkbox = event.children["0"];
+       console.log(checkbox['checked'])
+       checkbox['checked']=!checkbox['checked'];
+       console.log(checkbox['checked'])
+       var token = $("[name=csrfmiddlewaretoken]").val();
+       type="award"
+       $.ajax({
+                type: 'POST',
+                url: 'updateUserStatus',
+                data: {'id':id,'checkbox':checkbox['checked'],"type":type,'csrfmiddlewaretoken':token},
+                success: function (response) {
+<!--                 $('#media_table').html(response);-->
+                }
+            });
+}
+    function submitAwardType(type){
+        $('#award_submit_type').val(type);
+    }
+    $("#awardForm").validate({
+
+        submitHandler: function (form) {
+
+            var price_submit_type = $('#award_submit_type').val();
+            var token = $("[name=csrfmiddlewaretoken]").val();
+            var form = document.querySelector('#awardForm');
+
+            var formData = new FormData(form);
+            console.log('error', formData)
+            formData.append('imageFile', $('#award_document')[0].files[0]);
+
+            formData.append('csrfmiddlewaretoken', token);
+
+            $.ajax({
+                type: 'POST',
+                url: 'freelancer-awardProfile',
+                contentType: false,
+                data: formData,
+                processData: false,
+                contentType: false,
+//                data: {'serializedData': serializedData, csrfmiddlewaretoken: token},
+                beforeSend: function () {
+                    $('#payloader').show();
+                },
+                success: function (response) {
+                    $('#payloader').hide();
+                    $('#award_table').html(response);
+                    $("#Awardssdata").show()
+                    Command: toastr["success"]("Changes Saved")
+                     $('#location_id').val([]).multiselect('refresh')
+                    if(price_submit_type == 'add'){
+                        form.reset();
+                        $([document.documentElement, document.body]).animate({
+                            scrollTop: $("#award-section-main").offset().top
+                        }, 500);
+                    } else if(price_submit_type == 'submit'){
+                        form.reset();
+                        $("#imgch").attr("src", "{% static 'images/no-image.svg' %}");
+                        $('#award_document_box').attr("onclick", "idiView('0','/static/images/no-image.svg')");
+                        $("#collapseFour").collapse("toggle");
+                        
+                        $([document.documentElement, document.body]).animate({
+                            scrollTop: $("#award-section-main").offset().top
+                        }, 500);
+                    }else{
+                        form.reset();
+                        $("#imgch").attr("src", "{% static 'images/no-image.svg' %}");
+                        $('#award_document_box').attr("onclick", "idiView('0','/static/images/no-image.svg')");
+                    }
+                },
+                error: function (response) {
+                    $('#payloader').hide();
+                    console.log('error', response)
+                }
+            })
+
+            return false;
+        }
+    });
+    
+    function userVisible(event,id){
+       var checkbox = event.children["0"];
+       console.log(checkbox['checked'])
+       checkbox['checked']=!checkbox['checked'];
+       console.log(checkbox['checked'])
+       var token = $("[name=csrfmiddlewaretoken]").val();
+       type="award"
+       $.ajax({
+            type: 'POST',
+            url: 'freelancer-updateUserStatus',
+            data: {'id':id,'checkbox':checkbox['checked'],"type":type,'csrfmiddlewaretoken':token},
+            success: function (response) {
+            }
+        });
+    }
+    
+    function deleteAward(id){
+        
+        swal({
+            title: "Are you sure?",
+            text: "You want to delete this record!",
+            icon: "warning",
+            buttons: [
+              'No',
+              'Yes'
+            ],
+            dangerMode: true,
+        }).then(function(isConfirm) {
+            if (isConfirm) {
+                var token = $("[name=csrfmiddlewaretoken]").val();        
+                $.ajax({
+                    type: 'POST',
+                    url: 'freelancer-deleteAward',
+                    data: {'id': id, csrfmiddlewaretoken: token},
+                    beforeSend: function () {
+                        $('#payloader').show();
+                    },
+                    success: function (response) {
+                        $('#payloader').hide();
+                        $('#award-'+id).remove();
+                        setNumberingAward();
+                        $('#viewAwardd').modal('hide');
+                    },
+                    error: function (response) {
+                        $('#payloader').hide();
+                        console.log('error', response)
+                    }
+                })
+            }
+        });
+        
+    }
+    
+    function setNumberingAward() {
+        var total_requirement = $('.award-box tr').length;
+        for (var r = 0; r < total_requirement; r++) {
+            var r_no = r + 1;
+            $(".award-box tr:eq(" + r + ") td:eq(0)").html(r_no+'.');
+        }
+    }
+    
+      $("#award_document").change(function (e) {
+        if (fileValidation("award_document", this) != false) {
+            var filename = document.getElementById('award_document').value;
+            var ext = getExt(filename);
+            ext = ext.toLowerCase();
+            readFILEURL(this, 'award_document_box',ext);
+        }
+    });
+
+    function readFILEURL(input, idVal, ext) {
+        var reader = new FileReader();
+        reader.onload = function ()
+        {
+            var output = document.getElementById(idVal);
+            if(ext == 'pdf'){
+                $('#'+idVal + ' img').attr("src", "{% static 'images/pdf.svg' %}");
+                $('#'+idVal).attr("onclick", "docView('0','" + reader.result + "')");
+            } else{
+                $('#'+idVal + ' img').attr("src", reader.result);
+                $('#'+idVal).attr("onclick", "idiView('0','" + reader.result + "')");
+            }
+
+            // output.src = reader.result;
+        }
+        reader.readAsDataURL(event.target.files[0]);
+    }
+function docView(id, doc) {
+        $('#documentModalCenter').modal('show');
+        $('#doc_dv object').attr('data', doc);
+        $('#doc_dv object a').attr('href', doc);
+        $('#doc_dv object a').html(doc);
+    }
+</script>

@@ -1,0 +1,42 @@
+<select name='type_of_service' class='multiple-single required' onChange="updateServicePrice(this.value)">
+    <option value="">Select Type of Service</option>
+    {% for key, record in records %}
+                            <option value="{{key}}">{{record}}</option>                                                    
+                            {% endfor %}
+</select>
+
+<script>
+    $('.multiple-single').multiselect({
+            nonSelectedText: "Select from list",
+            enableFiltering: true,
+            enableCaseInsensitiveFiltering: true,
+        });
+        
+        function updateServicePrice(value) { 
+        var category = $('#category').val();
+        var token = $("[name=csrfmiddlewaretoken]").val();
+        $.ajax({
+            type: 'POST',
+            url: 'getServicePrice',
+            data: {'category': category,'service': value, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+                var amt = response[0]+' '+ response[1];
+                $('#before_price').val(amt);
+                
+                var str = $('#discount').val();
+                if(str != ''){
+                    calculateAmount(response[0],str, response[0]);
+                }
+                
+            },
+            error: function (response) {
+                $('#payloader').hide();
+                console.log('error', response)
+            }
+        })
+    }
+</script>

@@ -1,0 +1,190 @@
+{% load static %}
+{% load fetch_user %}
+
+<div class="modal fade form-popup" id="viewAwardd" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered" role="document">
+
+        <div class="modal-content upload-img-pop new-offer-pop disable-text-field">
+            <form class="" name='editAwardFormm' id='editAwardFormm' method="POST" enctype="multipart/form-data">
+
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Awards/Achievements</label>
+                            <div class="form-field-input">
+                                <input type="text" class="disabledField required" id="award_name_edit" name="award_title" value="{{awardValue.award_name}}" placeholder=""  >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Location obtained</label>
+                            <div class="drop-down">
+                                {% if awardValue.location %}
+                                {% change_type_int awardValue.location as loc %}
+                                <select name="award_location" id="location_id" class='disabledField ' >
+                                    <option value="">Choose from list</option>
+
+                                    {% for key, country in countries %} 
+                                    <option value="{{key}}" {% if key == loc %} selected{% endif %}>{{country}}</option>
+                                    {% endfor %}
+
+                                </select>
+                                {% else %}
+                                
+                                <select name="award_location" id="location_id" class='disabledField ' >
+                                    <option value="">Choose from list</option>
+
+                                    {% for key, country in countries %} 
+                                    <option value="{{key}}">{{country}}</option>
+                                    {% endfor %}
+
+                                </select>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Document Upload</label>
+                            <div class="form-field-video">
+                                <div class="video-uploadbox" >
+                                    <div class="custom-file award_edit_img" style="display: none;">
+                                        <input type="file" id="edit_award_document" name="edit_award_document" accept=".jpg, .pdf, .png" class="custom-file-input disabledField ">
+                                        <label for="edit_award_document" class="custom-file-label placeholder text-truncate">Document Upload</label>
+                                    </div>
+                                    <div class="custom-file award_view_img">
+                                        <label class="custom-file-label placeholder text-truncate">Document Upload</label>
+                                    </div>
+                                </div>
+                                
+                                {% check_ext awardValue.document as ext %}
+                                
+                    {% if ext == '.pdf' %}
+
+                    <div class="upload-box up-small " onclick='docView("{{awardValue.id}}", "{% static DOCUMENT_URL %}{{awardValue.document}}")'>
+                        <img src="{% static 'images/pdf.svg' %}">
+                    </div>
+                    {% elif ext != '' %}
+                    
+                    <div class="upload-box up-small " onclick="awardView('{{award.id}}', '{% static DOCUMENT_URL %}{{awardValue.document}}')">
+                        <img src="{% static DOCUMENT_URL %}{{awardValue.document}}">
+                    </div>
+                    {% else %}
+                    <div class="upload-box up-small ">
+                        <img src="{% static 'images/no-image.svg' %}">
+                    </div>
+                    
+                    {% endif%}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Held since</label>
+                            <div class="form-field-input  date">
+                                {% change_dat awardValue.date as date_val %}
+                                <input type="text" class="datepickerrr disabledField required" value="{{date_val}}" readonly="readonly" name="award_date" placeholder="Choose date" id="reservationDatee">
+                                <div class="input-group-append"><img src="{% static 'images/noun_Calendar_1611923.svg' %}"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" value="{{awardValue.document}}" name="old_award_document">
+                    <input type="hidden" value="{{awardValue.id}}" name="award_id">
+                    <div class="col-sm-12">
+                        <div class="action-box  btn-form acpt-rjt-btn action-one">
+                            <div id="award_view_btn">
+                                <button class="border-btn-small" type="button" onclick="editAward()">Edit</button>
+                                <button class="btn-red-one" type="button" onclick="deleteAward('{{awardValue.id}}')">Delete</button>
+                            </div>
+
+                            <div id="award_edit_btn" style="display: none;">
+                                <button class="border-btn" type='button' onclick="closeAward()">Discard changes</button>
+                                <button class="btn-pink ml-10 savebtn" type="submit">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <button type="button" class="close-btn-pop" data-dismiss="modal"><img src="{% static 'images/material-cancel.svg'%}"></button>
+        </div>
+    </div>
+</div>
+<script>
+//    $(".datepickerr").click(function(){
+    $('.datepickerrr').datepicker({
+        clearBtn: false,
+        weekStart: 1,
+        maxDate: new Date(),
+        orientation: "bottom",
+        dateFormat: "dd/mm/yy"
+    });
+    
+    $("#editAwardFormm").validate({
+        submitHandler: function (form) {
+            var token = $("[name=csrfmiddlewaretoken]").val();
+            var form = document.querySelector('#editAwardFormm');
+            var formData = new FormData(form);
+            
+            formData.append('imageFile', $('#edit_award_document')[0].files[0]);
+            formData.append('csrfmiddlewaretoken', token);
+            console.log('error', formData)
+            $.ajax({
+                type: 'POST',
+                url: 'editAwardProfile',
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $('#payloader').show();
+                },
+                success: function (response) {
+                    $('#payloader').hide();
+                    $('#award_table').html(response);
+                    $('#viewAwardd').modal('hide');
+                },
+            })
+        }
+    });
+
+//    $(document).ready(function () {
+//        $(".savebtn").click(function (e) { alert('name');
+//            var token = $("[name=csrfmiddlewaretoken]").val();
+////            var form = document.querySelector('#editAwardForm');
+////
+////            var formData = new FormData(form);
+////            formData.append('imageFile', $('#edit_award_document')[0].files[0]);
+////
+////            formData.append('csrfmiddlewaretoken', token);
+//
+//            $.ajax({
+//                type: 'POST',
+//                url: 'editAwardProfile',
+////                contentType: false,
+////                data: formData,
+////                processData: false,
+//                data: {id: '546', csrfmiddlewaretoken: token},
+//                beforeSend: function () {
+//                    alert('send');
+//                    $('#payloader').show();
+//                },
+//                success: function (response) {
+//                    $('#payloader').hide();
+//                    alert();
+////                    $('#award_table').html(response);
+////                    $('#viewAwardd').modal('hide');
+//                },
+//                error: function (response) { 
+//                    alert('error');
+//                    $('#payloader').hide();
+//                    console.log('error', response)
+//                }
+//            })
+//        });
+//    });
+
+</script>
+

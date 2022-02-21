@@ -1,0 +1,102 @@
+{% load static %}
+{% load fetch_user %}
+{% if eventList %}
+<table class="table list-view-table">
+    <thead>
+        <tr>
+            <th scope="col" width="15%">Date</th>
+            <th scope="col" width="19%">Session Time</th>
+            <th scope="col" width="15%">Type of Service</th>
+            <th scope="col" width="17%">Service Name</th>
+            <th scope="col" width="17%">PT Name</th>
+            <th scope="col" width="17%">Client Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for event in eventList%}
+        
+        {% get_book_id request.session.user_id event.date_of_booking con1 con2 con3 con4 con5 as bookIDArr %}
+        
+        <tr>
+            <td>
+                {% change_date event.date_of_booking as date_val %}
+                {{date_val}}
+            </td>
+            <td>
+                
+                
+                {% for bookTimeA in bookIDArr%}
+                {% get_book_time bookTimeA as bookArr %}
+                {% for bookTime in bookArr.0%}
+                <div class="ses-tab" onclick="eventPopup('{{bookTimeA}}','list')"><i class="fas fa-circle"></i><span>{{bookTime}}</span></div>
+                {% endfor%}
+                {% endfor%}
+            </td>
+            
+            <td>
+                {% for bookTimeA in bookIDArr%}
+                {% get_book_time bookTimeA as bookArr %}
+                {% for bookTime in bookArr.1%}
+                <div class="ses-tab" onclick="eventPopup('{{bookTimeA}}','list')">
+                    {{bookTime}}
+                </div>
+                {% endfor%}
+                {% endfor%}
+            </td>
+            <td>
+                {% for bookTimeA in bookIDArr%}
+                {% get_book_time bookTimeA as bookArr %}
+                {% for bookTime in bookArr.2%}
+                <div class="ses-tab" onclick="eventPopup('{{bookTimeA}}','list')">
+                    {{bookTime}}
+                </div>
+                {% endfor%}
+                {% endfor%}
+            </td>
+            <td>
+                {% for bookTimeA in bookIDArr%}
+                {% get_book_time bookTimeA as bookArr %}
+                {% for bookTime in bookArr.3%}
+                <div class="ses-tab" onclick="eventPopup('{{bookTimeA}}','list')">
+                    {{bookTime}}
+                </div>
+                {% endfor%}
+                {% endfor%}
+            </td>
+            <td>
+                {% for bookTimeA in bookIDArr%}
+                {% get_book_time bookTimeA as bookArr %}
+                {% for bookTime in bookArr.4%}
+                <div class="ses-tab" onclick="eventPopup('{{bookTimeA}}','list')">
+                    {{bookTime}}
+                </div>
+                {% endfor%}
+                {% endfor%}
+            </td>
+        </tr>
+        {% endfor%}
+        
+        
+        
+        
+        
+    </tbody>
+</table>
+<style>
+    .ses-tab{
+        cursor: pointer;
+    }
+</style>
+<script>
+    function editEv() { 
+        $('.disabledField').removeAttr("disabled");
+        $('#event_view_btn').hide();
+        $('#event_edit_btn').show();
+        $('#reassign_id').attr( 'onclick',"reassignPT()");
+        $('#reason_bx').show();
+        $('#reassing_dv').show();
+    }
+</script>
+
+{% endif%}
+

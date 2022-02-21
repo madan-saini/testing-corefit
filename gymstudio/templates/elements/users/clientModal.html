@@ -1,0 +1,277 @@
+{% load static %}
+
+
+<div class="modal fade" data-backdrop="static" id="modalShowClient" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered new-offer-dialog" role="document">
+        <div class="modal-content upload-img-pop new-offer-pop disable-text-field">
+            <form name="clientTransformationFormEdit" id="clientTransformationFormEdit-{{clientTransformationData.id}}" method="POST" enctype="multipart/form-data" >
+            {% csrf_token %}
+            <div class="row" style="display:block">
+                <div class="col-sm-6">
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Client name[*] </label>
+                        <div class="form-field-input">
+                            <input id="client_name_id" class="required disabledField " type="text" name="client_name_id" placeholder="" value="{{clientTransformationData.name}}" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Client Description[*] </label>
+                        <div class="form-field-input">
+                            <textarea name="client_Description_id" id="client_Description_id{{clientTransformationData.id}}" class="client_Description_edit disabledField"  placeholder="Enter client description" disabled>{{clientTransformationData.description}}
+                            </textarea>
+                            <small class="client_Description_edit_count{{clientTransformationData.id}}">0 of 100 words</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Profile image</label>
+                        <div class="form-field-video">
+
+                            <div class="video-uploadbox">
+                                <div class="profile_client_view_img" >
+                                    <label for="video" class="custom-file-labell placeholder text-truncate">Upload image</label>
+                                </div>
+                                <div class="profile_client_edit_img custom-file"  style="display: none;" >
+                                    <input type="file"  name="client_ProfileImageEdit" onchange="changeEditPreview(this,{{clientTransformationData.id}},'client_ProfileImageEditPreview_showid','client_ProfileImageEditPreview_')" id="client_ProfileImageEdit_{{clientTransformationData.id}}" class="custom-file-input disabledField" accept=".jpg, .jpeg, .png" fullwidth=""  disabled>
+                                    <label for="video" class="custom-file-label placeholder text-truncate">Upload image</label>
+                                    <input type="hidden" name="client_ProfileImageOldEdit"  value="{{clientTransformationData.image}}" class="">
+
+                                </div>
+
+
+                            </div>
+                            {% if clientTransformationData.image%}
+                            <div id="client_ProfileImageEditPreview_showid{{clientTransformationData.id}}" onclick="clientPreViewEdit('client_ProfileImageEditPreview_{{clientTransformationData.id}}','{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.image}}')" class="upload-box" data-toggle="modal" >
+                                <img id="client_ProfileImageEditPreview_{{clientTransformationData.id}}" data="{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.image}}" src="{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.image}}">
+                            </div>
+
+                            {% else %}
+                                <div id="client_ProfileImageEditPreview_showid{{clientTransformationData.id}}" class="upload-box" >
+                                    <img id="client_ProfileImageEditPreview_{{clientTransformationData.id}}" src="{% static 'images/no-image.svg' %}">
+                                </div>
+                                {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row-new">
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <h4 class="before-head mb-3">Before image</h4>
+                            <label class="label-field">Front</label>
+                            <div class="form-field-video mb-3">
+
+                                <div class="video-uploadbox">
+<div class="profile_client_view_img" >
+                                        <label for="client_BeforeImageFrontEdit_{{clientTransformationData.id}}" class="custom-file-labell placeholder text-truncate">Upload image</label>
+                                </div>
+                                    <div class="profile_client_edit_img custom-file"  style="display: none;" >
+                                        <input type="file"  name="client_BeforeImageFrontEdit" onchange="changeEditPreview(this,{{clientTransformationData.id}},'client_BeforeImageEditFrontPreview_showId','client_BeforeImageEditFrontPreview_')" id="client_BeforeImageFrontEdit_{{clientTransformationData.id}}" accept=".jpg, .jpeg, .png" fullwidth="" class="custom-file-input disabledField" disabled>
+                                        <input type="hidden" name="client_BeforeImageFrontOldEdit" id="" value="{{clientTransformationData.beforeimage_front}}" class="custom-file-input" accept=".jpg, .jpeg, .png" fullwidth=""  >
+
+                                        <label for="client_BeforeImageFrontEdit_{{clientTransformationData.id}}" class="custom-file-label placeholder text-truncate">Upload image</label>
+                                    </div>
+
+                                </div>
+                                {% if clientTransformationData.beforeimage_front%}
+                                <div id="client_BeforeImageEditFrontPreview_showId{{clientTransformationData.id}}" onclick="clientPreViewEdit('client_BeforeImageEditFrontPreview_{{clientTransformationData.id}}','{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.beforeimage_front}}')" class="upload-box" data-toggle="modal" >
+                                    <img id="client_BeforeImageEditFrontPreview_{{clientTransformationData.id}}" data="{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.beforeimage_front}}" src="{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.beforeimage_front}}">
+                                </div>
+                                {% else %}
+                                <div id="client_BeforeImageEditFrontPreview_showId{{clientTransformationData.id}}" class="upload-box" >
+                                    <img id="client_BeforeImageEditFrontPreview_{{clientTransformationData.id}}" src="{% static 'images/no-image.svg' %}">
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="form-group form-field-main">
+                            <label class="label-field"> Side</label>
+                            <div class="form-field-video mb-3">
+
+                                <div class="video-uploadbox">
+<div class="profile_client_view_img" >
+                                        <label for="client_BeforeImageSideEdit_{{clientTransformationData.id}}" class="custom-file-labell placeholder text-truncate">Upload image</label>
+                                </div>
+                                    <div class="profile_client_edit_img custom-file"  style="display: none;" >
+                                        <input type="file" name="client_BeforeImageSideEdit" onchange="changeEditPreview(this,{{clientTransformationData.id}},'client_BeforeImageEditSidePreview_showId','client_BeforeImageEditSidePreview_')" id="client_BeforeImageSideEdit_{{clientTransformationData.id}}"  accept=".jpg, .jpeg, .png" fullwidth=""  class="custom-file-input disabledField " disabled>
+                                        <input type="hidden" name="client_BeforeImageSideOldEdit" id="" value="{{clientTransformationData.beforeimage_side}}" class="custom-file-input" accept=".jpg, .jpeg, .png" fullwidth=""  >
+
+                                        <label for="client_BeforeImageSideEdit_{{clientTransformationData.id}}" class="custom-file-label placeholder text-truncate">Upload image</label>
+                                    </div>
+
+                                </div>
+                                {% if clientTransformationData.beforeimage_side%}
+                                <div id="client_BeforeImageEditSidePreview_showId{{clientTransformationData.id}}" onclick="clientPreViewEdit('client_BeforeImageEditSidePreview_{{clientTransformationData.id}}','{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.beforeimage_side}}')" class="upload-box" data-toggle="modal" >
+                                    <img id="client_BeforeImageEditSidePreview_{{clientTransformationData.id}}" data="{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.beforeimage_side}}" src="{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.beforeimage_side}}">
+                                </div>
+                                {% else %}
+                                <div id="client_BeforeImageEditSidePreview_showId{{clientTransformationData.id}}" class="upload-box" >
+                                    <img id="client_BeforeImageEditSidePreview_{{clientTransformationData.id}}" src="{% static 'images/no-image.svg' %}">
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Back</label>
+                            <div class="form-field-video mb-3">
+
+                                <div class="video-uploadbox">
+<div class="profile_client_view_img" >
+                                        <label for="client_BeforeImageBackEdit_{{clientTransformationData.id}}" class="custom-file-labell placeholder text-truncate">Upload image</label>
+                                    </div>
+                                    <div class="profile_client_edit_img custom-file"  style="display: none;" >
+                                        <input type="file" name="client_BeforeImageBackEdit" onchange="changeEditPreview(this,{{clientTransformationData.id}},'client_BeforeImageEditBackPreview_showId','client_BeforeImageEditBackPreview_')" id="client_BeforeImageBackEdit_{{clientTransformationData.id}}"  accept=".jpg, .jpeg, .png" fullwidth=""  class="custom-file-input disabledField" disabled>
+                                        <input type="hidden" name="client_BeforeImageBackOldEdit" id="" value="{{clientTransformationData.beforeimage_back}}" class="custom-file-input" accept=".jpg, .jpeg, .png" fullwidth=""  >
+
+                                        <label for="client_BeforeImageBackEdit_{{clientTransformationData.id}}" class="custom-file-label placeholder text-truncate">Upload image</label>
+                                    </div>
+
+                                </div>
+                                {% if clientTransformationData.beforeimage_back%}
+                                <div id="client_BeforeImageEditBackPreview_showId{{clientTransformationData.id}}" onclick="clientPreViewEdit('client_BeforeImageEditBackPreview_{{clientTransformationData.id}}','{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.beforeimage_back}}')" class="upload-box" data-toggle="modal" >
+                                    <img id="client_BeforeImageEditBackPreview_{{clientTransformationData.id}}" data="{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.beforeimage_back}}" src="{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.beforeimage_back}}">
+                                </div>
+                                {% else %}
+                                <div id="client_BeforeImageEditBackPreview_showId{{clientTransformationData.id}}" class="upload-box" >
+                                    <img id="client_BeforeImageEditBackPreview_{{clientTransformationData.id}}" src="{% static 'images/no-image.svg' %}">
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <h4 class="before-head mb-3">After image</h4>
+                            <label class="label-field">Front</label>
+                            <div class="form-field-video mb-3">
+
+                                <div class="video-uploadbox">
+<div class="profile_client_view_img" >
+                                        <label for="client_AfterImageFrontEdit_{{clientTransformationData.id}}" class="custom-file-labell placeholder text-truncate">Upload image</label>
+                                    </div>
+                                    <div class="profile_client_edit_img custom-file"  style="display: none;" >
+                                        <input type="file" name="client_AfterImageFrontEdit" onchange="changeEditPreview(this,{{clientTransformationData.id}},'client_AfterImageEditFrontPreview_showId','client_AfterImageEditFrontPreview_')" id="client_AfterImageFrontEdit_{{clientTransformationData.id}}"  accept=".jpg, .jpeg, .png" fullwidth="" class="custom-file-input disabledField" disabled>
+                                        <input type="hidden" name="client_AfterImageFrontOldEdit" id="" value="{{clientTransformationData.afterimage_front}}" class="custom-file-input" accept=".jpg, .jpeg, .png" fullwidth=""  >
+
+                                        <label for="client_AfterImageFrontEdit_{{clientTransformationData.id}}" class="custom-file-label placeholder text-truncate">Upload image</label>
+                                    </div>
+
+                                </div>
+                                {% if clientTransformationData.afterimage_front%}
+                                <div id="client_AfterImageEditFrontPreview_showId{{clientTransformationData.id}}" onclick="clientPreViewEdit('client_AfterImageEditFrontPreview_{{clientTransformationData.id}}','{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.afterimage_front}}')" class="upload-box" data-toggle="modal" >
+                                    <img id="client_AfterImageEditFrontPreview_{{clientTransformationData.id}}" data="{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.afterimage_front}}" src="{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.afterimage_front}}">
+                                </div>
+                                {% else %}
+                                <div id="client_AfterImageEditFrontPreview_showId{{clientTransformationData.id}}" class="upload-box" >
+                                    <img id="client_AfterImageEditFrontPreview_{{clientTransformationData.id}}" src="{% static 'images/no-image.svg' %}">
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Side</label>
+                            <div class="form-field-video mb-3">
+
+                                <div class="video-uploadbox">
+ <div class="profile_client_view_img" >
+                                        <label for="client_AfterImageFrontSideEdit_{{clientTransformationData.id}}" class="custom-file-labell placeholder text-truncate">Upload image</label>
+                                    </div>
+                                    <div class="profile_client_edit_img custom-file"  style="display: none;" >
+                                        <input type="file" name="client_AfterImageFrontSideEdit" onchange="changeEditPreview(this,{{clientTransformationData.id}},'client_AfterImageEditSidePreview_showId','client_AfterImageEditSidePreview_')" id="client_AfterImageFrontSideEdit_{{clientTransformationData.id}}"  accept=".jpg, .jpeg, .png" fullwidth=""  class="custom-file-input disabledField" disabled>
+                                        <input type="hidden" name="client_AfterImageFrontSideOldEdit" id="" value="{{clientTransformationData.afterimage_side}}" class="custom-file-input" accept=".jpg, .jpeg, .png" fullwidth=""  >
+                                        <label for="client_AfterImageFrontSideEdit_{{clientTransformationData.id}}" class="custom-file-label placeholder text-truncate">Upload image</label>
+                                    </div>
+
+                                </div>
+                                {% if clientTransformationData.afterimage_side%}
+                                <div id="client_AfterImageEditSidePreview_showId{{clientTransformationData.id}}" onclick="clientPreViewEdit('client_AfterImageEditSidePreview_{{clientTransformationData.id}}','{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.afterimage_side}}')" class="upload-box" data-toggle="modal" >
+                                    <img id="client_AfterImageEditSidePreview_{{clientTransformationData.id}}" data="{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.afterimage_side}}" src="{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.afterimage_side}}">
+                                </div>
+                                {% else %}
+                                <div id="client_AfterImageEditSidePreview_showId{{clientTransformationData.id}}" class="upload-box" >
+                                    <img id="client_ProfileImageEditPreview_{{clientTransformationData.id}}" src="{% static 'images/no-image.svg' %}">
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Back</label>
+                            <div class="form-field-video mb-3">
+
+                                <div class="video-uploadbox">
+<div class="profile_client_view_img" >
+                                        <label for="client_AfterImageFrontBackEdit_{{clientTransformationData.id}}" class="custom-file-labell placeholder text-truncate">Upload image</label>
+                                    </div>
+                                    <div class="profile_client_edit_img custom-file"  style="display: none;" >
+                                        <input type="file" name="client_AfterImageFrontBackEdit" onchange="changeEditPreview(this,{{clientTransformationData.id}},'client_AfterImageEditFrontBackPreview_showId','client_AfterImageEditFrontBackPreview_')" id="client_AfterImageFrontBackEdit_{{clientTransformationData.id}}"  accept=".jpg, .jpeg, .png" fullwidth=""  class="disabledField custom-file-input " disabled>
+                                        <input type="hidden" name="client_AfterImageFrontBackOldEdit" id="" value="{{clientTransformationData.afterimage_back}}" class="custom-file-input" accept=".jpg, .jpeg, .png" fullwidth=""  >
+                                        <label for="client_AfterImageFrontBackEdit_{{clientTransformationData.id}}" class="custom-file-label placeholder text-truncate">Upload image</label>
+                                    </div>
+
+                                </div>
+                                {% if clientTransformationData.afterimage_back%}
+                                <div id="client_AfterImageEditFrontBackPreview_showId{{clientTransformationData.id}}" onclick="clientPreViewEdit('client_AfterImageEditFrontBackPreview_{{clientTransformationData.id}}','{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.afterimage_back}}')" class="upload-box" data-toggle="modal" >
+                                    <img id="client_AfterImageEditFrontBackPreview_{{clientTransformationData.id}}" data="{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.afterimage_back}}" src="{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.afterimage_back}}">
+                                </div>
+                                {% else %}
+                                <div id="client_AfterImageEditFrontBackPreview_showId{{clientTransformationData.id}}" class="upload-box" >
+                                    <img id="client_AfterImageEditFrontBackPreview_{{clientTransformationData.id}}" src="{% static 'images/no-image.svg' %}">
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-12">
+                    <div class="action-box  btn-form acpt-rjt-btn action-one">
+                        <div id="view_btn_clientTransformationData{{clientTransformationData.id}}" class="view_btn_clientTransformationData">
+                            <button class="border-btn-small" type="button" onclick="editclientTransformationData('{{clientTransformationData.id}}')">Edit</button>
+                            <button class="btn-red-one" type="button"  onclick="deleteClientTransformation('{{clientTransformationData.id}}')">Delete</button>
+                        </div>
+
+                        <div id="edit_btn_clientTransformationData{{clientTransformationData.id}}" class="edit_btn_clientTransformationData" style="display: none;">
+                            <button class="border-btn" type='button' onclick="closeclientTransformationData('{{clientTransformationData.id}}')">Discard changes</button>
+                            <button  class="btn-pink ml-10" onclick="editClientTransformationSubmit({{clientTransformationData.id}})">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="close-btn-pop" data-dismiss="modal"><img src="{% static 'images/material-cancel.svg'%}"></button>
+            </form>
+
+        </div>
+    </div>
+</div>
+<script>
+    $('.client_Description_edit').on('keyup', function (e) {
+            console.log(e.currentTarget.id)
+            cls = e.currentTarget.id
+            cls = cls.split("_id")
+            str = $(this).val();
+            str = str.replace(/(^\s*)|(\s*$)/gi, "");
+            str = str.replace(/[ ]{2,}/gi, " ");
+            str = str.replace(/\n /, "\n");
+            words = str.split(/\s/).length;
+            if (words >= 1 && $(this).val() != '')
+            {
+                if (words <= 100) {
+                    $('.client_Description_edit_count'+cls[1]).html(words + ' of 100 words');
+                } else {
+                    if (e.which !== 8)
+                        e.preventDefault();
+                    var values = $(this).val().split(" ").splice(0,100).join(" ")
+                        $(this).val(values)
+                        var trimmed = $(this).val().split(/\s+/, 100).join(" ");
+                    // Add a space at the end to make sure more typing creates new words
+                    $(this).val(trimmed + " ");
+                }
+            } else {
+                $('.client_Description_edit_count').html('0 of 100 words');
+            }
+        });
+</script>

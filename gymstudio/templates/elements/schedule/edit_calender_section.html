@@ -1,0 +1,104 @@
+{% load static %}
+{% load fetch_user %}
+
+<script>
+    function removeSetCalEdit(val) { 
+        var count = $('.cal_settt').length;
+        if (count == 1) {
+            $('.cal_settt').html('<p>Unavailable</p>');
+        } else {
+            $('#cal_settt_' + val).remove();
+            checkValidCalEdit()
+        }
+        $('.ui-timepicker-standard').hide();
+    }
+
+
+    var makeidd = function (length) {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
+</script>
+
+{% if queries == 0%}
+
+<div class="check-date-input cal_settt" id='cal_settt_5555'>
+    <div>
+    <input type="text" id="start_time_edit_5555" value="9:00 AM" name="over_start_time_edit[]" class="e_start_timepicker"><span class="space">-</span><input type="text" id="end_time_edit_5555" value="5:00 PM" name="over_end_time_edit[]" class="e_end_timepicker"><a href="javascript:void(0);" class="trash-check-avail "  title="Remove interval" id='delete_lnk_e_5555'><img src='/static/images/material-delete.svg'></a>
+    </div>
+    <script>
+        var rand = makeidd(5);
+        $('#start_time_edit_5555').attr('id', 'start_time_edit_' + rand);
+        $('#end_time_edit_5555').attr('id', 'end_time_edit_' + rand);
+    
+        $('#cal_settt_5555').attr('id', 'cal_settt_' + rand);
+        $('#delete_lnk_e_5555').attr('id', 'delete_lnk_e_' + rand);
+    
+        $('#delete_lnk_e_'+rand).attr("onclick", "removeSetCalEdit('" + rand + "')");
+    
+    </script>
+
+    
+</div>
+
+{% else %}
+{% for val in queries %}
+{% if val.status == 0%}
+{% convert_json val.start_time as json_val1 %}
+{% convert_json val.end_time as json_val2 %}
+{%for start_val, end_val in json_val1|zip:json_val2 %}
+<div class="check-date-input cal_settt" id='cal_settt_5555'>
+<div>
+    <input type="text" id="start_time_edit_5555" value="{{start_val}}" name="over_start_time_edit[]" class="e_start_timepicker"><span class="space">-</span><input type="text" id="end_time_edit_5555" value="{{end_val}}" name="over_end_time_edit[]" class="e_end_timepicker"><a href="javascript:void(0);" class="trash-check-avail delete_lnk" title="Remove interval" id='delete_lnk_e_5555'><img src='/static/images/material-delete.svg'></a>
+</div>
+    <script>
+        var rand = makeidd(5);
+        $('#start_time_edit_5555').attr('id', 'start_time_edit_' + rand);
+        $('#end_time_edit_5555').attr('id', 'end_time_edit_' + rand);
+    
+        $('#cal_settt_5555').attr('id', 'cal_settt_' + rand);
+        $('#delete_lnk_e_5555').attr('id', 'delete_lnk_e_' + rand);
+    
+        $('#delete_lnk_e_'+rand).attr("onclick", "removeSetCalEdit('" + rand + "')");
+    
+    </script>
+</div>
+
+
+{% endfor%}
+
+{% else %}
+<p>Unavailable</p>
+{% endif %}
+{% endfor %}
+
+{% endif %}
+
+<script>
+    $('.e_start_timepicker').timepicker({
+        timeFormat: 'h:mm p',
+        interval: 15,
+        minTime: '00',
+        maxTime: '11:45pm',
+        startTime: '00:00',
+        dynamic: false,
+        dropdown: true,
+        scrollbar: true
+    });
+    $('.e_end_timepicker').timepicker({
+        timeFormat: 'h:mm p',
+        interval: 15,
+        minTime: '00',
+        maxTime: '11:45pm',
+        startTime: '00:00',
+        dynamic: false,
+        dropdown: true,
+        scrollbar: true
+    });
+</script>
+

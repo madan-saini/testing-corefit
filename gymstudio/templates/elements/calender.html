@@ -1,0 +1,893 @@
+{% load static %}
+{% load fetch_user %}
+
+<!--<link rel="stylesheet" type="text/css" href="{% static 'css/daterangepicker.css' %}" />-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.4/moment.js"></script>
+<script>
+    
+    
+    
+    $(document).mouseup(function(e) 
+{
+    var container = $("#copy_part");
+
+    // if the target of the click isn't the container nor a descendant of the container
+    if (!container.is(e.target) && container.has(e.target).length === 0) 
+    {
+        container.hide();
+        $('.copy-dv-part').html('');
+    }
+});
+
+    function copyData() { 
+        $("input:checkbox[name=day_name_copy]:checked").each(function () {
+            var selected_box = $('#selected_box').val();
+            var selected_box_html = $('#section_day_' + selected_box).html();
+            var id = $(this).val();
+            var val_n = $(this).attr("data");
+
+
+            if (selected_box != id && $('#day-option' + selected_box).prop('checked') == true) {
+                $('#section_day_' + id).html(selected_box_html);
+//                $('#section_day_' + id).child().id();
+//                alert(val_n);
+                $('#section_day_' + id + ' .day_set_' + selected_box).each(function () {
+//                    alert()
+                    
+                    
+                    var rand = makeid(5);
+                    $(this).removeClass('check-date-input');
+                    $(this).removeClass('day_set_' + selected_box);
+
+                    var cls1 = $(this).attr('class');
+                    var clsArr = cls1.split(/\s+/);
+                    var cls = clsArr[0];
+                    
+                    $(this).removeClass();
+                    var val1 = $('#section_day_' + selected_box + ' .' + cls).find('input.start_timepicker').val();
+                    var val2 = $('#section_day_' + selected_box + ' .' + cls).find('input.end_timepicker').val();
+//                    alert(val1);
+
+                    $(this).find('a.delete_lnk_' + selected_box).addClass('delete_lnk_' + id);
+                    $(this).find('a.delete_lnk_' + selected_box).removeClass('delete_lnk_' + selected_box);
+
+                    $(this).find('input.start_timepicker').attr('id', 'start_time_' + rand);
+                    $(this).find('input.start_timepicker').attr('name', "start_time['" + val_n + "'][]");
+                    $(this).find('input.end_timepicker').attr('id', 'end_time_' + rand);
+                    $(this).find('input.end_timepicker').attr('name', "end_time['" + val_n + "'][]");
+
+
+                    if(val1 != undefined){ 
+                        $(this).find('input.start_timepicker').val(val1);
+                        $(this).find('input.end_timepicker').val(val2);
+                    } else{
+                        var start = $(this).find('input.start_timepicker').val();
+                        var end = $(this).find('input.end_timepicker').val();
+                    }
+                    
+//                    $(this).find('input.start_timepicker').val(val1);
+//                    $(this).find('input.end_timepicker').val(val2);
+                    $(this).addClass('check-date-input');
+                    $(this).addClass('day_set_' + id);
+
+                    $(this).find('p.error_box').remove();
+                    
+                    setNumbering(id, start, end, val_n);
+                });
+                $('#section_empty_' + id).hide();
+                $('#section_day_' + id).show();
+
+//                setNumbering(id, '', '', val_n);
+
+//                $('#copy-option'+id).prop('checked',false);
+                $('#day-option' + id).prop('checked', true);
+                $('#copy_part').hide();
+                
+                Command: toastr["success"]("Changes Saved")
+            } else if (selected_box != id) {
+
+                $('#day-option' + id).prop('checked', false);
+
+                $('#section_day_' + id).html('');
+                $('#section_empty_' + id).show();
+                $('#section_day_' + id).hide();
+                $('#copy_part').hide();
+                
+                Command: toastr["success"]("Changes Saved")
+            }
+        });
+
+        checkValid();
+    }
+    
+    function isEmpty( el ){
+        return !$.trim(el.html())
+    }
+
+    function copySet(val, day) { 
+        var sty = $('#copy-dv'+val).html();        
+        if(!isEmpty($('#copy-dv'+val))){
+            $('#copy_part').hide();
+            $('.copy-dv-part').html('');
+        } else {
+            $('.copy-dv-part').html('');
+            var token = $("[name=csrfmiddlewaretoken]").val();
+            $.ajax({
+                type: 'POST',
+                url: 'viewCopy',
+                data: {'val': val, csrfmiddlewaretoken: token},
+                success: function (response) {                
+                    $('#copy-dv'+val).html(response);
+                    $('#copy-dv'+val).show();
+                    $('#copy_part').show();
+                    $('.copy-option').prop('checked', false);
+                    $('.copy-option').prop('disabled', false);
+                    $('#copy-option' + val).prop('checked', true);
+                    $('#copy-option' + val).prop('disabled', true);
+
+                    $('#selected_box').val(val);
+                }
+            });
+        }
+    }
+
+    function addSet(checked, val, day) {
+        var count = $('.day_set_' + val).length;
+        if (checked == true) {
+            $('#day-option' + val).prop('checked', true);
+            if (count == 0) {
+                var rand = makeid(5);
+                var day_val = "'" + day + "'";
+                var nav = '<div class="check-date-input day_set_' + val + '"><div class="check-date-section">';
+                nav += '<input type="text" id="start_time_' + rand + '" name="start_time[' + day_val + '][]" class="start_timepicker">';
+                nav += '<span class="space">-</span>';
+                nav += '<input type="text" id="end_time_' + rand + '" name="end_time[' + day_val + '][]" class="end_timepicker">';
+                nav += '<a href="javascript:void(0);" title="Remove interval" class="trash-check-avail delete_lnk_' + val + '">';
+                nav += "<img src='/static/images/material-delete.svg'>";
+                nav += '</a></div></div>';
+
+//                $('#delete_lnk_'+val).attr("onclick", "removeSet("+val+",'"+day+"')");
+
+                $('#section_day_' + val).html(nav);
+                $('#section_day_' + val).show();
+                $('#section_empty_' + val).hide();
+
+                setNumbering(val, '9', '17', day);
+                saveAvailability();
+            } else {
+                
+                if ($('#section_day_' + val).css('display') == 'none') {
+                    $('#section_day_' + val).show();
+                    $('#section_empty_' + val).hide();
+                } else{
+                    checkValidation(val, day);
+                }
+                
+
+                
+
+//                saveAvailability();
+            }
+            saveAvail('0',day);
+        } else {
+//            $('#section_day_' + val).html('');
+            $('#section_day_' + val).hide();
+            $('#section_empty_' + val).show();
+            $('#day-option' + val).prop('checked', false);
+            
+            saveAvail('1',day);
+
+//            saveAvailability();
+        }
+        
+//        alert(checked);
+//        alert(count);
+//        alert(day);
+    }
+
+    function removeSet(val, r_no) {
+        var count = $('.day_set_' + val).length;
+        if (count == 1) {
+            $('#day-option' + val).prop('checked', false);
+            $('#section_day_' + val).html('');
+            $('#section_day_' + val).hide();
+            $('#section_empty_' + val).show();
+        } else {
+            $('.day_set_' + r_no).remove();
+            checkValid()
+        }
+        $('.ui-timepicker-standard').hide();
+    }
+
+    function setNumberingCopy(val, time, endTime, day) {
+        var total_requirement = $('.day_set_' + val).length;
+        for (var r = 0; r < total_requirement; r++) {
+            var r_no = r + 1;
+            $(".day_set_" + val + ":eq(" + r + ")").addClass('day_set_' + val + r_no);
+            $(".delete_lnk_" + val + ":eq(" + r + ")").attr("onclick", "removeSet(" + val + "," + val + r_no + ")");
+        }
+    }
+
+    function setNumbering(val, time, endTime, day) { 
+        var total_requirement = $('.day_set_' + val).length;
+        for (var r = 0; r < total_requirement; r++) {
+            var r_no = r + 1;
+            $(".day_set_" + val + ":eq(" + r + ")").addClass('day_set_' + val + r_no);
+            $(".delete_lnk_" + val + ":eq(" + r + ")").attr("onclick", "removeSet(" + val + "," + val + r_no + ")");
+        }
+
+
+        $('.start_timepicker').timepicker({
+            timeFormat: 'h:mm p',
+            interval: 15,
+            minTime: '00',
+            maxTime: '11:45pm',
+            defaultTime: time,
+            startTime: '00:00',
+            dynamic: false,
+            dropdown: true,
+            scrollbar: true,
+            change: checkValid
+        });
+        $('.end_timepicker').timepicker({
+            timeFormat: 'h:mm p',
+            interval: 15,
+            minTime: '00',
+            maxTime: '11:45pm',
+            defaultTime: endTime,
+            startTime: '00:00',
+            dynamic: false,
+            dropdown: true,
+            scrollbar: true,
+            change: checkValid
+        });
+    }
+
+    function saveAvailability() {
+        var token = $("[name=csrfmiddlewaretoken]").val();
+        var form = $("#profileForm1");
+
+        var serializedData = form.serializeArray().reduce(function (obj, item) {
+            var n = item.name,
+                    v = item.value;
+
+            obj[n] = obj[n] === undefined ? v
+                    : $.isArray(obj[n]) ? obj[n].concat(v)
+                    : [obj[n], v];
+//                obj[item.name] = item.value;
+            return obj;
+        }, {});
+
+
+        $.ajax({
+            type: 'POST',
+            url: 'saveAvailability',
+            data: {'serializedData': serializedData, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+//                console.log('success', response)
+Command: toastr["success"]("Changes Saved")
+            },
+            error: function (response) {
+                $('#payloader').hide();
+                console.log('error', response)
+            }
+        });
+    }
+    
+    function saveAvail(type, day) {
+        var token = $("[name=csrfmiddlewaretoken]").val();
+        var form = $("#profileForm1");
+
+        var serializedData = form.serializeArray().reduce(function (obj, item) {
+            var n = item.name,
+                    v = item.value;
+
+            obj[n] = obj[n] === undefined ? v
+                    : $.isArray(obj[n]) ? obj[n].concat(v)
+                    : [obj[n], v];
+//                obj[item.name] = item.value;
+            return obj;
+        }, {});
+
+
+        $.ajax({
+            type: 'POST',
+            url: 'saveAvail',
+            data: {'serializedData': serializedData,'uncheck':type, 'day':day, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+//                console.log('success', response)
+Command: toastr["success"]("Changes Saved")
+            },
+            error: function (response) {
+                $('#payloader').hide();
+                console.log('error', response)
+            }
+        });
+    }
+
+    function checkValidation(val, day) {
+//        var inps = $("input[name=start_time]").val();
+        var start_var = document.getElementsByName("start_time['" + day + "'][]");
+        var end_var = document.getElementsByName("end_time['" + day + "'][]");
+//        alert(start_var.length);
+        for (var i = 0; i < start_var.length; i++) {
+            var inp = start_var[i];
+//            alert("start_time["+day+"][" + i + "].value=" + inp.value);
+        }
+        for (var i = 0; i < end_var.length; i++) {
+            var inp = end_var[i];
+//            alert("start_time["+day+"][" + i + "].value=" + inp.value);
+            var lst_val = inp.value;
+        }
+
+        if (lst_val != '') {
+//            var next_start_val = lst_val;
+            var time_val = lst_val.split(' ')[0];
+            var time_ex = lst_val.split(' ')[1];
+            var hour_time = time_val.split(':')[0];
+            var min_time = time_val.split(':')[1];
+
+            if (time_ex == 'PM') {
+                hour_time = parseInt(hour_time) + 12;
+            }
+
+            var cont_val1 = (parseInt(hour_time) + 1);
+            var cont_val2 = (parseInt(hour_time) + 2);
+
+//            alert(cont_val1);
+//            alert(cont_val2);
+
+            var prec1 = ' AM';
+            if (cont_val1 >= 12 && cont_val1 < 24) {
+                prec1 = ' PM';
+            }
+            var hours1 = cont_val1 % 12 || 12;
+
+            var prec2 = ' AM';
+            if (cont_val2 >= 12 && cont_val2 < 24) {
+                prec2 = ' PM';
+            }
+            var hours2 = cont_val2 % 12 || 12;
+
+//            alert(hours1);
+//            alert(hours2);
+
+            var fnl_val = hours1 + ':' + min_time + prec1;
+            var fnl_end_val = hours2 + ':' + min_time + prec2;
+
+        }
+
+        var rand = makeid(5);
+        var day_val = "'" + day + "'";
+        var nav = '<div class="check-date-input day_set_' + val + '"><div class="check-date-section">';
+        nav += '<input type="text" id="start_time_' + rand + '" name="start_time[' + day_val + '][]" class="start_timepicker">';
+        nav += '<span class="space">-</span>';
+        nav += '<input type="text" id="end_time_' + rand + '" name="end_time[' + day_val + '][]" class="end_timepicker">';
+        nav += '<a href="javascript:void(0);" class="trash-check-avail delete_lnk_' + val + '">';
+        nav += "<img src='/static/images/material-delete.svg'>";
+        nav += '</a></div></div>';
+//                $('#delete_lnk_'+val).attr("onclick", "removeSet("+val+",'"+day+"')");
+
+        $('#section_day_' + val).append(nav);
+
+        setNumbering(val, fnl_val.toString(), fnl_end_val.toString(), day);
+
+    }
+
+    function checkValid_old() {
+        var start_var = document.getElementsByName("start_time['MON'][]");
+        var end_var = document.getElementsByName("end_time['MON'][]");
+
+        var start_array = new Array();
+        var end_array = new Array();
+
+        for (var i = 0; i < start_var.length; i++) {
+            var from = start_var[i].value;
+            var to = end_var[i].value;
+
+//            console.log('Start time id : ' + start_var[i].id);
+//            console.log('End time id : ' + end_var[i].id);
+            if (moment(from, 'hh:mm a') > moment(to, 'hh:mm a')) {
+                if (!$('#' + end_var[i].id).hasClass('error_range_o')) {
+                    $('#error_set_' + end_var[i].id).remove();
+                    $('#' + start_var[i].id).removeClass('error_range');
+                    $('#' + end_var[i].id).addClass('error_range');
+                    $('#' + end_var[i].id).addClass('error_range_o');
+                    $('#' + end_var[i].id).parent().parent().append('<p id="error_set_' + end_var[i].id + '" class="error_box">Choose an end time later than the start time.</p>');
+                }
+
+            } else {
+                $('#' + start_var[i].id).removeClass('error_range');
+                $('#' + end_var[i].id).removeClass('error_range');
+                $('#' + end_var[i].id).removeClass('error_range_o');
+                $('#error_set_' + end_var[i].id).remove();
+            }
+        }
+
+        for (var i = 0; i < start_var.length; i++) {
+            var inp_start = start_var[i];
+            start_array.push(inp_start.value);
+        }
+        for (var i = 0; i < end_var.length; i++) {
+            var inp_end = end_var[i];
+            end_array.push(inp_end.value);
+        }
+
+        $.each(start_array, function (index) {
+            var arr_len = start_array.length;
+            var first_val = start_array[index];
+
+            for (var i = 0; i < start_array.length; i++) {
+                if (i != index) {
+                    if (moment(first_val, 'hh:mm a') >= moment(start_array[i], 'hh:mm a')) {
+                        if (moment(first_val, 'hh:mm a') < moment(end_array[i], 'hh:mm a')) {
+
+                            if (!$('#' + end_var[index].id).hasClass('error_range')) {
+                                $('#' + start_var[index].id).addClass('error_range');
+                                $('#' + end_var[index].id).addClass('error_range');
+
+                                $('#' + end_var[index].id).parent().parent().append('<p id="error_set_' + end_var[index].id + '" class="error_box">Times overlap with another set of times.</p>');
+
+                            }
+
+                            if (!$('#' + end_var[i].id).hasClass('error_range')) {
+                                $('#' + start_var[i].id).addClass('error_range');
+                                $('#' + end_var[i].id).addClass('error_range');
+
+                                $('#' + end_var[i].id).parent().parent().append('<p id="error_set_' + end_var[i].id + '" class="error_box">Times overlap with another set of times.</p>');
+                            }
+                        } else {
+//                            $('#'+start_var[index].id).removeClass('error_range');
+//                            $('#'+end_var[index].id).removeClass('error_range');
+//                            $('#'+start_var[i].id).removeClass('error_range');
+//                            $('#'+end_var[i].id).removeClass('error_range');
+//                            $('#error_set_'+end_var[index].id).remove();
+//                            $('#error_set_'+end_var[i].id).remove();
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function checkValid() {
+        var is_error = 0;
+        $.each(['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'], function (i, day) {
+            var start_var = document.getElementsByName("start_time['" + day + "'][]");
+            var end_var = document.getElementsByName("end_time['" + day + "'][]");
+
+            var start_array = new Array();
+            var end_array = new Array();
+
+            for (var i = 0; i < start_var.length; i++) {
+                var from = start_var[i].value;
+                var to = end_var[i].value;
+
+//            alert(from);
+
+                if (moment(from, 'hh:mm a') > moment(to, 'hh:mm a')) {
+                    if (!$('#' + end_var[i].id).hasClass('error_range_o')) {
+                        is_error = 1;
+                        $('#error_set_' + end_var[i].id).remove();
+                        $('#' + start_var[i].id).removeClass('error_range');
+                        $('#' + end_var[i].id).addClass('error_range');
+                        $('#' + end_var[i].id).addClass('error_range_o');
+                        $('#' + end_var[i].id).parent().parent().append('<p id="error_set_' + end_var[i].id + '" class="error_box">Choose an end time later than the start time.</p>');
+                    }
+
+                } else {
+                    $('#' + start_var[i].id).removeClass('error_range');
+                    $('#' + end_var[i].id).removeClass('error_range');
+                    $('#' + end_var[i].id).removeClass('error_range_o');
+                    $('#error_set_' + end_var[i].id).remove();
+//                is_error = is_error - 1;
+                }
+            }
+
+            for (var i = 0; i < start_var.length; i++) {
+                var inp_start = start_var[i];
+                start_array.push(inp_start.value);
+            }
+            for (var i = 0; i < end_var.length; i++) {
+                var inp_end = end_var[i];
+                end_array.push(inp_end.value);
+            }
+
+            $.each(start_array, function (index) {
+                var arr_len = start_array.length;
+                var first_val = start_array[index];
+
+                for (var i = 0; i < start_array.length; i++) {
+                    if (i != index) {
+                        if (moment(first_val, 'hh:mm a') >= moment(start_array[i], 'hh:mm a')) {
+                            if (moment(first_val, 'hh:mm a') < moment(end_array[i], 'hh:mm a')) {
+
+                                if (!$('#' + end_var[index].id).hasClass('error_range')) {
+                                    is_error = 1;
+                                    $('#' + start_var[index].id).addClass('error_range');
+                                    $('#' + end_var[index].id).addClass('error_range');
+
+                                    $('#' + end_var[index].id).parent().parent().append('<p id="error_set_' + end_var[index].id + '" class="error_box">Times overlap with another set of times.</p>');
+
+                                }
+
+                                if (!$('#' + end_var[i].id).hasClass('error_range')) {
+                                    is_error = 1;
+                                    $('#' + start_var[i].id).addClass('error_range');
+                                    $('#' + end_var[i].id).addClass('error_range');
+
+                                    $('#' + end_var[i].id).parent().parent().append('<p id="error_set_' + end_var[i].id + '" class="error_box">Times overlap with another set of times.</p>');
+                                }
+                            } else {
+//                            $('#'+start_var[index].id).removeClass('error_range');
+//                            $('#'+end_var[index].id).removeClass('error_range');
+//                            $('#'+start_var[i].id).removeClass('error_range');
+//                            $('#'+end_var[i].id).removeClass('error_range');
+//                            $('#error_set_'+end_var[index].id).remove();
+//                            $('#error_set_'+end_var[i].id).remove();
+                            }
+                        }
+                    }
+                }
+            });
+
+        });
+        if (is_error == 0) {
+            saveAvailability()
+        }
+    }
+
+    var makeid = function (length) {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
+
+    function calenderPost() {
+        var is_error = $('#is_error').val();
+        if(is_error == 0){
+        var token = $("[name=csrfmiddlewaretoken]").val();
+        var form = $("#calenderForm1");
+
+        var serializedData = form.serializeArray().reduce(function (obj, item) {
+            var n = item.name,
+                    v = item.value;
+
+            obj[n] = obj[n] === undefined ? v
+                    : $.isArray(obj[n]) ? obj[n].concat(v)
+                    : [obj[n], v];
+//                obj[item.name] = item.value;
+            return obj;
+        }, {});
+
+        $.ajax({
+            type: 'POST',
+            url: 'calenderPost',
+            data: {'serializedData': serializedData, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+                if(response != 0){
+                    $('#overwrite_section').load('overwrite_section');
+                    $('#modal-overide-date').modal('hide');
+                    Command: toastr["success"]("Changes Saved")
+                }
+            }
+        });
+    }
+    }
+
+
+</script>
+<script>
+    function openPopup(){
+//        $('#cal_set').hide();
+//        $('#cal_update').html('');
+//        $('input.hasDatepicker').val('');
+$('#mdp-demo').multiDatesPicker('resetDates');
+$('#cal_set').hide();
+        $('#cal_update').html('');
+        $('#modal-overide-date').modal('show');
+    }
+    
+    function editOver(id){
+        
+        var start_val = $('#start_cal_val_'+id).val();
+        var end_val = $('#end_cal_val_'+id).val();
+         
+        
+        if(start_val == end_val){
+            var dates = start_val;
+            var date2 = moment(start_val).format('MM/DD/YYYY');
+            var datesArr = [date2]
+            var datesVal = [new Date(dates)]
+        } else{
+            var start = new Date(start_val);
+            var end   = new Date(end_val);
+            // end - start returns difference in milliseconds 
+            var diff = new Date(end - start);
+            const dates = [];
+            const datesArrr = [];
+            // get days
+            var days = diff/1000/60/60/24;            
+            
+            var new_date = start;
+            dates.push(new Date(new_date));
+            var date2 = moment(new_date).format('MM/DD/YYYY');
+                
+            datesArrr.push(date2);
+            for(var i=0;i<days;i++){    
+                
+                new_date.setDate(start.getDate() + 1);
+                var date2 = moment(new_date).format('MM/DD/YYYY');
+                
+                datesArrr.push(date2);
+                
+                dates.push(new Date(new_date));
+            }
+            var datesVal = dates
+            var datesArr = datesArrr
+            
+        }
+        
+//        $('#mdp-demo').multiDatesPicker("resetDates");
+                
+        
+        $('#mdp-demo').multiDatesPicker({
+            addDates: datesVal,
+            numberOfMonths: [1,2],
+            minDate: new Date(Date.now()+1*24*60*60*1000),
+            opens: 'center',
+            onSelect: function() {
+                var values = $(this).multiDatesPicker("getDates");
+                var style = $('#cal_set').attr('style');
+
+                if(values.length == 1 && style == 'display: none;'){
+                    var token = $("[name=csrfmiddlewaretoken]").val();
+                    $.ajax({
+                        type: 'POST',
+                        url: 'checkCalVal',
+                        data: {'date': values, csrfmiddlewaretoken: token},
+                        beforeSend: function () {
+                            $('#payloader').show();
+                        },
+                        success: function (response) {
+                            $('#payloader').hide();
+                            $('#cal_set').show();
+                            $('#cal_update').html(response);
+                        }
+                    });
+                } else{ 
+                    if(values.length == 0){
+                        $('#cal_set').hide();
+                        $('#cal_update').html('');
+                    }                
+                }
+                $("#DatesLabel").val(JSON.stringify($(this).multiDatesPicker("getDates")))
+            }
+        });
+        
+        $('#modal-overide-date').modal('show');
+        
+        var first_date = moment(start_val).format('MM/DD/YYYY'); 
+        var token = $("[name=csrfmiddlewaretoken]").val();
+        $.ajax({
+            type: 'POST',
+            url: 'checkCalVal',
+            data: {'date[]': first_date, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+                $('#cal_set').show();
+                $('#cal_update').html(response);
+            }
+        });
+        
+        var dateSet = JSON.stringify(datesArr);
+//        "[\"01/27/2022\",\"01/28/2022\",\"01/29/2022\",\"01/30/2022\"]"
+        $("#DatesLabel").val(dateSet)
+    }
+    
+    function deleteOver(id){
+        
+        var start_val = $('#start_cal_val_'+id).val();
+        var end_val = $('#end_cal_val_'+id).val();
+         
+        
+        if(start_val == end_val){
+            var dates = start_val;
+            var date2 = moment(start_val).format('MM/DD/YYYY');
+            var datesArr = [date2]
+            var datesVal = [new Date(dates)]
+        } else{
+            var start = new Date(start_val);
+            var end   = new Date(end_val);
+            
+            var diff = new Date(end - start);
+            const dates = [];
+            const datesArrr = [];
+            // get days
+            var days = diff/1000/60/60/24;            
+            
+            var new_date = start;
+            dates.push(new Date(new_date));
+            var date2 = moment(new_date).format('MM/DD/YYYY');
+                
+            datesArrr.push(date2);
+            for(var i=0;i<days;i++){                    
+                new_date.setDate(start.getDate() + 1);
+                var date2 = moment(new_date).format('MM/DD/YYYY');
+                
+                datesArrr.push(date2);                
+                dates.push(new Date(new_date));
+            }
+            var datesVal = dates
+            var datesArr = datesArrr
+            
+        }
+        var dateSet = JSON.stringify(datesArr);
+        
+        var token = $("[name=csrfmiddlewaretoken]").val();
+        $.ajax({
+            type: 'POST',
+            url: 'deleteOver',
+            data: {'dates': dateSet, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+                $('#overwrite_section').load('overwrite_section');
+                $('#modal-overide-date').modal('hide');
+                Command: toastr["success"]("Changes Saved")
+            }
+        });
+    }
+</script>
+
+    <div class="col-sm-8 left-main-openbox">
+        <div class="set-open-time-box">
+            <h5>Set your opening times</h5>
+            {% for i, day in day_array.items %}
+
+            {% check_avail request.session.user_id day as queries %}
+            <div class="set-time-left">
+                <div class="col-sm-8 d-flex">
+                    <div>
+                        <div class="radio-box">
+                            <input type="checkbox" id="day-option{{i}}" {% if queries.0.day_name == day and queries.0.status == 0%} checked {% endif%} name="day_name" value="{{day}}" onclick="addSet(this.checked, '{{i}}', '{{day}}')">
+                            <label for="day-option{{i}}">{{day}}</label>
+                            <div class="check"></div>
+                        </div>
+                    </div>
+
+                    <div class="check-time-add" id="section_day_{{i}}" style="{% if queries.0.day_name != day or queries.0.status == 1%} display:none {% endif%}">
+                        {% for val in queries %}
+                        {% convert_json val.start_time as json_val1 %}
+                        {% convert_json val.end_time as json_val2 %}
+                        {%for start_val, end_val in json_val1|zip:json_val2 %}
+                        <div class="check-date-input day_set_{{i}}">
+                            <div class="check-date-section">
+                                <input type="text" id="start_time_456456" value="{{start_val}}" name="start_time['{{day}}'][]" class="start_timepicker">
+                                <span class="space">-</span>
+                                <input type="text" id="end_time_456456" value="{{end_val}}" name="end_time['{{day}}'][]" class="end_timepicker">
+                                <a href="javascript:void(0);" title="Remove interval" class="trash-check-avail delete_lnk_{{i}}">
+                                    <img src='/static/images/material-delete.svg'>
+                                </a>
+                            </div>
+                        </div>
+                        <script>
+                            var rand = makeid(5);
+                            $('#start_time_456456').attr('id', 'start_time_' + rand);
+                            $('#end_time_456456').attr('id', 'end_time_' + rand);
+
+                            setNumberingCopy('{{i}}', '{{start_val}}', '{{end_val}}', '{{day}}');
+                        </script>
+                        {%endfor%}
+
+                        {% endfor %}
+
+                        {% if queries.0.day_name == day%}
+                        <script>
+                            $('.start_timepicker').timepicker({
+                                timeFormat: 'h:mm p',
+                                interval: 15,
+                                minTime: '00',
+                                maxTime: '11:45pm',
+                                startTime: '00:00',
+                                dynamic: false,
+                                dropdown: true,
+                                scrollbar: true,
+                                change: checkValid
+                            });
+                            $('.end_timepicker').timepicker({
+                                timeFormat: 'h:mm p',
+                                interval: 15,
+                                minTime: '00',
+                                maxTime: '11:45pm',
+                                startTime: '00:00',
+                                dynamic: false,
+                                dropdown: true,
+                                scrollbar: true,
+                                change: checkValid
+                            });
+                        </script>
+                        {% endif%}
+                    </div>
+
+                    <div class="check-time-add" id="section_empty_{{i}}" style="{% if queries.0.day_name == day and queries.0.status == 0%} display:none {% endif%}">
+                        <p>Unavailable</p>
+                    </div>
+                </div>
+                <div class="col-sm-4 text-right rt-avail-icon">
+                    <a href="javascript:void(0);" title="New interval" onclick="addSet(true, '{{i}}', '{{day}}')">
+                        <img src="{% static 'images/feather-plus.svg' %}">
+                    </a>
+                    <div class="copy_elme">
+                    <a href="javascript:void(0);" class="ml-4" title="Copy times" onclick="copySet('{{i}}', '{{day}}')">
+                        <img src="{% static 'images/feather-copy.svg' %}">
+                        
+                    </a>
+                    <div class="copy-dv-part" id="copy-dv{{i}}">
+                            
+                        </div>
+                        
+                        </div>
+                    
+                </div>
+            </div>
+            {% if i != 7%}
+            <hr class="hr-one">
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col-sm-4 right-overide availability-overide pr-3">
+        <div class="Add-date-overrides" id="overwrite_section">
+            {% include 'users/overwrite_section.html' %}
+            
+        </div>
+    </div>
+
+
+<style>
+    .error_range{
+        border: 1px solid red !important;
+    }
+    .error_range_o{
+        border: 1px solid red !important;
+    }
+    .check-date-input{
+        display: block !important;
+    }
+
+    .check-date-section{
+        display: flex;
+    }
+    .error_box{
+        color: red !important;
+    }
+    
+    .over-box{
+        cursor: pointer;
+    }
+</style>
+
+
+
