@@ -462,7 +462,7 @@ def profile(request):
     awardInfo = ameniinfo = amenityinfo = ''
     equipinfo = equipmentinfo = ''
     if BasicInfo.objects.filter(user_id=user_id):
-        basicinfo = BasicInfo.objects.get(user_id=user_id)
+        basicinfo = BasicInfo.objects.get(user_id=user_id) 
         amenityinfo = UserAmenity.objects.all().filter(user_id=user_id).values()
         ameniinfo = UserAmenity.objects.filter(user_id=user_id)
         equipinfo = UserEquipment.objects.filter(user_id=user_id)
