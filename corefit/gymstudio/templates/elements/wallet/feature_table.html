@@ -1,0 +1,31 @@
+{% load static %}
+<table class="table table-bordered table-cs table-subs">
+    <thead>
+        <tr>
+            <th scope="col" width="70%">Features</th>
+            <th scope="col" width="15%" class="text-center">Basic Plan</th>
+            <th scope="col" width="15%" class="text-center">Premium Plan</th>
+        </tr>
+    </thead>
+    <tbody>
+        {%for feature in features%}
+        <tr>
+            <td>{{feature.title}}</td>
+            <td class="text-center"><img src="{% static 'images/close-one.svg' %}"></td>
+            <td class="text-center"><img src="{% static 'images/line-red.svg' %}"></td>
+        </tr>
+        {% endfor%}
+        <tr>
+            <td>Amount:</td>
+            <td class="text-center">AED {{basicPlan.AED_price|floatformat:2}}/weekly</td>
+            <td class="text-center">AED {{premiumPlan.AED_price|floatformat:2}}/weekly</td>
+        </tr>
+    </tbody>
+</table>
+<table width="100%" class="mb-4 table-one" bgcolor="#fff">
+    <tr>
+        <td width="70%"></td>
+        <td width="15%" class="text-center"><a href="#" class="ex-plan">Existing Plan</a></td>
+        <td width="15%" class="text-center"><a href="#" class="up-plan">Upgrade</a></td>
+    </tr>
+</table>

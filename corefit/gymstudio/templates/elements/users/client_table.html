@@ -1,0 +1,168 @@
+{% load static %} {% load fetch_user %}
+<input type='hidden' id="clientL" value="{{userClientTransformationData|length }}">
+
+{% if userClientTransformationData %}
+
+            <div class="table-box table-w-3">
+
+        <table class="table table-bordered">
+        <form  name="userViewStat"
+      id="userViewStat"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+            {% csrf_token %}
+            <thead>
+                <tr>
+                    <th scope="col">Client name</th>
+                    <th scope="col">Client description</th>
+                    <th scope="col">Front Image</th>
+                    <th scope="col">Side Image</th>
+                    <th scope="col">Back Image</th>
+                    <th scope="col">Profile Image</th>
+                    <th scope="col">Visible to User</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for clientTransformationData in userClientTransformationData %}
+                <tr id="clientTransformationDataId-{{clientTransformationData.id}}">
+                    <td class="pt-3">{{clientTransformationData.name}}</td>
+                    <td class="pt-3">{{clientTransformationData.description}}</td>
+                    <td class="pt-0">
+
+                        <div class="aft-bef-box">
+                            <div class="before-box">
+                                <h6>Before</h6>
+                                {% if clientTransformationData.beforeimage_front%}
+                                <div onclick="clientPreView('{{clientTransformationData.beforeimage_front}}','{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.beforeimage_front}}')"  class="upload-box up-small" data-toggle="modal" >
+                                    <img src="{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.beforeimage_front}}">
+                                </div>
+                                
+                                {% else %}
+                                <div class="upload-box up-small" >
+                                    <img src="{% static 'images/no-image.svg' %}">
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="before-box br-none">
+                                <h6>After</h6>
+                                {% if clientTransformationData.afterimage_front%}
+                                <div onclick="clientPreView('{{clientTransformationData.afterimage_front}}','{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.afterimage_front}}')" class="upload-box up-small" data-toggle="modal">
+                                    <img src="{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.afterimage_front}}">
+                                </div>
+                                {% else %}
+                                <div class="upload-box up-small" >
+                                    <img src="{% static 'images/no-image.svg' %}">
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </td>
+                    <td class="pt-0">
+                        <div class="aft-bef-box">
+                            <div class="before-box">
+                                <h6>Before</h6>
+                                {% if clientTransformationData.beforeimage_side%}
+                                <div onclick="clientPreView('{{clientTransformationData.beforeimage_side}}','{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.beforeimage_side}}')" class="upload-box up-small" data-toggle="modal">
+                                    <img src="{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.beforeimage_side}}">
+                                </div>
+                                {% else %}
+                                <div class="upload-box up-small" >
+                                    <img src="{% static 'images/no-image.svg' %}">
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="before-box br-none">
+                                <h6>After</h6>
+                                {% if clientTransformationData.afterimage_side%}
+                                <div onclick="clientPreView('{{clientTransformationData.afterimage_side}}','{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.afterimage_side}}')" class="upload-box up-small" data-toggle="modal" >
+                                    <img src="{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.afterimage_side}}">
+                                </div>
+                                {% else %}
+                                <div class="upload-box up-small" >
+                                    <img src="{% static 'images/no-image.svg' %}">
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </td>
+
+                    <td class="pt-0">
+                        <div class="aft-bef-box">
+                            <div class="before-box">
+                                <h6>Before</h6>
+                                {% if clientTransformationData.beforeimage_back%}
+                                <div onclick="clientPreView('{{clientTransformationData.beforeimage_back}}','{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.beforeimage_back}}')" class="upload-box up-small" data-toggle="modal" >
+                                    <img src="{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.beforeimage_back}}">
+                                </div>
+                                {% else %}
+                                <div class="upload-box up-small" >
+                                    <img src="{% static 'images/no-image.svg' %}">
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="before-box br-none">
+                                <h6>After</h6>
+                                {% if clientTransformationData.afterimage_back%}
+                                <div onclick="clientPreView('{{clientTransformationData.afterimage_back}}','{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.afterimage_back}}')" class="upload-box up-small" data-toggle="modal" >
+                                    <img src="{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.afterimage_back}}">
+                                </div>
+                                {% else %}
+                                <div class="upload-box up-small" >
+                                    <img src="{% static 'images/no-image.svg' %}">
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </td>
+
+                    <td  class="pt-3">
+                        {% if clientTransformationData.image%}
+                        <div onclick="clientPreView('{{clientTransformationData.image}}','{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.image}}')" class="upload-box up-small" data-toggle="modal" >
+                            <img src="{% static CLIENT_TRANSFORMATION_URL %}{{clientTransformationData.image}}">
+                        </div>
+                        {% else %}
+                                <div class="upload-box up-small" >
+                                    <img src="{% static 'images/no-image.svg' %}">
+                                </div>
+                                {% endif %}
+                    </td>
+                    <td class="pt-3">
+                        <div class="can-toggle" onclick="javascript:userVisibleClient(this,{{clientTransformationData.id}})">
+                             {% if clientTransformationData.status == 1 %}
+                    <input type="checkbox" name="userVIew"/>
+                {% else %}
+                    <input type="checkbox"  name="userVIew" checked/>
+                {% endif %}
+                            <label>
+                                <div class="can-toggle__switch" data-checked="No" data-unchecked="Yes"></div>
+                            </label>
+                        </div>
+                    </td>
+                    <td class="pt-3">
+                        <div class="action-box">
+                            <div class="dropdown drop-more">
+                                <button class="more-btn dropdown-toggle ml-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    More
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a onclick="viewClientTransformation('{{clientTransformationData.id}}')" class="dropdown-item" href="javascript:void(0);">View</a>
+                                    <a class="dropdown-item" href="javascript:void(0);" onclick="deleteClientTransformation('{{clientTransformationData.id}}')">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+            </form>
+
+        </table>
+    </div>
+<script>
+
+</script>
+
+{% endif%}

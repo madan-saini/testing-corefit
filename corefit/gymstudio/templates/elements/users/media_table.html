@@ -1,0 +1,110 @@
+{% load static %} {% load fetch_user %}
+<input type='hidden' id="medL" value="{{mediaSocialMedia|length }}">
+
+{% if mediaSocialMedia %}
+<div class="table-box mt-3 medialen">
+    
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th scope="col">Sr. no</th>
+          <th scope="col">Title</th>
+          <th scope="col">Type</th>
+          <th scope="col">Media</th>
+          <th scope="col">Visible to user</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody class='media-box' id="media_body">
+        {% for mediaSoci in mediaSocialMedia %} 
+        {% check_ext mediaSoci.data as ext %} 
+        {% comment %} {{ext}} {% endcomment %}
+        <tr id='media-{{mediaSoci.id}}'>
+          <td class='media-box'>{{forloop.counter}}</td>
+          <td>{{mediaSoci.mediaTitle}}</td>
+          <td>
+            {% if ext == ".mp4" %} Video {% else %} Image {% endif %}
+          </td>
+          <td>
+            {% if ext == ".mp4" %}
+            <div
+              class="upload-box table-img"
+              onclick="openVideoPop('media_upload_show{{mediaSoci.id}}')"
+            >
+              <img
+                id="media_upload_show{{mediaSoci.id}}"
+                src="{% static 'images/videoPreview.png' %}"
+                data="{% static MEDIA_URL%}{{mediaSoci.data}}"
+              />
+            </div>
+            {% else %}
+            <div
+              class="upload-box table-img" onclick="mediaView('{{mediaSoci.id}}','{% static MEDIA_URL %}{{mediaSoci.data}}')"
+            >
+              <img
+                id="media_upload_show"
+                src="{% static MEDIA_URL%}{{mediaSoci.data}}"
+                data="{% static MEDIA_URL%}{{mediaSoci.data}}"
+              />
+            </div>
+            {% endif %}
+          </td>
+          <td>
+            <div class="can-toggle" onclick="javascript:userVisibleMedia(this,{{mediaSoci.id}})">
+                {% if mediaSoci.status == 1 %}
+                    <input type="checkbox" name="userVIew"/>
+                {% else %}
+                    <input type="checkbox"  name="userVIew" checked/>
+                {% endif %}
+
+
+              <label >
+                <div
+                  class="can-toggle__switch"
+                  data-checked="No"
+                  data-unchecked="Yes"
+                >
+              </div>
+              </label>
+            </div>
+          </td>
+          <td>
+            <div class="action-box">
+              <div class="dropdown drop-more">
+                <button
+                  class="more-btn dropdown-toggle ml-0"
+                  type="button"
+                  id="dropdownMenuButton"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  More
+                </button>
+                <div
+                  class="dropdown-menu"
+                  aria-labelledby="dropdownMenuButton"
+                >
+                  <a class="dropdown-item" onclick="viewMedia({{mediaSoci.id}})" href="javascript:void(0);"
+                    >View</a
+                  >
+                  <a class="dropdown-item" href="javascript:void(0);" onclick="deleteMedia('{{mediaSoci.id}}')"
+                    >Delete</a
+                  >
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        
+        {% endfor %}
+      </tbody>
+    </table>
+    
+  </div>
+
+<!--<script>-->
+<!--  -->
+<!--</script>-->
+
+{% endif%}

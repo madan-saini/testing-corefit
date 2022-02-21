@@ -1,0 +1,150 @@
+{% load static %}
+{% load fetch_user %}
+{% if awardList %}
+<div class="table-box table-w-3">
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col" width="20%">Sr. no</th>
+                <th scope="col" width="20%">Awards/Achievements</th>
+                <th scope="col" width="20%">Attachment</th>
+                <th scope="col" width="20%">Visible to user</th>
+                <th scope="col" width="20%">Action</th>
+            </tr>
+        </thead>
+        <tbody class="award-box">
+            {% for award in awardList%}
+
+            <tr id="award-{{award.id}}">
+                <td>{{ forloop.counter }}.</td>
+                <td> {{award.award_name}}</td>
+                <td>
+                    {% check_ext award.document as ext %}
+                    {% if ext == '.pdf' %}
+
+                    <div class="upload-box up-small " onclick='docView("{{award.id}}", "{% static DOCUMENT_URL %}{{award.document}}")'>
+                        <img src="{% static 'images/pdf.svg' %}">
+                    </div>
+                    {% elif ext != '' %}
+                    <div class="upload-box up-small " onclick="awardView('{{award.id}}', '{% static DOCUMENT_URL %}{{award.document}}')">
+                        <img src="{% static DOCUMENT_URL %}{{award.document}}">
+                    </div>
+                    {% else %}
+                    <div class="upload-box up-small ">
+                        <img src="{% static 'images/no-image.svg' %}">
+                    </div>
+                    
+                    {% endif%}
+
+                </td>
+                <td>
+                    <div class="can-toggle" onclick="javascript:userVisibleAward(this,{{award.id}})">
+                        {% if award.status == 1 %}
+                        <input id="Ai{{award.id}}" type="checkbox" name="userVIew"/>
+                {% else %}
+                    <input id="Ai{{award.id}}" type="checkbox"  name="userVIew" checked/>
+                {% endif %}
+                        <label for="Ai{{award.id}}">
+                            <div class="can-toggle__switch" onclick="saveAwardVisible('{{award.id}}')" data-checked="No" data-unchecked="Yes"></div>
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <div class="action-box">
+                        <div class="dropdown drop-more">
+                            <button class="more-btn dropdown-toggle ml-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                More
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="viewAward('{{award.id}}')">View</a>
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="deleteAward('{{award.id}}')">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+        
+        
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+
+
+<script>
+    function closeAward(id) {
+        $('#award_view_btn').show();
+        $('#award_edit_btn').hide();
+        $('#viewAwardd').modal('hide');
+    }
+    function userVisibleAward(event,id){
+        var checkbox = event.children["0"];
+        console.log(checkbox['checked'])
+        checkbox['checked']=!checkbox['checked'];
+        console.log(checkbox['checked'])
+        var token = $("[name=csrfmiddlewaretoken]").val();
+        var type="award"
+        $.ajax({
+                 type: 'POST',
+                 url: 'updateUserStatus',
+                 data: {'id':id,'checkbox':checkbox['checked'],"type":type,'csrfmiddlewaretoken':token},
+                 success: function (response) {
+                 }
+             });
+ }
+    function viewAward(id) {
+        
+        var token = $("[name=csrfmiddlewaretoken]").val();
+        
+        $.ajax({
+            type: 'POST',
+            url: 'viewAward',
+            data: {'id': id, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) { 
+                $('#payloader').hide();
+                $('#award_model').html(response);
+                $('#viewAwardd').modal('show');
+                $('.disabledField').prop("disabled", true);
+                $('.award_view_img').show();
+                $('.award_edit_img').hide();
+            },
+            error: function (response) {
+                $('#payloader').hide();
+                console.log('error', response)
+            }
+        });
+    }
+
+    function editAward(id) {
+        $('.disabledField').removeAttr("disabled");
+        $('#location_ide').multiselect('enable');
+        $('#award_view_btn').hide();
+        $('#award_edit_btn').show();
+        $('.award_view_img').hide();
+        $('.award_edit_img').show();
+    }
+
+    function awardView(id, img) {
+
+        $('#imageModalCenter').modal('show');
+        $('#image_dv img').attr('src', img)
+    }
+
+    function saveAwardVisible(id) {
+        var vs = $('#Ai' + id).attr('checked');
+    }
+    
+    
+
+
+</script>
+
+{% endif%}
+

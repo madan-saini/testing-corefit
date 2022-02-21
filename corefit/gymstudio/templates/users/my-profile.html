@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/all.min.css">
+</head>
+
+<body class="fixed-nav sticky-footer" id="page-top">
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg  fixed-top nav-top" id="mainNav">
+        <div class="navbar-nav sidenav-toggler">
+            <a class="nav-link text-center" id="sidenavToggler" href="#">
+                <img src="images/bars.svg">
+            </a>
+        </div>
+        <a class="navbar-brand" href="index.html">Corefit</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+                <li>
+                    <div class="corefit-logo-icon">
+                        <a href="#"><img src="images/corefit-icon.png"></a>
+                    </div>
+                </li>
+                <li class="nav-item " data-toggle="tooltip" data-placement="right" title="Dashboard">
+                    <a class="nav-link " href="dashboard.html">
+                        <i class="fas fa-home"></i>
+                        <span class="nav-link-text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item active" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExampleone" data-parent="#exampleAccordion">
+                        <i class="fas fa-users"></i>
+                        <span class="nav-link-text">Profile Setup</span>
+                    </a>
+                    <ul class="sidenav-second-level collapse" id="collapseExampleone">
+                        <li>
+                            <a href="my-profile.html">My Profile</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link" href="tables.html">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span class="nav-link-text">My Schedule</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseComponents" data-parent="#exampleAccordion">
+                        <i class="fas fa-book"></i>
+                        <span class="nav-link-text">Bookings</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
+                        <i class="fas fa-file"></i>
+                        <span class="nav-link-text">Requests</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMulti" data-parent="#exampleAccordion">
+                        <i class="fa fa-fw fa-sitemap"></i>
+                        <span class="nav-link-text">Classes Management</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
+                        <i class="fas fa-file"></i>
+                        <span class="nav-link-text">Subscriptions</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
+                        <i class="fas fa-file"></i>
+                        <span class="nav-link-text">Client Reviews</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
+                        <i class="fas fa-file"></i>
+                        <span class="nav-link-text">Video On Demand</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
+                        <i class="fas fa-file"></i>
+                        <span class="nav-link-text">Live Classes</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
+                        <i class="fas fa-file"></i>
+                        <span class="nav-link-text">Reports</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
+                        <i class="fas fa-file"></i>
+                        <span class="nav-link-text">Message</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
+                        <i class="fas fa-setting"></i>
+                        <span class="nav-link-text">Settings</span>
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto rt-head">
+                <li>
+                    <a href="#">Big Gym 1</a>
+                </li>
+                <li>
+                    <a href="#">Gym & Studio </a>
+                </li>
+                <li>
+                    <a href="#"><img src="images/email.svg"></a>
+                </li>
+                <li>
+                    <a href="#"><img src="images/bell.svg"></a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class=" login-profile-top" id="messagesDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <div class="img-login"></div> <span>John Doe</span>
+                    </a>
+                    <ul class="dropdown-menu drop-pro" aria-labelledby="messagesDropdown">
+                        <li><a href="#">My Profile</a></li>
+                        <li><a href="#">Log out</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="content-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12 mt-3">
+                    <a href="#" class=" btn-magenta">Profile Approved</a>
+                </div>
+            </div>
+            <div class="row mt-4 mb-4">
+                <div class="col-sm-4">
+                    <p>Would you like to create a Profile for each Facility?
+                    </p>
+                </div>
+                <div class="col-sm-4 text-center">
+                    <a href="#" class=" btn-magenta">Add Branch</a>
+                </div>
+                <div class="col-sm-4">
+                     <div class="select-multi">
+                                                <select>
+                                                    <option>Admin</option>
+                                                </select>
+                                            </div>
+                </div>
+            </div>
+            <div>
+                <div id="main">
+                    <div class="accordion" id="faq">
+                        <div class="accord">
+                            <span class="num-accord">01</span>
+                            <div class="card">
+                                <div class="" id="faqhead1">
+                                    <a href="#" class="btn btn-header-link" data-toggle="collapse" data-target="#faq1" aria-expanded="true" aria-controls="faq1"> Basic Information [*]</a>
+                                </div>
+                                <div id="faq1" class="collapse show" aria-labelledby="faqhead1" data-parent="#faq">
+                                    <div class="card-body">
+                                        <div class="mb-3">LET'S GET STARTED (KEY INFORMATION)</div>
+                                        <div class="row mb-3">
+                                            <div class="col-sm-2 label-field">
+                                                Facility type
+                                            </div>
+                                            <div class="col-sm-10 select-multi">
+                                                <select>
+                                                    <option>1</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-sm-2 label-field">
+                                                COMPANY NAME*
+                                            </div>
+                                            <div class="col-sm-10 input-form">
+                                                <input type="text" name="" placeholder="Big Gym 1">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-sm-6 input-form">
+                                                <label>Main Contact First Name</label>
+                                                <input type="text" name="" placeholder="John">
+                                            </div>
+                                            <div class="col-sm-6 input-form">
+                                                <label>Main Contact Last Name</label>
+                                                <input type="text" name="" placeholder="Doe">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-sm-12 input-form">
+                                                <label>EMAIL ADDRESS *</label>
+                                                <input type="text" name="" placeholder="Johnsgym@gmail.com">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label class="col-sm-12">NUMBER OF FACILITIES*</label>
+                                            <div class="col-sm-4 select-multi">
+                                                <select>
+                                                    <option>1</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-8 input-form">
+                                                <input type="text" name="" placeholder="500001111">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-sm-12 input-form">
+                                                <label>NUMBER OF FACILITIES*</label>
+                                                <div class="select-multi">
+                                                    <select>
+                                                        <option>1</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr class="hr-form">
+                                        <div class="row mb-3">
+                                            <div class="col-sm-12 input-form">
+                                                <div class="mb-3">MY PROFILE</div>
+                                                <label>YEARS IN BUSINESS*</label>
+                                                <div class="select-multi mb-3">
+                                                    <select>
+                                                        <option>5</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12 input-form mb-3">
+                                                <label>LANGUAGE*</label>
+                                                <div class="select-multi">
+                                                    <select>
+                                                        <option>Akan</option>
+                                                    </select>
+                                                </div>
+                                                <div class="select-multi">
+                                                    <select>
+                                                        <option>Select Other Language</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12 input-form mb-3">
+                                                <label>TRAINING RESTRICTIONS*</label>
+                                                <div class="select-multi">
+                                                    <p class="sub-head">Our facility can accept</p>
+                                                </div>
+                                                <div class="d-flex mt-3">
+                                                    <div class="radio-new">
+                                                        <input type="radio" id="male" name="gender">
+                                                        <label for="male">Male Only</label>
+                                                    </div>
+                                                    <div class="radio-new">
+                                                        <input type="radio" id="female" name="gender">
+                                                        <label for="female">Female Only</label>
+                                                    </div>
+                                                    <div class="radio-new">
+                                                        <input type="radio" id="both" name="gender">
+                                                        <label for="both">Both</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr class="hr-form">
+                                        <div class="row mb-3">
+                                            <div class="mb-3 col-sm-12">ABOUT US*</div>
+                                            <div class="col-sm-12 input-form">
+                                                <textarea placeholder="abc">
+
+                                                </textarea>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="mb-3 col-sm-12">SHORT BIO*</div>
+                                            <div class="col-sm-12 input-form">
+                                                <textarea placeholder="abc">
+
+                                                </textarea>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="mb-3 col-sm-12">INTRODUCTION VIDEO</div>
+                                            <div class="col-sm-12 input-form">
+                                                <div class="custom-file"><input type="file" id="video" accept="video/mp4,video/x-m4v,video/mov,video/avi,video/*" fullwidth="" formcontrolname="video" class="custom-file-input"><label for="video" class="custom-file-label placeholder text-truncate">No video uploaded</label>
+                                                    <small>Video size should be Less than 100 Mb</small></div>
+                                                <iframe src="https://player.vimeo.com/video/564759485?title=0&amp;byline=0&amp;portrait=0&amp;speed=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=191406" width="400" height="300" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen="" title="football.mp4"></iframe>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-sm-12 input-form">
+                                                <label>WEBSITE</label>
+                                                <input type="text" name="" placeholder="www.johnsgym.com">
+                                            </div>
+                                        </div>
+                                        <hr class="hr-form">
+                                        <div class="row mb-3">
+                                            <div class="col-sm-12 input-form">
+                                                <div class="mb-3">MY PROFILE</div>
+                                                <label>YEARS IN BUSINESS*</label>
+                                                <div class="select-multi mb-3">
+                                                    <select>
+                                                        <option>5</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12 input-form mb-3">
+                                                <label>LANGUAGE*</label>
+                                                <div class="select-multi">
+                                                    <select>
+                                                        <option>Akan</option>
+                                                    </select>
+                                                </div>
+                                                <div class="select-multi">
+                                                    <select>
+                                                        <option>Select Other Language</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12 input-form mb-3">
+                                                <label>LOCATIONS</label>
+                                                <div class="select-multi">
+                                                    <label>COUNTRY*</label>
+                                                    <select>
+                                                        <option> United Arab Emirates </option>
+                                                    </select>
+                                                </div>
+                                                <div class="select-multi">
+                                                    <label>City*</label>
+                                                    <select>
+                                                        <option>Dubai</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <label><strong>Location*</strong></label>
+                                            </div>
+                                            <div class="col-sm-4 input-form">
+                                                <label>AREA</label>
+                                                <input type="text" name="" placeholder="Al Quoz">
+                                            </div>
+                                            <div class="col-sm-4 input-form">
+                                                <label>GOOGLE LOCATION</label>
+                                                <input type="text" name="" placeholder="17 B St - Al QuozAl Quoz Industrial Area 3 - Dubai - United Arab Emirates">
+                                            </div>
+                                            <div class="col-sm-4 input-form">
+                                                <label>ADDRESS</label>
+                                                <input type="text" name="" placeholder="17 B St - Al QuozAl Quoz Industrial Area 3 - Dubai - United Arab Emirates">
+                                            </div>
+                                        </div>
+                                        <hr class="hr-form">
+                                        <div class="row">
+                                            <div class="mb-3 col-sm-12">AVAILABLE SERVICES</div>
+                                            <div class="col-sm-6">
+                                                <label>KEY SERVICES*</label>
+                                                <div class="select-multi mb-3">
+                                                    <select>
+                                                        <option>5</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label>OTHER SERVICES</label>
+                                                <div class="select-multi mb-3">
+                                                    <select>
+                                                        <option>5</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <small>Note: Basic information might take sometime to save due to upload of introductory video</small>
+                                            </div>
+                                            <div class="col-sm-12 text-center mt-4">
+                                                <button type="submit" class="sub-btn">Save</button>
+                                            </div>
+                                        </div>
+                                        <hr class="hr-form">
+                                        <div class="row">
+                                            <div class="mb-3 col-sm-12">ADD OPENING/CLOSING TIME*
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <label>OPENING DAYS*
+                                                </label>
+                                                <div class="select-multi mb-3">
+                                                    <select>
+                                                        <option>5</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-sm-2 input-form">
+                                                <label>WEEK DAYS
+                                                </label>
+                                                <input type="text" name="" placeholder="Sunday">
+                                            </div>
+                                            <div class="col-sm-2 input-form">
+                                                <label>FROM
+                                                </label>
+                                                <input type="text" name="" placeholder="HH:MM 24H">
+                                            </div>
+                                            <div class="col-sm-2 input-form">
+                                                <label>TO
+                                                </label>
+                                                <input type="text" name="" placeholder="HH:MM 24H">
+                                            </div>
+                                            <div class="col-sm-4 input-form d-flex flex-btn">
+                                                <div class="btn-ad-sub">
+                                                    <i class="fas fa-plus"></i>
+                                                </div>
+                                                <div class="btn-ad-sub">
+                                                    <i class="fas fa-minus"></i>
+                                                </div>
+                                                <div class="btn-ad-sub">
+                                                    <i class="fas fa-copy"></i> </div> <span class="ct">Copy Timing
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-sm-12">
+                                                <label>SPECIAL DAYS
+                                                </label>
+                                                <div class="select-multi mb-3 d-flex box-select">
+                                                    <div class="select-multi-new">
+                                                        <select>
+                                                            <option>Select Special Days</option>
+                                                        </select>
+                                                    </div>
+                                                    <button type="submit" class="sub-btn">Add Custom</button>
+                                                </div>
+                                                <div class="select-multi mb-3 ">
+                                                    <select>
+                                                        <option>CLOSED DAYS</option>
+                                                    </select>
+                                                </div>
+                                                <div class="select-multi mb-3">
+                                                    <select>
+                                                        <option>SPECIAL CLOSED DAYS</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12 text-center mt-4">
+                                                <button type="submit" class="sub-btn">Save</button>
+                                            </div>
+                                        </div>
+                                        <hr class="hr-form">
+                                        <div class="row mb-3">
+                                            <label class="col-sm-12">AMENITIES & EQUIPMENT</label>
+                                            <div class="col-sm-12 select-multi mb-3">
+                                                <label>EQUIPMENT*</label>
+                                                <select>
+                                                    <option>Enter Equipment Name</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-12 input-form mb-3">
+                                                <label>QUANTITY*</label>
+                                                <input type="text" name="" placeholder="Quantity">
+                                            </div>
+                                            <div class="col-sm-12 input-form mb-3">
+                                                <label>MAX KG</label>
+                                                <input type="text" name="" placeholder="Enter Max KG">
+                                            </div>
+                                            <div class="col-sm-12 text-center mt-4 mb-3">
+                                                <button type="submit" class="sub-btn">Save</button>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="table-wrapper-scroll-y " style="">
+                                                <table class="table ">
+                                                    <thead class="text-center thead-dark">
+                                                        <tr>
+                                                            <th>Equipment Name </th>
+                                                            <th>Quantity </th>
+                                                            <th>Max KG </th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="text-center">
+                                                        <tr class="ng-star-inserted">
+                                                            <td>Ab Crunch Machine</td>
+                                                            <td>1</td>
+                                                            <td>0</td>
+                                                            <td class="td-flex">
+                                                                <a href="#" class="icon-table"><i class="fa fa-edit"></i></a>
+                                                                <a href="#" class="icon-table"><i class="fa fa-trash"></i></a>
+                                                                <label class="toggleSwitch nolabel" onclick="">
+                                                                    <input type="checkbox" checked />
+                                                                    <a></a>
+                                                                </label>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Free weights</td>
+                                                            <td>50</td>
+                                                            <td>100</td>
+                                                            <td class="td-flex">
+                                                                <a href="#" class="icon-table"><i class="fa fa-edit"></i></a>
+                                                                <a href="#" class="icon-table"><i class="fa fa-trash"></i></a>
+                                                                <label class="toggleSwitch nolabel" onclick="">
+                                                                    <input type="checkbox" checked />
+                                                                    <a></a>
+                                                                </label>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label class="col-sm-12">AMENITIES*
+                                            </label>
+                                            <div class="col-sm-12 select-multi mb-3">
+                                                <label>AMENITY*
+                                                </label>
+                                                <select>
+                                                    <option>Enter Amenity Name</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-12 input-form mb-3">
+                                                <label>QUANTITY*</label>
+                                                <input type="text" name="" placeholder="Quantity">
+                                            </div>
+                                           
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="table-wrapper-scroll-y " style="">
+                                                <table class="table ">
+                                                    <thead class="text-center thead-dark">
+                                                        <tr>
+                                                            <th>Amenity Name</th>
+                                                            <th>Quantity </th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="text-center">
+                                                        <tr class="ng-star-inserted">
+                                                            <td>Boxing Ring </td>
+                                                            <td>1</td>
+                                                            <td class="td-flex">
+                                                                <a href="#" class="icon-table"><i class="fa fa-edit"></i></a>
+                                                                <a href="#" class="icon-table"><i class="fa fa-trash"></i></a>
+                                                                <label class="toggleSwitch nolabel" onclick="">
+                                                                    <input type="checkbox" checked />
+                                                                    <a></a>
+                                                                </label>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                             <div class="col-sm-12 text-center mt-4 mb-3">
+                                                <button type="submit" class="sub-btn">Save</button>
+                                                <button type="submit" class="sub-btn">Submit & Proceed</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accord">
+                            <span class="num-accord">02</span>
+                            <div class="card">
+                                <div class="" id="faqhead2">
+                                    <a href="#" class="btn btn-header-link collapsed" data-toggle="collapse" data-target="#faq2" aria-expanded="true" aria-controls="faq2"> Media & Social Media </a>
+                                </div>
+                                <div id="faq2" class="collapse" aria-labelledby="faqhead2" data-parent="#faq">
+                                    <div class="card-body">
+                                        <div class="row mb-3">
+                                            <div class="col-sm-12 note">
+                                                <p class="mb-3"> <strong>NOTE*</strong></p>
+                                                <p>
+                                                    Maximum limit of adding photos should be 10 and videos should be 5</p>
+                                                <p>
+                                                    Atleast one photo is required.</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-sm-12 input-form mb-3">
+                                                <p><strong>Tile Image*</strong></p>
+                                                <div class="custom-file"><input type="file" id="video" accept="video/mp4,video/x-m4v,video/mov,video/avi,video/*" fullwidth="" formcontrolname="video" class="custom-file-input"><label for="video" class="custom-file-label placeholder text-truncate">Upload Image</label>
+                                                    <small>Image size should be less than 1 MB</small>
+                                                    <small>
+                                                        Image Format should be jpg, jpeg, png</small></div>
+                                            </div>
+                                            <div class="col-sm-12 input-form mb-3">
+                                                <p><strong>Tile Image*</strong></p>
+                                                <div class="custom-file"><input type="file" id="video" accept="video/mp4,video/x-m4v,video/mov,video/avi,video/*" fullwidth="" formcontrolname="video" class="custom-file-input"><label for="video" class="custom-file-label placeholder text-truncate">Upload Image</label>
+                                                    <small>Image size should be less than 1 MB</small>
+                                                    <small>
+                                                        Image Format should be jpg, jpeg, png</small></div>
+                                            </div>
+                                            <div class="col-sm-12 text-center mt-4">
+                                                <button type="submit" class="sub-btn">Save</button>
+                                            </div>
+                                        </div>
+                                        <hr class="hr-form ">
+                                        <div class="row mb-3">
+                                            <div class="col-sm-12 input-form mb-3">
+                                                <p><strong>Tile Image*</strong></p>
+                                                <div class="custom-file"><input type="file" id="video" accept="video/mp4,video/x-m4v,video/mov,video/avi,video/*" fullwidth="" formcontrolname="video" class="custom-file-input"><label for="video" class="custom-file-label placeholder text-truncate">Upload Image</label>
+                                                    <small>Image size should be less than 1 MB</small>
+                                                    <small>
+                                                        Image format should be jpg, jpeg, png</small>
+                                                    <small>
+                                                        Video size should be less than 100 MB</small>
+                                                    <small>
+                                                        Video format should be mp4, x-m4v</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12 input-form">
+                                                <label>TITLE*
+                                                </label>
+                                                <input type="text" name="" placeholder="Enter Title">
+                                            </div>
+                                            <div class="col-sm-12 text-center mt-4 mb-3">
+                                                <button type="submit" class="sub-btn">Save</button>
+                                            </div>
+                                            <div class="table-wrapper-scroll-y " style="">
+                                                <table class="table ">
+                                                    <thead class="text-center thead-dark">
+                                                        <tr>
+                                                            <th>Sr.no</th>
+                                                            <th>Title </th>
+                                                            <th>Type</th>
+                                                            <th>Media</th>
+                                                            <th>Approval Status</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="text-center">
+                                                        <tr class="ng-star-inserted">
+                                                            <td>1 </td>
+                                                            <td>abc</td>
+                                                            <td>image</td>
+                                                            <td class="text-center">
+                                                                <div class="media"><img src="images/05.jpg"></div>
+                                                            </td>
+                                                            <td>Approved </td>
+                                                            <td class="td-flex">
+                                                                <a href="#" class="icon-table"><i class="fa fa-edit"></i></a>
+                                                                <a href="#" class="icon-table"><i class="fa fa-trash"></i></a>
+                                                                <label class="toggleSwitch nolabel" onclick="">
+                                                                    <input type="checkbox" checked />
+                                                                    <a></a>
+                                                                </label>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="ng-star-inserted">
+                                                            <td>2 </td>
+                                                            <td>abc</td>
+                                                            <td>image</td>
+                                                            <td class="text-center">
+                                                                <div class="media"><img src="images/05.jpg"></div>
+                                                            </td>
+                                                            <td>Approved </td>
+                                                            <td class="td-flex">
+                                                                <a href="#" class="icon-table"><i class="fa fa-edit"></i></a>
+                                                                <a href="#" class="icon-table"><i class="fa fa-trash"></i></a>
+                                                                <label class="toggleSwitch nolabel" onclick="">
+                                                                    <input type="checkbox" checked />
+                                                                    <a></a>
+                                                                </label>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <label>SOCIAL MEDIA LINKS</label>
+                                                <div class="social-input"><input type="text" name="" placeholder="Social Media URL"><i class="fa fa-facebook-f"></i></div>
+                                                <div class="social-input"><input type="text" name="" placeholder="Social Media URL"><i class="fa fa-instagram"></i></div>
+                                                <div class="social-input"><input type="text" name="" placeholder="Social Media URL"><i class="fa fa-twitter"></i></div>
+                                            </div>
+                                            <div class="col-sm-12 text-center mt-4 mb-3">
+                                                <button type="submit" class="sub-btn">Save</button>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label class="col-sm-12">VIRTUAL TOUR</label>
+                                            <div class="col-sm-12 input-form mb-3">
+                                                <label>Title</label>
+                                                <input type="#" name="" placeholder="Enter Title">
+                                            </div>
+                                            <div class="col-sm-12 input-form mb-3">
+                                                <label>Link</label>
+                                                <input type="#" name="" placeholder="Enter Link">
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="table-wrapper-scroll-y " style="">
+                                                <table class="table ">
+                                                    <thead class="text-center thead-dark">
+                                                        <tr>
+                                                            <th>Sr. No</th>
+                                                            <th>Title </th>
+                                                            <th>Link</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="text-center">
+                                                        <tr class="ng-star-inserted">
+                                                            <td>1 </td>
+                                                            <td>Virtual Tour 1</td>
+                                                            <td>Matterport.com/123</td>
+                                                            <td class="td-flex">
+                                                                <a href="#" class="icon-table"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                                                                <a href="#" class="icon-table"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                                                <label class="toggleSwitch nolabel" onclick="">
+                                                                    <input type="checkbox" checked="">
+                                                                    <a></a>
+                                                                </label>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 text-center mt-4 mb-3">
+                                                <button type="submit" class="sub-btn">Save</button>
+                                                <button type="submit" class="sub-btn">Submit & Proceed</button>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accord">
+                            <span class="num-accord">03</span>
+                            <div class="card">
+                                <div class="" id="faqhead3">
+                                    <a href="#" class="btn btn-header-link collapsed" data-toggle="collapse" data-target="#faq3" aria-expanded="true" aria-controls="faq3"> Awards & Achievements Details</a>
+                                </div>
+                                <div id="faq3" class="collapse" aria-labelledby="faqhead3" data-parent="#faq">
+                                    <div class="card-body">
+                                        <div class="row mb-3">
+                                            <div class="col-sm-4 input-form mb-3">
+                                                <label>AWARDS/ACHIEVEMENTS</label>
+                                                <input type="#" name="" placeholder="Enter Awards & Achievements">
+                                            </div>
+                                            <div class="col-sm-4 select-multi mb-3">
+                                                <label>LOCATION OBTAINED</label>
+                                                <select>
+                                                    <option>Select Location</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-4 input-form mb-3">
+                                                <label>DATE HELD SINCE</label>
+                                                <div class="d-flex align-item-center">
+                                                    <input type="#" name="" placeholder="DD/MM/YY"><i class="fas fa-calendar"></i></div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="mb-3 col-sm-12">ADD ATTACHMENT</div>
+                                            <div class="col-sm-12 input-form">
+                                                <div class="custom-file"><input type="file" id="video" accept="video/mp4,video/x-m4v,video/mov,video/avi,video/*" fullwidth="" formcontrolname="video" class="custom-file-input"><label for="video" class="custom-file-label placeholder text-truncate">No file uploaded</label>
+                                                    <small>Image size should be less than 1 MB</small> <small>Image format should be jpg, jpeg, png, pdf</small></div>
+                                            </div>
+                                          
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="table-wrapper-scroll-y " style="">
+                                                <table class="table ">
+                                                    <thead class="text-center thead-dark">
+                                                        <tr>
+                                                            <th>Sr. No</th>
+                                                            <th>Awards/Achievements </th>
+                                                            <th>Attachment </th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="text-center">
+                                                        <tr class="ng-star-inserted">
+                                                            <td>1 </td>
+                                                            <td>abc</td>
+                                                            <td>
+                                                                <div class="media"><img src="images/05.jpg"></div>
+                                                            </td>
+                                                            <td class="td-flex">
+                                                                <a href="#" class="icon-table"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                                                                <a href="#" class="icon-table"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                                                <label class="toggleSwitch nolabel" onclick="">
+                                                                    <input type="checkbox" checked="">
+                                                                    <a></a>
+                                                                </label>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                          <div class="col-sm-12 text-center mt-4 mb-3">
+                                            <div class="ad-another"><a href="#"><i class="fas fa-plus-circle"></i>ADD ANOTHER</a></div>
+                                                <button type="submit" class="sub-btn">Save</button>
+                                                <button type="submit" class="sub-btn">Submit & Proceed</button>
+                                            </div>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accord">
+                            <span class="num-accord">04</span>
+                            <div class="card">
+                                <div class="" id="faqhead4">
+                                    <a href="#" class="btn btn-header-link collapsed" data-toggle="collapse" data-target="#faq4" aria-expanded="true" aria-controls="faq4"> My Pricing Details
+                                        [*]</a>
+                                </div>
+                                <div id="faq4" class="collapse" aria-labelledby="faqhead4" data-parent="#faq">
+                                    <div class="card-body">
+                                        <div class="row mb-3">
+                                            <label class="col-sm-12">PRICING CATEGORY</label>
+                                            <div class="col-sm-12 select-multi">
+                                                <select>
+                                                    <option>Select Categories</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accord">
+                            <span class="num-accord">05</span>
+                            <div class="card">
+                                <div class="" id="faqhead5">
+                                    <a href="#" class="btn btn-header-link collapsed" data-toggle="collapse" data-target="#faq5" aria-expanded="true" aria-controls="faq5"> Client Transformation</a>
+                                </div>
+                                <div id="faq5" class="collapse" aria-labelledby="faqhead5" data-parent="#faq">
+                                    <div class="card-body">
+                                        <div class="row mb-3">
+                                            <div class="col-sm-12 note">
+                                                <p class="mb-3"> <strong>NOTE*</strong></p>
+                                                <p>
+                                                    Image size should be less than 1 MB and image format should be png, jpeg, jpg.</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-sm-12 input-form mb-3">
+                                                <div class="mb-3">ADD NEW TRANSFORMATION*</div>
+                                                <label>CLIENT NAME*</label>
+                                                <input type="text" name="" placeholder="Enter Client Name">
+                                            </div>
+                                            <div class="col-sm-12 input-form">
+                                                <label>CLIENT DESCRIPTION*</label>
+                                                <textarea placeholder="Add Client Description"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="input-form col-sm-12">
+                                                <label>PROFILE IMAGE*</label>
+                                            </div>
+                                            <div class="col-sm-12 input-form">
+                                                <div class="custom-file"><input type="file" id="video" accept="video/mp4,video/x-m4v,video/mov,video/avi,video/*" fullwidth="" formcontrolname="video" class="custom-file-input"><label for="video" class="custom-file-label placeholder text-truncate">No file uploaded</label>
+                                                    <small>Image size should be less than 1 MB</small> <small>Image format should be jpg, jpeg, png
+                                                    </small></div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-sm-6">
+                                                <h6 class="mb-3">BEFORE PHOTOS</h6>
+                                                <div class="mb-3">
+                                                    <p class="mb-2">BEFORE FRONT</p>
+                                                    <div class="custom-file"><input type="file" id="video" accept="video/mp4,video/x-m4v,video/mov,video/avi,video/*" fullwidth="" formcontrolname="video" class="custom-file-input"><label for="video" class="custom-file-label placeholder text-truncate">No file uploaded</label>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <p class="mb-2">BEFORE BACK</p>
+                                                    <div class="custom-file"><input type="file" id="video" accept="video/mp4,video/x-m4v,video/mov,video/avi,video/*" fullwidth="" formcontrolname="video" class="custom-file-input"><label for="video" class="custom-file-label placeholder text-truncate">No file uploaded</label>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <p class="mb-2">BEFORE SIDE</p>
+                                                    <div class="custom-file"><input type="file" id="video" accept="video/mp4,video/x-m4v,video/mov,video/avi,video/*" fullwidth="" formcontrolname="video" class="custom-file-input"><label for="video" class="custom-file-label placeholder text-truncate">No file uploaded</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <h6 class="mb-3">AFTER PHOTOS</h6>
+                                                <div class="mb-3">
+                                                    <p class="mb-2">AFTER FRONT</p>
+                                                    <div class="custom-file"><input type="file" id="video" accept="video/mp4,video/x-m4v,video/mov,video/avi,video/*" fullwidth="" formcontrolname="video" class="custom-file-input"><label for="video" class="custom-file-label placeholder text-truncate">No file uploaded</label>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <p class="mb-2">AFTER BACK</p>
+                                                    <div class="custom-file"><input type="file" id="video" accept="video/mp4,video/x-m4v,video/mov,video/avi,video/*" fullwidth="" formcontrolname="video" class="custom-file-input"><label for="video" class="custom-file-label placeholder text-truncate">No file uploaded</label>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <p class="mb-2">AFTER SIDE</p>
+                                                    <div class="custom-file"><input type="file" id="video" accept="video/mp4,video/x-m4v,video/mov,video/avi,video/*" fullwidth="" formcontrolname="video" class="custom-file-input"><label for="video" class="custom-file-label placeholder text-truncate">No file uploaded</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="table-wrapper-scroll-y " style="">
+                                            <table class="table ">
+                                                <thead class="text-center thead-dark">
+                                                    <tr>
+                                                        <th>Client Name</th>
+                                                        <th>Client Description</th>
+                                                        <th colspan="2">Front Image </th>
+                                                        <th colspan="2">Back Image</th>
+                                                        <th colspan="2"> Side Image</th>
+                                                        <th>Profile Image</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="text-center">
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>Before </td>
+                                                        <td>After</td>
+                                                        <td>Before </td>
+                                                        <td>After</td>
+                                                        <td>Before </td>
+                                                        <td>After</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr class="ng-star-inserted">
+                                                        <td>abc </td>
+                                                        <td>abcdef </td>
+                                                        <td colspan="2">
+                                                            <div class="flex-media">
+                                                                <div class="media"><img src="images/05.jpg"></div>
+                                                                <div class="media"><img src="images/05.jpg"></div>
+                                                            </div>
+                                                        </td>
+                                                        <td colspan="2">
+                                                        </td>
+                                                        <td colspan="2">
+                                                        </td>
+                                                        <td>
+                                                            <div class="media"><img src="images/05.jpg"></div>
+                                                        </td>
+                                                        <td class="td-flex">
+                                                            <a href="#" class="icon-table"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                                                            <a href="#" class="icon-table"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                                            <label class="toggleSwitch nolabel" onclick="">
+                                                                <input type="checkbox" checked="">
+                                                                <a></a>
+                                                            </label>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                  <div class="col-sm-12 text-center mt-4 mb-3">
+                                            <div class="ad-another"><a href="#"><i class="fas fa-plus-circle"></i>ADD ANOTHER</a></div>
+                                                <button type="submit" class="sub-btn">Save</button>
+                                                <button type="submit" class="sub-btn">Submit & Proceed</button>
+                                            </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accord">
+                            <span class="num-accord">06</span>
+                            <div class="card">
+                                <div class="" id="faqhead6">
+                                    <a href="#" class="btn btn-header-link collapsed" data-toggle="collapse" data-target="#faq6" aria-expanded="true" aria-controls="faq6"> FAQ's</a>
+                                </div>
+                                <div id="faq6" class="collapse" aria-labelledby="faqhead5" data-parent="#faq">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="d-flex mt-3 col-sm-12 mb-3">
+                                                <div class="radio-new">
+                                                    <input type="radio" id="faq-new" name="gender">
+                                                    <label for="faq-new">Existing FAQ's</label>
+                                                </div>
+                                                <div class="radio-new">
+                                                    <input type="radio" id="faq-new-one" name="gender">
+                                                    <label for="faq-new-one">Custom FAQ's</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12 input-form select-multi mb-3">
+                                                <label>QUESTION</label>
+                                                <select>
+                                                    <option>Select Question</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-12 input-form mb-3">
+                                                <label>ANSWER</label>
+                                                <textarea placeholder="Write answer">
+
+                                                </textarea>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="table-wrapper-scroll-y col-sm-12" style="">
+                                                <table class="table ">
+                                                    <thead class="text-center thead-dark">
+                                                        <tr>
+                                                            <th>Sr.no </th>
+                                                            <th>Question </th>
+                                                            <th>Answer </th>
+                                                            <th>Approval Status </th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="text-center">
+                                                        <tr class="ng-star-inserted">
+                                                            <td>1</td>
+                                                            <td>Can I have a free trial at the facility?</td>
+                                                            <td>Yes for monthly memberships you can avail a one day free pass.</td>
+                                                            <td>Approved</td>
+                                                            <td class="td-flex">
+                                                                <a href="#" class="icon-table"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                                                                <a href="#" class="icon-table"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="ng-star-inserted">
+                                                            <td>1</td>
+                                                            <td>Can I have a free trial at the facility?</td>
+                                                            <td>Yes for monthly memberships you can avail a one day free pass.</td>
+                                                            <td>Approved</td>
+                                                            <td class="td-flex">
+                                                                <a href="#" class="icon-table"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                                                                <a href="#" class="icon-table"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                           <div class="col-sm-12 text-center mt-4 mb-3">
+                                            <div class="ad-another"><a href="#"><i class="fas fa-plus-circle"></i>ADD ANOTHER</a></div>
+                                              
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accord">
+                            <span class="num-accord">07</span>
+                            <div class="card">
+                                <div class="" id="faqhead7">
+                                    <a href="#" class="btn btn-header-link collapsed" data-toggle="collapse" data-target="#faq7" aria-expanded="true" aria-controls="faq7"> Association Details</a>
+                                </div>
+                                <div id="faq7" class="collapse" aria-labelledby="faqhead7" data-parent="#faq">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <p><strong>ASSOCIATED PERSONAL TRAINER*</strong></p>
+                                                <div class="d-flex align-item-center">
+                                                    <span>Are you associated with any Trainers?</span>
+                                                    <div class="switch-btn"><span>No</span><label class="toggleSwitch nolabel" onclick="">
+                                                            <input type="checkbox" checked="">
+                                                            <a></a>
+                                                        </label><span>Yes</span></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12 input-form mb-3 select-multi mt-3">
+                                                <label>PERSONAL TRAINER SEARCH</label>
+                                                <select>
+                                                    <option>Enter Personal Trainers Name</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-12 input-form mb-3 select-multi">
+                                                <label>Location</label>
+                                                <select>
+                                                    <option>search Location</option>
+                                                </select>
+                                            </div>
+                                           
+                                            <div class="table-wrapper-scroll-y col-sm-12" style="">
+                                                <table class="table ">
+                                                    <thead class="text-center thead-dark">
+                                                        <tr>
+                                                            <th>Personal Trainer Name </th>
+                                                            <th>Personal Trainer Email </th>
+                                                            <th>Location </th>
+                                                            <th>Request Status </th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="text-center">
+                                                        <tr>
+                                                            <td>John John</td>
+                                                            <td>John1@gmail.com</td>
+                                                            <td>17 B St - Al QuozAl Quoz Industrial Area 3 - Dubai - United Arab Emirates</td>
+                                                            <td>Pending</td>
+                                                            <td class="td-flex">
+                                                                <a href="#" class="icon-table"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                             <div class="col-sm-12 text-center mt-4 mb-3">
+                                                <button type="submit" class="sub-btn">Save</button>
+                                                <button type="submit" class="sub-btn">Submit & Proceed</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accord">
+                            <span class="num-accord">08</span>
+                            <div class="card">
+                                <div class="" id="faqhead8">
+                                    <a href="#" class="btn btn-header-link collapsed" data-toggle="collapse" data-target="#faq8" aria-expanded="true" aria-controls="faq8"> Identification [*]</a>
+                                </div>
+                                <div id="faq8" class="collapse" aria-labelledby="faqhead8" data-parent="#faq">
+                                    <div class="card-body">
+                                        <div class="row mb-3">
+                                            <div class="col-sm-12 input-form mb-3">
+                                                <p><strong>BUSINESS LICENSE *</strong></p>
+                                                <div class="custom-file"><input type="file" id="video" accept="video/mp4,video/x-m4v,video/mov,video/avi,video/*" fullwidth="" formcontrolname="video" class="custom-file-input"><label for="video" class="custom-file-label placeholder text-truncate">Upload Image</label>
+                                                    <small>Document size should be less than 1 MB</small>
+                                                    <small>
+                                                        Document format should be jpg, jpeg, png, pdf</small></div>
+                                            </div>
+                                            <div class="col-sm-12 input-form mb-3">
+                                                <p><strong>DIRECTOR IDENTIFICATION (PASSPORT OR LOCAL ID) *</strong></p>
+                                                <div class="custom-file"><input type="file" id="video" accept="video/mp4,video/x-m4v,video/mov,video/avi,video/*" fullwidth="" formcontrolname="video" class="custom-file-input"><label for="video" class="custom-file-label placeholder text-truncate">Upload Image</label>
+                                                    <small>Document size should be less than 1 MB</small>
+                                                    <small>
+                                                        Document format should be jpg, jpeg, png, pdf</small></div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="radio-new">
+                                                        <input type="checkbox" id="terms" name="gender">
+                                                        <label for="terms">I accept the Terms and Conditions *</label>
+                                                    </div>
+                                            </div>
+                                            <div class="col-sm-12 text-center mt-4">
+                                                <button type="submit" class="sub-btn">Save</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.container-fluid-->
+        <!-- /.content-wrapper-->
+        <footer class="sticky-footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <small>Created with ♥ by </small>
+                    </div>
+                    <div class="col-sm-6 text-right social-ftr">
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- Scroll to Top Button-->
+        <a class="scroll-to-top rounded" href="#page-top">
+            <i class="fas fa-angle-up"></i>
+        </a>
+    </div>
+    <!-- script -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/custom.js"></script>
+    <script src="https://kit.fontawesome.com/cd05e4ba4d.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+    // Toggle the side navigation
+    $("#sidenavToggler").click(function(e) {
+        e.preventDefault();
+        $("body").toggleClass("sidenav-toggled");
+        $(".navbar-sidenav .nav-link-collapse").addClass("collapsed");
+        $(".navbar-sidenav .sidenav-second-level, .navbar-sidenav .sidenav-third-level").removeClass("show");
+    });
+    // Force the toggled class to be removed when a collapsible nav link is clicked
+    $(".navbar-sidenav .nav-link-collapse").click(function(e) {
+        e.preventDefault();
+        $("body").removeClass("sidenav-toggled");
+    });
+    // Prevent the content wrapper from scrolling when the fixed side navigation hovered over
+    $('body.fixed-nav .navbar-sidenav, body.fixed-nav .sidenav-toggler, body.fixed-nav .navbar-collapse').on('mousewheel DOMMouseScroll', function(e) {
+        var e0 = e.originalEvent,
+            delta = e0.wheelDelta || -e0.detail;
+        this.scrollTop += (delta < 0 ? 1 : -1) * 30;
+        e.preventDefault();
+    });
+    </script>
+    <script type="text/javascript">
+    $(".js-select2").select2({
+        closeOnSelect: false,
+        placeholder: "Placeholder",
+        // allowHtml: true,
+        allowClear: true,
+        tags: true // создает новые опции на лету
+    });
+    </script>
+</body>
+
+</html>

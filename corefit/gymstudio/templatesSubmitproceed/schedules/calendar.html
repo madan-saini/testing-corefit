@@ -1,0 +1,585 @@
+{% extends 'layout/inner.html' %} 
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/daterangepicker.css' %}">
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/calendar.css' %}">
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4SA7UBi6Yk3_IX3-U3qF7WSiTadRwFJU&libraries=places&sensor=true"></script>
+
+<script>
+
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-bottom-center",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "1000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+</script>
+<style>
+    .fc-past{
+        opacity: 0.5 !important;
+    }
+</style>
+<!-- Navigation-->
+<div class="loader" id="payloader" style="display:none"><img src="{% static 'images/loading.gif' %}" alt=""></div>
+
+{% include "layout/successerror.html" %}
+<script src="{% static 'js/jquery-ui.min.js' %}"></script>
+<script src="{% static 'js/jquery-ui.multidatespicker.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.css' %}">
+
+<div class="content-page">
+    <div class="cal-row-one">
+        <div class="shed-main-sort sort-filter-main">
+            <form class="" name='searchEvent' id='searchEvent' method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <a href="javascript:void(0);" class="btn-green-border filter-click"><img src="{% static 'images/filter.svg' %}">Filters</a>
+                <div class="pop-schedule filter-pop sort-filter" style="display: none;">
+                    <h4>Filter</h4>
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Type of Services:</label>
+                        <div class="drop-down">
+                            <select name="search_service" id="search_service" class="single-withoutsearch">
+                                <option value="">Select from list</option>
+                                {% for key, item in type_of_service.items %}
+                                <option value="{{key}}">{{item}}</option>                                                    
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group form-field-main">
+                        <label class="label-field">PT name:</label>
+                        <div class="drop-down">
+                            <select name="search_pt" id="search_pt" class="multiple-single required">
+                                <option value="">Select one</option>
+                                {% for id, first_name, last_name in ptusers %}
+                                <option value="{{id}}" {% if id == eventData.pt_name%} selected{% endif%}>{{first_name}} {{last_name}}</option>                                                    
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Client name:</label>
+                        <div class="form-field-input">
+                            <input type="text" name="search_client" id="search_client" class="">
+                        </div>
+                    </div>
+                    <div class="btn-btm-group">
+                        <button class="border-btn" type='button' onclick="closeSPop()">Discard</button> 
+                        <button class="btn-pink ml-10">Submit</button>
+                    </div>
+                    <input type="hidden" name="filter_type" id='filter_type' value="list">
+                    <input type="hidden" name="search_start_date" id='search_start_date' value="{{startV}}">
+                    <input type="hidden" name="search_end_date" id='search_end_date' value="{{endV}}">
+                </div>
+                <input class="btn-green-border date-pik list-btn list-btn1" style="display: none;" type="text" name="search_date" value="{{start}} - {{end}}">
+                <!--<a href="javascript:void(0);" class="btn-green-border choose-date-pik list-btn" style="display: none;"> <img src="{% static 'images/noun_Calendar_1611923.svg'%}"> Choose dates </a>-->
+            </form>
+        </div>
+
+
+        <div>
+            <a href="javascript:void(0);" class="btn-green-border cal-btn"  data-toggle="modal" data-target="#modal-ad-slot"><img src="{% static 'images/feather-plus-one.svg'%}">Add New Event</a>
+            <a href="javascript:void(0);" class="btn-green-border list-btn1" data-toggle="modal" data-target="#modal-ad-slot" style="display: none;"><img src="{% static 'images/feather-plus-one.svg'%}">Add New Event</a>
+            <div class="taeb-switch left text-center">
+                <div class="taeb list_cls" taeb-direction="right">List View</div>
+                <div class="taeb calender_cls active" taeb-direction="left">Calendar</div>
+            </div>
+        </div>
+    </div>
+    <div class="change-tab" id="calender_view">
+        {% include 'elements/schedule/event_calendar.html' %}
+    </div>
+    <div class="change-tab list-box" id="list_view" style="display:none">
+        {% include 'elements/schedule/event_table.html' %}
+    </div>
+</div>
+
+<div class="modal modal-top fade calendar-modal" id="modal-ad-slot" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered new-offer-dialog" role="document">
+        <form class="" name='addEvent' id='addEvent' method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="modal-content upload-img-pop new-offer-pop">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Date of booking</label>
+                            <div class="form-field-input  date">
+                                <input type="text" name="date_of_booking" class="datepickerr required" placeholder="Choose date" id="reservationDatee" readonly>
+                                <div class="input-group-append"><img src="{% static 'images/noun_Calendar_1611923.svg' %}"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Time of booking</label>
+                            <div class="form-field-input">
+                                <input type="text" name="time_of_booking" id="search_time" class="start_timepicker required" autocomplete='off' readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Location</label>
+                            <div class="form-field-input icon-overlay">
+                                <input type="text" name="location" class=" required" id="location_event" value="{{basicinfo.location}}" placeholder="" readonly>
+                                <img src="{% static 'images/metro-location.svg' %}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Client name</label>
+                            <div class="form-field-input">
+                                <input type="text" name="client_name" class=" required" placeholder="Name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">PT name</label>
+                            <div class="drop-down">
+                                <select name="pt_name" id="pt_name" class="multiple-single  required">
+                                    <option value="">Select one</option>
+                                    {% for id, first_name, last_name in ptusers %}
+                                    <option value="{{id}}">{{first_name}} {{last_name}}</option>                                                    
+                                    {% endfor %}
+                                </select>
+                                <!--<div class="input-over-name"><a href="#">Reassign PT</a></div>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Type of services</label>
+                            <div class="drop-down">
+                                <select name="type_of_services" id="type_of_services" class="single-withoutsearch  required" onchange='updateService(this.value);'>
+                                    <option value="">Select from list</option>
+                                    {% for key, item in type_of_service.items %}
+                                    <option value="{{key}}">{{item}}</option>                                                    
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Service Name</label>
+                            <div class="drop-down" id="service_data">
+                                <select name="service" id="service" class="single-withoutsearch  required">
+                                    <option value="">Select from list</option>                                    
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="btn-btm-group btn-grp-without-bg">
+                            <button class="border-btn" data-dismiss="modal">Discard changes</button> 
+                            <button class="btn-pink ml-10">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <button type="button" class="close-btn-pop" data-dismiss="modal"><img src="{% static 'images/material-cancel.svg' %}"></button>
+
+            </div>
+        </form>
+    </div>
+
+</div>
+<div id="event_popup">
+
+</div>
+<script type="text/javascript">
+    $(function () {
+
+        $('.date-pik').daterangepicker({
+//            autoUpdateInput: false,
+            opens: 'left',
+            minDate: new Date(Date.now()+1*24*60*60*1000),
+            locale: {
+                cancelLabel: 'Clear',
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $('.date-pik').on('showCalendar.daterangepicker', function (ev, picker) {
+            $('.prev span').html('<img src="static/images/left-cal-arrow.svg">');
+            $('.next span').html('<img src="static/images/rt-cal-arrow.svg">');
+        });
+        $('.drp-buttons').html(' <div class="radio-box"><div class="check"></div></div> <button class="applyBtn btn btn-sm btn-primary" type="button">Apply</button>');
+        $('.drp-buttons').addClass('cal-btns');
+        $('.date-pik').on('apply.daterangepicker', function (ev, picker) {
+            $('input[name="datefilter"]').val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+            var startDate = picker.startDate.format('YYYY-MM-DD');
+            var endDate = picker.endDate.format('YYYY-MM-DD');
+            $('#search_start_date').val(startDate);
+            $('#search_end_date').val(endDate);
+
+            $('.prev span').html('<img src="static/images/left-cal-arrow.svg">');
+            $('.next span').html('<img src="static/images/rt-cal-arrow.svg">');
+
+            $('#searchEvent').submit();
+        });
+
+        $('.date-pik').on('cancel.daterangepicker', function (ev, picker) {
+            $('input[name="datefilter"]').val('');
+        });
+    });
+
+</script>
+<script>
+
+    function closeSPop() {
+        $('.filter-pop').hide();
+    }
+
+    $(".filter-click").click(function () {
+        $(".filter-pop").toggle();
+        $(".calendar-filter").hide();
+    });
+    $(".calendar-click").click(function () {
+        $(".calendar-filter").toggle();
+        $(".filter-pop").hide();
+    });
+
+    $('#mdp-demo').multiDatesPicker({
+        numberOfMonths: [1, 2],
+        minDate: new Date(),
+        opens: 'left',
+    });
+    $(document).ready(function () {
+        $location_input = $("#location_event");
+        var options = {
+        };
+        autocomplete = new google.maps.places.Autocomplete($location_input.get(0), options);
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            return false;
+        });
+    });
+
+
+
+    $('.datepickerr').datepicker({
+        clearBtn: false,
+        weekStart: 1,
+        minDate: new Date(Date.now()+1*24*60*60*1000),
+        orientation: "bottom",
+        dateFormat: "dd/mm/yy"
+    });
+
+    $('.start_timepicker').timepicker({
+        timeFormat: 'h:mm p',
+        interval: 15,
+        minTime: '00',
+        maxTime: '11:45pm',
+        startTime: '00:00',
+        dynamic: false,
+        dropdown: true,
+        scrollbar: true
+    });
+
+    $(document).ready(function () {
+        $('.multiple-single').multiselect({
+            nonSelectedText: "Select from list",
+            enableFiltering: true,
+            maxHeight: 250,
+            numberDisplayed: 1,
+            enableCaseInsensitiveFiltering: true,
+            onDropdownShown: function (even) {
+                this.$filter.find('.multiselect-search').focus();
+            }
+        });
+
+        $('.single-withoutsearch').multiselect({
+            maxHeight: 250,
+            numberDisplayed: 1,
+            nonSelectedText: "Select from list"
+        });
+
+        $(".list_cls").click(function () {
+            $('#calender_view').hide();
+            $('#list_view').show();
+            $('#calender_view').removeClass('active');
+            $('#list_view').addClass('active');
+        });
+
+        $(".calender_cls").click(function () {
+            $('#list_view').hide();
+            $('#calender_view').show();
+            $('#list_view').removeClass('active');
+            $('#calender_view').addClass('active');
+        });
+
+        $(".list_cls").click(function () {
+            $('.list-btn1').show();
+            $('.cal-btn').hide();
+
+        });
+
+        $(".calender_cls").click(function () {
+            $('.list-btn1').hide();
+            $('.cal-btn').show();
+            getCal();
+        });
+    });
+</script>
+<script>
+
+    $(document).mouseup(function (e)
+    {
+        var container = $(".filter-pop");
+
+        // if the target of the click isn't the container nor a descendant of the container
+        if (!container.is(e.target) && container.has(e.target).length === 0)
+        {
+            container.hide();
+        }
+    });
+
+    function updateService(value) {
+        var token = $("[name=csrfmiddlewaretoken]").val();
+        $.ajax({
+            type: 'POST',
+            url: 'getServiceData',
+            data: {'category': value, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+                $('#service_data').html(response);
+
+            },
+            error: function (response) {
+                $('#payloader').hide();
+                console.log('error', response)
+            }
+        })
+    }
+
+
+    $("#addEvent").validate({
+
+        submitHandler: function (form) {
+            var token = $("[name=csrfmiddlewaretoken]").val();
+            var form = document.querySelector('#addEvent');
+
+            var formData = new FormData(form);
+
+            formData.append('csrfmiddlewaretoken', token);
+
+            var erro_show = 0
+            var inputP = $('#pt_name').val();
+            var inputF = $('#type_of_services').val();
+            var inputS = $('#service').val();
+            if (inputP == '') {
+                swal('', "Please select PT name.", 'error');
+                erro_show = 1;
+            }
+            if (inputF == '') {
+                swal('', "Please select type of service.", 'error');
+                erro_show = 1;
+            } else
+            if (inputS == '') {
+                swal('', "Please select service name.", 'error');
+                erro_show = 1;
+            }
+
+            if (erro_show == 0) {
+                $.ajax({
+                    type: 'POST',
+                    url: 'addEvent',
+                    contentType: false,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+//                data: {'serializedData': serializedData, csrfmiddlewaretoken: token},
+                    beforeSend: function () {
+                        $('#payloader').show();
+                    },
+                    success: function (response) {
+                        $('#payloader').hide();
+                        $('#list_view').html(response);
+                        if ($('#calender_view').css('display') == 'none')
+                        {
+                            $("#list_view").show()
+                            $("#calender_view").hide()
+                            $('.list_cls').trigger('click');
+                        } else {
+                            $("#list_view").hide()
+                            $("#calender_view").show()
+                            getCal();
+                        }
+
+                        $("#modal-ad-slot").modal('hide');
+
+                        form.reset();
+                        $('#pt_name').multiselect("clearSelection");
+                        $('#type_of_services').multiselect("clearSelection");
+                        $('#service').multiselect("clearSelection");
+                        Command: toastr["success"]("Changes Saved")
+                    },
+                    error: function (response) {
+                        $('#payloader').hide();
+                        console.log('error', response)
+                    }
+                })
+            }
+            return false;
+        }
+    });
+
+    $("#searchEvent").validate({
+
+        submitHandler: function (form) {
+            var token = $("[name=csrfmiddlewaretoken]").val();
+            var form = document.querySelector('#searchEvent');
+
+            var formData = new FormData(form);
+
+            formData.append('csrfmiddlewaretoken', token);
+
+            $.ajax({
+                type: 'POST',
+                url: 'searchEvent',
+                contentType: false,
+                data: formData,
+                processData: false,
+                contentType: false,
+//                data: {'serializedData': serializedData, csrfmiddlewaretoken: token},
+                beforeSend: function () {
+                    $('#payloader').show();
+                },
+                success: function (response) {
+                    $('#payloader').hide();
+                    $('#list_view').html(response);
+
+                    $(".filter-pop").hide();
+
+                    var filter_type = $('#filter_type').val();
+                    if (filter_type == 'list') {
+                        $('.list_cls').trigger('click');
+                    } else {
+                        $('.calender_cls').trigger('click');
+                    }
+                },
+                error: function (response) {
+                    $('#payloader').hide();
+                    console.log('error', response)
+                }
+            })
+
+            return false;
+        }
+    });
+
+    function eventPopup(id, type) {
+        var token = $("[name=csrfmiddlewaretoken]").val();
+
+        $.ajax({
+            type: 'POST',
+            url: 'viewEvent',
+            data: {'id': id, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+                $('#event_popup').html(response);
+                $('#ev_type').val(type);
+                $('#edit-modal-ad-slot').modal('show');
+                $('.disabledField').prop("disabled", true);
+                $('.disabledField1').prop("disabled", true);
+                $('.event_view_img').show();
+                $('.event_edit_img').hide();
+            },
+            error: function (response) {
+                $('#payloader').hide();
+                console.log('error', response)
+            }
+        });
+    }
+
+    function getCal() {
+        var token = $("[name=csrfmiddlewaretoken]").val();
+
+        $.ajax({
+            type: 'POST',
+            url: 'getCal',
+            data: {csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+                $('#calender_view').html(response);
+            },
+            error: function (response) {
+                $('#payloader').hide();
+                console.log('error', response)
+            }
+        });
+    }
+
+    function deleteEvent(id) {
+
+        swal({
+            title: "Are you sure?",
+            text: "You want to delete this record!",
+            icon: "warning",
+            buttons: [
+                'No',
+                'Yes'
+            ],
+            dangerMode: true,
+        }).then(function (isConfirm) {
+            if (isConfirm) {
+                var token = $("[name=csrfmiddlewaretoken]").val();
+                $.ajax({
+                    type: 'POST',
+                    url: 'deleteEvent',
+                    data: {'id': id, csrfmiddlewaretoken: token},
+                    beforeSend: function () {
+                        $('#payloader').show();
+                    },
+                    success: function (response) {
+                        $('#payloader').hide();
+                        $('#event-' + id).remove();
+                        $('#edit-modal-ad-slot').modal('hide');
+                    },
+                    error: function (response) {
+                        $('#payloader').hide();
+                    }
+                })
+            }
+        });
+
+    }
+
+
+</script>
+{% endblock content %}

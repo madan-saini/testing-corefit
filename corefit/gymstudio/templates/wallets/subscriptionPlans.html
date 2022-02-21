@@ -1,0 +1,93 @@
+{% extends 'layout/inner.html' %} 
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/daterangepicker.css' %}">
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+<script>
+
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-bottom-center",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "1000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+</script>
+
+<!-- Navigation-->
+<div class="loader" id="payloader" style="display:none"><img src="{% static 'images/loading.gif' %}" alt=""></div>
+
+{% include "layout/successerror.html" %}
+<script src="{% static 'js/jquery-ui.min.js' %}"></script>
+<script src="{% static 'js/jquery-ui.multidatespicker.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.css' %}">
+
+<div class="content-page">
+    <div class="page-head-one">
+        <h2 class="bnk-info-head">Available Subscription Plans</h2>
+    </div>
+    <div class="bg-subs">
+        <div class="col-sm-6 m-auto chose-plan-head">
+            Choose the plan that’s right for you
+        </div>
+        <p class="text-center mt-5 mb-5 head-one">Pay by month or the year, and cancel at any time</p>
+        <div class="avail-subs-check col-sm-8 text-center m-auto">
+            <div class="radio-box"><input type="radio" id="e-option1" checked name="selector" class="div-check">
+                <label for="e-option1">Weekly</label>
+                <div class="check"></div>
+            </div>
+            <div class="radio-box"><input type="radio" id="e-option2" name="selector" class="div-check">
+                <label for="e-option2">Quarterly</label>
+                <div class="check"></div>
+            </div>
+            <div class="radio-box"><input type="radio" id="e-option3" name="selector" class="div-check">
+                <label for="e-option3">Monthly</label>
+                <div class="check"></div>
+            </div>
+            <div class="radio-box"><input type="radio" id="e-option4" name="selector" class="div-check">
+                <label for="e-option4">Yearly</label>
+                <div class="check"></div>
+            </div>
+        </div>
+        <div class="col-sm-8 m-auto">
+            <div class="subs-plan-col">
+                <div class="subs-plan-inr">
+                    <small>BASIC</small>
+                    <h6>{{basicPlan.description}}</h6>
+                    <h5>AED {{basicPlan.AED_price|floatformat:2}} <small>/weekly</small></h5>
+                    <!-- <a href="#" class="border-sm-btn">Downgrade to Basic</a> -->
+                </div>
+                <div class="subs-plan-inr">
+                    <small>PREMIUM</small>
+                    <h6>{{premiumPlan.description}}</h6>
+                    <h5>AED {{premiumPlan.AED_price|floatformat:2}} <small>/weekly</small></h5>
+                    <a href="#" class="bg-sm-btn">Upgrade to Premium</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4" id="feature_table">
+        {% include 'elements/wallet/feature_table.html' %}
+    </div>
+</div>
+{% endblock content %}

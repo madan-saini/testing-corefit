@@ -1,0 +1,70 @@
+{% load static %}
+{% load fetch_user %}
+{% if employees %}
+
+<table class="table table-bordered table-stip table-cs">
+    <thead>
+        <tr>
+            <th scope="col" width="16.66%">Employee name <img src="{% static 'images/sort-arrow.svg'%}" style="margin-left: 5px;"></th>
+            <th scope="col">Primary working location</th>
+            <th scope="col">Start date</th>
+            <th scope="col">PT rating</th>
+            <th scope="col">Service type</th>
+            <th scope="col">Service name</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for employee in employees%}
+        {% get_location employee.freelance_id as freelance %}
+        
+        <tr class="gray-clr" id="emp-{{employee.id}}">
+            <td><a href="javascript:void(0);">{{employee.first_name}} {{employee.last_name}}</a></td>
+            <td><a href="javascript:void(0);">
+                    {{freelance}}
+                </a></td>
+            <td><a href="javascript:void(0);">15 Sep 2021</a></td>
+            <td><a href="javascript:void(0);">4.7</a></td>
+            <td><a href="javascript:void(0);">Yoga</a></td>
+            <td><a href="javascript:void(0);">Class</a></td>
+            <td>
+                <div class="action-box">
+                    <a href="#" class="border-btn-small">Message</a>
+                    <div class="dropdown drop-more ml-3">
+                        <button class="more-btn dropdown-toggle ml-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            More
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">View</a>
+                            <a class="dropdown-item" href="javascript:void(0);" onclick="deleteEmp('{{employee.id}}')">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}        
+    </tbody>
+</table>
+
+<script>
+    function deleteEmp(id){
+    var token = $("[name=csrfmiddlewaretoken]").val();
+            $.ajax({
+                type: 'POST',
+                url: 'deleteEmployee',
+                data: {'id': id, csrfmiddlewaretoken: token},
+                beforeSend: function () {
+                    $('#payloader').show();
+                },
+                success: function (response) {
+                    $('#payloader').hide();
+                    $('#emp-'+id).remove();
+                },
+                error: function (response) {
+                    $('#payloader').hide();
+                }
+            });
+            
+}
+    </script>
+{% endif%}

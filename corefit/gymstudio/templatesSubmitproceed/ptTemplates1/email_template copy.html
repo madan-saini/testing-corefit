@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>DafriBank Receipt Welcome</title>
+        <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+        <style type="text/css">body {padding: 0;margin: 0}table {border-spacing: 0px !important;}</style>
+    </head>
+    <body>
+        <table cellspacing="0" cellpadding="0" border="0" height="100%" bgcolor="#ebebeb" width="100%">
+            <tbody>
+                <tr>
+                    <td>
+                        <table cellspacing="0" cellpadding="0" border="0" align="center" width="90%" style="margin: 0 auto">
+                            <tbody>
+                                <tr>
+                                    <td align="left" valign="top">
+                                        <table cellspacing="0" cellpadding="0" border="0" width="90%">
+                                            <tbody>
+                                                <tr>
+                                                    <td align="center" valign="middle" style="padding:30px 0px 30px 0px;">
+                                                        <img height="54" alt="{{SITE_TITLE}}" src="{{LOGO}}">
+                                                    </td>
+
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left" valign="top">
+                                        <table cellspacing="0" cellpadding="0" border="0" width="90%" sryle="padding:0 10px" style="margin: 0 auto">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="font-family:Arial;font-size:14px; padding:0px 0px;">
+                                                        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="background: #fff;padding: 10px 30px 20px;border-radius: 25px;">
+                                                            <tbody>
+                                                                {% block content %}
+
+                                                                {% endblock content %}
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td align="left" valign="top">
+                                        <table cellspacing="0" cellpadding="0" border="0" width="90%" style="margin: 0 auto">
+                                            <tbody>
+                                                <tr>	
+                                                    <td width="50%" style="font-family:Arial;font-size:14px; padding:10px 0px 0px 0px;">
+                                                        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                                                            <tbody>
+                                                                <tr><th colspan="3" style="padding:0px 10px 0px 10px;"><span style="padding:10px 0px; font-size:14px; text-align: left;font-weight:bold;display: block; color:#242528;">General Enquiries</span></th></tr>
+                                                                <tr>
+                                                                    <td style="padding:0px 0px 0px 10px;" colspan="3">
+                                                                        <strong style="padding:3px 0px; font-size:12px;display: inline-block; text-align: left; color:#ff0000;">T:</strong>
+                                                                        <span style="padding:3px 0px; font-size:12px;display: inline-block; text-align: left; color:#242528;"> +27 011 568 5053</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="padding:0px 0px 0px 10px;"colspan="3">
+                                                                        <strong style="padding:3px 0px; font-size:12px;display: inline-block; text-align: left; color:#ff0000;">F:</strong>
+                                                                        <span style="padding:3px 0px; font-size:12px;display: inline-block; text-align: left; color:#242528;"> +27 086 560 9785</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="padding:0px 0px 0px 10px;"colspan="3">
+                                                                        <strong style="padding:3px 0px; font-size:12px;display: inline-block; text-align: left; color:#ff0000;">W:</strong>
+                                                                        <a style="padding:3px 0px; font-size:12px;display: inline-block; text-align: left; color:#242528;" href="{{HTTP_PATH}}" target="_blank">{{HTTP_PATH}}</a>
+                                                                    </td>
+                                                                </tr>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                    <td width="50%" valign="top" style="font-family:Arial;font-size:14px; padding:10px 0px 0px 0px;" >
+                                                        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                                                            <tbody>
+                                                                <tr><th style="padding:0px 10px 0px 10px;"><span style="padding:10px 0px 10px; font-size:14px; text-align: right;font-weight:bold;display: block; color:#242528;">Follow Us:</span></th></tr>
+                                                                <tr>
+                                                                    <td align="right" style="padding:0px 10px 0px 10px;">
+                                                                        {% comment %} <a style="padding:2px 3px; background:#fff; font-size:12px;display: inline-block; text-align: left; border-radius:6px;" href="#" target="_blank"><img height="16" alt="corefit on facebook" src="{% static 'images/facebook.jpg' %}" style="display:block;"></a> 
+                                                                        <a style="padding:2px 3px; background:#fff; font-size:12px;display: inline-block; text-align: left; border-radius:6px;" href="#" target="_blank"><img height="16" alt="corefit on twitter" src="{% static 'images/twitter.jpg' %}" style="display:block;"></a> 
+                                                                        <a style="padding:2px 3px; background:#fff; font-size:12px;display: inline-block; text-align: left; border-radius:6px;" href="#" target="_blank"><img height="16" alt="corefit on instagram" src="{% static 'images/instagram.jpg' %}" style="display:block;"></a> 
+                                                                        <a style="padding:2px 3px; background:#fff; font-size:12px;display: inline-block; text-align: left; border-radius:6px;" href="#" target="_blank"><img height="16" alt="corefit on linkedin" src="{% static 'images/linkedin.jpg' %}" style="display:block;"></a> {% endcomment %}
+                                                                    </td>
+                                                                </tr>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                <tr><td colspan="2" style="height: 10px;"></td></tr>
+                                                <tr>	
+                                                    <td colspan="2" style="font-family:Arial;font-size:14px; padding:0px 0px 0px 0px;">
+                                                        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                                                            <tbody>
+
+                                                                <tr>
+                                                                    <td align="center" valign="middle" style="padding:10px 10px 0px 10px;">
+                                                                        <img height="80" alt="{{SITE_TITLE}}" src="{{LOGO}}" style="display:block;border-radius: 10px; width:100%; height:auto;">
+                                                                    </td>
+                                                                </tr>
+                                                                <tr><td style="height: 10px;"></td></tr>
+                                                                <tr><td><span style="padding:10px 10px; font-size:12px; font-weight:bold;display: block; text-align: left; color:#242528;">© 2021 Corefit Limited. All Rights Reserved. </span></td></tr>
+                                                                <tr><td><span style="padding:0px 10px 0px 10px;font-style: italic;line-height:16px; font-size:11px;display: block; text-align: left; color: rgb(150,150,150);"></td></tr>
+                                                                <tr><td style="height: 10px;"></td></tr>
+                                                                <tr><td style="text-align: left;padding:3px 10px;"><a style="padding:3px 0px; font-size:11px;display: inline-block; text-align: left; color:#242528;" href="privacy-policy" target="_blank">Policy</a> | <a style="padding:3px 0px; font-size:11px;display: inline-block; text-align: left; color:#242528;" href="cookie-policy" target="_blank">Cookie Notice</a></td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>	
+
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>

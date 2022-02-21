@@ -1,0 +1,1037 @@
+{% load static %} {% load fetch_user %}
+{% load define_action %}
+
+<div class="card-main-accord" id="media-section-main">
+  <div
+    class="card-header collapsed"
+    data-toggle="collapse"
+    data-parent="#accordion"
+    href="#collapseTwo"
+  >
+<a class="card-title"> Media & Social Media  <i class="fa fa-check" id="mediassdata" aria-hidden="true" {%if mediaprofile_photo %}{%else%} style="display:none" {%endif%} ></i>
+ </a>
+
+  </div>
+  <div
+    id="collapseTwo"
+    class="card-body collapse "
+    data-parent="#accordion"
+  >
+    <div
+      class="modal fade"
+      id="cropImagePop"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="myModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">
+              <?=multiLanguage( "Edit Foto" , "Edit Photo" )?>
+            </h4>
+          </div>
+          <div class="modal-body">
+            <div id="upload-demo" class="center-block"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+              Close
+            </button>
+            <button type="button" id="cropImageBtn" class="btn btn-primary">
+              Crop
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <form
+      name="mediaSocialMedia"
+      id="mediaSocialMedia"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+    {% csrf_token %}
+    
+    
+      
+      <div class="media-main">
+        <input id="checkIdPreview" type="hidden" />
+        <input id="checkIdClick" type="hidden" />
+
+        <div class="row-new">
+
+          <div class="col-sm-6">
+            <div class="form-group form-field-main media-up" id="profileerror">
+              <div class="form-field-video" >
+
+
+                {% if  not mediaprofile_photo%}
+          <div class="video-uploadbox">
+                  <div class="custom-file">
+                    <input
+                      class="custom-file-input item-img"
+                      type="hidden"
+                      id="imagebase64"
+                    />
+                    <input
+                      class="custom-file-input item-img required"
+                      type="file"
+                      id="profile_photo"
+                      accept=".png, .jpg, .jpeg"
+                      fullwidth=""
+                      name="profile_photo"
+                      value=""
+                    />
+                    <input
+                    type="hidden"
+                    id="profile_photoold"
+                    name="profile_photoold"
+                    value=""
+                  />
+                    <label
+                      for="profile_photo"
+                      class="custom-file-label placeholder text-truncate"
+                      >Profile Image</label
+                    >
+                  </div>
+                </div>
+                <div id="preViewProfileId"
+                  class="upload-box"
+                  data-toggle="modal"
+                  data-target="#"
+                >
+                     <img id="profile_photo_show" data="{% static 'images/no-image.svg' %}" src="{% static 'images/no-image.svg' %}"/>
+                </div>
+
+                {% else %}
+                <div class="video-uploadbox">
+                  <div class="custom-file">
+                    <input
+                      class="custom-file-input item-img"
+                      type="hidden"
+                      id="imagebase64"
+                    />
+                    <input
+                      class="custom-file-input item-img"
+                      type="file"
+                      id="profile_photo"
+                      accept=".png, .jpg, .jpeg"
+                      fullwidth=""
+                      name="profile_photo"
+                      value="{{mediaprofile_photo.0.data}}"
+                    />
+                    <input
+                    type="hidden"
+                    id="profile_photoold"
+                    name="profile_photoold"
+                    value="{{mediaprofile_photo.0.data}}"
+                  />
+                    <label
+                      for="profile_photo"
+                      class="custom-file-label placeholder text-truncate"
+                      >Profile Image</label
+                    >
+                  </div>
+                </div>
+                  <div id="preViewProfileId"
+                  onclick="mediaView('{{mediaprofile_photo.0.id}}','{% static PROFILE_URL %}{{mediaprofile_photo.0.data}}')"
+                  class="upload-box"
+                  data-toggle="modal"
+                  data-target="#"
+                >
+                    <img id="profile_photo_show" data="{% static 'uploads/profile/' %}{{mediaprofile_photo.0.data}}" src="{% static 'uploads/profile/' %}{{mediaprofile_photo.0.data}}"/>
+                </div>
+
+                {% endif %}
+                  <!-- <img src="{% static 'images/no-image.svg' %}" id="profile_photo_show"> -->
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group form-field-main media-up">
+              <div class="form-field-video">
+                <div class="video-uploadbox">
+                  <div class="custom-file">
+                    <input
+                      class="custom-file-input"
+                      type="file"
+                      id="myMedia"
+                      name="myMedia[]"
+                      accept="video/mp4,.png, .jpg, .jpeg"
+                      fullwidth=""
+                      value="{{mediamyMedia.data}}"
+                    />
+                    <input
+                      multiple
+                      type="hidden"
+                      name="myMediaold"
+                      value="{{mediamyMedia.data}}"
+                    />
+                    <label
+                      for="myMedia"
+                      class="
+                        custom-file-label
+                        placeholder
+                        text-truncate
+                        my-media-plus
+                      "
+                      >My Media</label
+                    >
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group form-field-main media-up" id="tileerror">
+              <div class="form-field-video">
+
+
+                {% if  not mediatile_image%}
+                <div class="video-uploadbox">
+                  <div class="custom-file">
+                    <input
+                      class="custom-file-input required"
+                      type="file"
+                      id="tile_image"
+                      name="tile_image"
+                      accept=".png, .jpg, .jpeg"
+                      fullwidth=""
+                      value=""
+                    />
+                    <input
+                    id="tile_imageold"
+                    type="hidden"
+                    name="tile_imageold"
+                    value=""
+                  />
+                    <label
+                      for="tile_image"
+                      class="custom-file-label placeholder text-truncate"
+                      >Tile Image</label
+                    >
+                  </div>
+                </div>
+                <div  id="preViewTitlId"
+                  class="upload-box"
+                  data-toggle="modal"
+
+                  data-target="#"
+                >
+                  <img id="tile_photo_show" src="{% static 'images/no-image.svg' %}" data="{% static 'images/no-image.svg' %}"/>
+                  <!-- <img src="{% static 'images/no-image.svg' %}"> -->
+                  </div>
+
+                {% else %}
+                <div class="video-uploadbox">
+                  <div class="custom-file">
+                    <input
+                      class="custom-file-input"
+                      type="file"
+                      id="tile_image"
+                      name="tile_image"
+                      accept=".png, .jpg, .jpeg"
+                      fullwidth=""
+                      value="{{mediatile_image.0.data}}"
+                    />
+                    <input
+                    id="tile_imageold"
+                    type="hidden"
+                    name="tile_imageold"
+                    value="{{mediatile_image.0.data}}"
+                  />
+                    <label
+                      for="tile_image"
+                      class="custom-file-label placeholder text-truncate"
+                      >Tile Image</label
+                    >
+                  </div>
+                </div>
+                  <div  id="preViewTitlId"
+                  class="upload-box"
+                  data-toggle="modal"
+                  onclick="mediaView('{{mediatile_image.id}}','{% static PROFILE_URL %}{{mediatile_image.0.data}}')"
+
+                  data-target="#"
+                >
+                    <img id="tile_photo_show" src="{% static 'uploads/profile/' %}{{mediatile_image.0.data}}" data="{% static 'uploads/profile/' %}{{mediatile_image.0.data}}" />
+                </div>
+
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% if user.user_type == "Personal Trainer" or user.user_type == "FreelanceTrainer" %}
+
+          {% else %}
+            <div class="col-sm-6">
+            <div class="form-group form-field-main media-up">
+              <div class="form-field-video">
+                <div class="video-uploadbox">
+                  <div class="custom-file">
+                    <input
+                      class="custom-file-input"
+                      name="virtual_tour"
+                      type="file"
+                      id="virtual_tour"
+                      accept="video/mp4"
+                      fullwidth=""
+                      data=""
+                      value="{{mediavirtual_tour.0.data}}"
+                    />
+                    <input
+                    id="virtual_tourold"
+                    type="hidden"
+                    name="virtual_tourold"
+                    value="{{mediavirtual_tour.0.data}}"
+                  />
+                    <label
+                      for="virtual_tour"
+                      class="custom-file-label placeholder text-truncate"
+                    >
+                      Virtual Tour
+                    </label>
+                  </div>
+                </div>
+
+                {% if  not mediavirtual_tour%}
+                <div  id="virtualTour_showId"
+                  class="upload-box"
+                  data-toggle="modal"
+                  data-target="#"
+                >
+                  <img id="virtualTour_show" src="{% static 'images/videoPreview.png' %}" data="{% static 'images/videoPreview.png' %}" />
+                  </div>
+
+                  {% else %}
+                  <div
+                    class="upload-box"
+                    onclick="openVideoPop('virtualTour_show')"
+                  >
+                      <img id="virtualTour_show" data="{% static VIRTUAL_TOUR_URL %}{{mediavirtual_tour.0.data}}" src="{% static 'images/videoPreview.png' %}"/>
+                  </div>
+
+                  {% endif %}
+                    <!-- <img src="{% static 'images/no-image.svg' %}"> -->
+                </div>
+              <div class="videoVir" style="">{{mediavirtual_tour.0.data}}</div>
+              </div>
+            </div>
+          {%endif%}
+
+          <div class="col-sm-12 border-table" id="media_table">
+            {% include 'elements/users/media_table.html' %}
+        </div>
+          <div class="col-sm-12 border-table">
+            
+          </div>
+        </div>
+
+        <div class="row-new">
+          <h4 class="gray-head col-sm-12 mb-4">Social media links</h4>
+          {%if request.session.user_type == "Personal Trainer" %}
+          <div class="col-sm-6">
+            <div class="form-group form-field-main mb-3">
+              <label class="label-field">Facebook</label>
+              <div class="form-field-input">
+
+                <input
+                  class=" "
+                  type="text"
+                  name="facebookLink"
+                  id="facebookLink"
+                  value="{{urlLink.facebookLink}}"
+                  placeholder="Enter link here"
+                />
+
+
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group form-field-main mb-3">
+              <label class="label-field">Twitter</label>
+              <div class="form-field-input">
+                <input
+                 value="{{urlLink.twitterLink}}"
+                  class=" "
+                  type="text"
+                  name="twitterLink"
+                  id="twitterLink"
+                  placeholder="Enter link here"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group form-field-main mb-3">
+              <label class="label-field">Instagram</label>
+              <div class="form-field-input">
+                <input
+                  value="{{urlLink.instagramLink}}"
+                  class= ""
+                  type="text"
+                  name="instagramLink"
+                  id="instagramLink"
+                  placeholder="Enter link here"
+                />
+              </div>
+            </div>
+          </div>
+          {%else%}
+          <div class="col-sm-6">
+            <div class="form-group form-field-main mb-3">
+              <label class="label-field">Facebook</label>
+              <div class="form-field-input">
+
+                <input
+                  class=" "
+                  type="text"
+                  name="facebookLink"
+                  id="facebookLink"
+                  value="{{user.facebookLink}}"
+                  placeholder="Enter link here"
+                />
+
+
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group form-field-main mb-3">
+              <label class="label-field">Twitter</label>
+              <div class="form-field-input">
+                <input
+                 value="{{user.twitterLink}}"
+                  class=" "
+                  type="text"
+                  name="twitterLink"
+                  id="twitterLink"
+                  placeholder="Enter link here"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group form-field-main mb-3">
+              <label class="label-field">Instagram</label>
+              <div class="form-field-input">
+                <input
+                  value="{{user.instagramLink}}"
+                  class= ""
+                  type="text"
+                  name="instagramLink"
+                  id="instagramLink"
+                  placeholder="Enter link here"
+                />
+              </div>
+            </div>
+          </div>
+          {%endif%}
+
+        </div>
+        <input type="hidden" id="mediaChecksub">
+        <div class="btn-btm-group">
+          {%if mediaSocialMedia %}
+          {% define "display:none;" as style31 %}
+          {% define "" as style32 %}
+          {% else %}
+          {% define "" as style31 %}
+          {% define "display:none;" as style32 %}
+          {% endif %}
+          <button class="border-btn" onclick="return submitTypeMedia('save')">Save</button>
+
+          <button  class="btn-pink ml-10 btnhide1" style="{{style31}}" onclick="return submitTypeMedia('submit')">Submit & Proceed</button>
+
+          <button type="button" class="btn-pink ml-10 btnshow1" style="{{style32}}" onclick="proceedbtn2()">Submit & Proceed</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div id="mediamodel">
+
+</div>
+<script>
+  function proceedbtn2(){
+    $("#collapseThree").collapse("toggle");
+              
+           $([document.documentElement, document.body]).animate({
+                  scrollTop: $("#media-section-main").offset().top
+              }, 500);
+           }
+function submitTypeMedia(type){
+$("#mediaChecksub").val(type)
+}
+function viewMedia(id){
+        var token = $("[name=csrfmiddlewaretoken]").val();
+        $.ajax({
+            type: 'POST',
+            url: 'viewMedia',
+            data: {'id': id, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+                $("#mediamodel").html(response)
+                $('.view_btn_media').show();
+                $('.edit_btn_media').hide();
+                $('.disabledField').prop("disabled", true)
+                $("#modalShowMedia").modal('show')
+
+            },
+            error: function (response) {
+                $('#payloader').hide();
+                console.log('error', response)
+            }
+        })
+
+    }
+    function mediaEdit(id){
+        console.log("#mediaSocialMediaEdit"+id)
+        $("#mediaSocialMediaEdit"+id).validate({
+            submitHandler: function (form, event) {
+                var form = document.querySelector("#mediaSocialMediaEdit"+id);
+                var token = $("[name=csrfmiddlewaretoken]").val();
+                var formData = new FormData(form);
+                formData.append("edit_media_media", $("#edit_media_media")[0].files[0]);
+                formData.append("csrfmiddlewaretoken", token);
+                formData.append("edit_id", id);
+                $.ajax({
+                    type: "POST",
+                    url: "edit_media_media",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function (xhr) {
+                      $("#payloader").show();
+                    },
+                    success: function (response) {
+                      $("#payloader").hide();
+                    Command: toastr["success"]("Changes Saved")
+
+                      console.log("response Hello", id);
+                      $('#media_table').html(response);
+                      $("#modalShowMedia").modal('hide')
+                    },
+                    error: function (response) {
+                      $("#payloader").hide();
+                      console.log("error", response);
+                    },
+                  });
+            
+                  return false;
+
+                
+            }
+        });
+      }
+</script>
+<script>
+    
+  $(document).ready(function () {
+    $(".titleEnter").click(function () {
+        if($('#mediaTitle').val() == ''){
+             $("#mediaTitle").focus();
+            alert('Please enter media title');
+        } else{
+          var form = document.querySelector("#mediaSocialMediaTitle");
+          var token = $("[name=csrfmiddlewaretoken]").val();
+          var formData = new FormData(form);
+          var mediaTitle = $("#mediaTitle").val();
+
+          formData.append("myMedia", $("#myMedia")[0].files[0]);
+          formData.append("csrfmiddlewaretoken", token);
+          formData.append("mediaTitle", mediaTitle);
+
+        $.ajax({
+                type: 'POST',
+                url: 'updateMedia',
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function (xhr) {
+                    $("#payloader").show();
+                  },
+                success: function (response) {
+                 $("#payloader").hide();
+                 Command: toastr["success"]("Changes Saved")
+                    $(".btnhide1").hide()
+                    $(".btnshow1").show()
+                    $("#mediassdata").show()
+                    $('#media_table').html(response);
+                    $("#mediaTitle").val('');
+                    $("#myMedia").val('');
+                }
+            });
+
+             $('#titleShow').modal('hide');
+             return false;
+        }
+
+    });
+});
+  
+  
+  
+    function userVisibleMedia(event,id){
+       var checkbox = event.children["0"];
+       console.log(checkbox['checked'])
+       checkbox['checked']=!checkbox['checked'];
+       console.log(checkbox['checked'])
+       var token = $("[name=csrfmiddlewaretoken]").val();
+       var type="media"
+       $.ajax({
+                type: 'POST',
+                url: 'updateUserStatus',
+                data: {'id':id,'checkbox':checkbox['checked'],"type":type,'csrfmiddlewaretoken':token},
+                success: function (response) {
+                }
+            });
+}
+  
+
+ 
+</script>
+<style>
+  label.cabinet {
+    display: block;
+    cursor: pointer;
+  }
+
+  label.cabinet input.file {
+    position: relative;
+    height: 100%;
+    width: auto;
+    opacity: 0;
+    -moz-opacity: 0;
+    filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0);
+    margin-top: -30px;
+  }
+
+  #upload-demo {
+    width: 250px;
+    height: 250px;
+    padding-bottom: 25px;
+  }
+</style>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.css"
+/>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.js"></script>
+
+<script>
+  // Start upload preview image
+  // $(".gambar").attr("src", "https://user.gadjian.com/static/images/personnel_boy.png");
+  var $uploadCrop, tempFilename, rawImg, imageId;
+
+  function readFile(input) {
+    var reader = new FileReader();
+    var idVal = $("#checkIdPreview").val();
+    var idValClick = $("#checkIdClick").val();
+    reader.onload = function ()
+    {
+        var output = document.getElementById(idVal);
+        if (idVal == "#myMedia_show") {
+          $("#titleShow").modal("show");
+        }
+        $(idVal).attr("src", reader.result);
+        $(idValClick).attr("onclick", "mediaView('0','"+reader.result+"')");
+      // output.src = reader.result;
+    }
+    reader.readAsDataURL(event.target.files[0]);
+}
+
+
+  // End upload preview image
+</script>
+<script>
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        // Does this cookie string begin with the name we want?
+        if (cookie.substring(0, name.length + 1) === name + "=") {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+  
+  $.validator.addMethod(
+    "facebookUrl",
+    function (input) {
+      var reg =
+        /(?:(?:http|https):\/\/)?(?:www.)?facebook.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[?\w\-]*\/)?(?:profile.php\?id=(?=\d.*))?([\w\-]*)?/;
+      return reg.test(input);
+    },
+    "Please enter valid Facebook URL."
+  );
+  
+  $("#mediaSocialMedia").validate({
+  errorPlacement: function (error, element) {
+            console.log('dd', element.attr("name"))
+            if (element.attr("name") == "profile_photo") {
+                error.appendTo("#profileerror");
+            }
+            if (element.attr("name") == "tile_image") {
+                error.appendTo("#tileerror");
+            }
+        },
+    submitHandler: function (form, event) {        
+      
+    var erro_show = 0
+    var inputF = $('#facebookLink').val();
+    var inputT = $('#twitterLink').val();
+    var inpuI = $('#instagramLink').val();
+    var inpuM = $(".medialen").length;
+    var fReg = /facebook.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[?\w\-]*\/)?(?:profile.php\?id=(?=\d.*))?([\w\-]*)?/;
+    var tReg = /twitter.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[?\w\-]*\/)?(?:profile.php\?id=(?=\d.*))?([\w\-]*)?/;
+    var iReg = /instagram.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[?\w\-]*\/)?(?:profile.php\?id=(?=\d.*))?([\w\-]*)?/;
+    if(inpuM == 0){
+    swal('',"Please enter my media",'error');
+    erro_show = 1;
+    }
+
+      if(inpuI != '' ){
+      if((!iReg.test(inpuI))) {
+          swal('',"Please enter valid Instagram link.",'error');
+          erro_show = 1;
+      }
+      }
+
+      if(inputT != '' ){
+      if((!tReg.test(inputT))) {
+          swal('',"Please enter valid Twitter link.",'error');
+          erro_show = 1;
+      }
+      }
+      if(inputF != '' ){
+      if((!fReg.test(inputF))) {
+          swal('',"Please enter valid Facebook link.",'error');
+          erro_show = 1;
+      }
+      }
+
+
+       
+       if(erro_show == 0){
+
+      var submitType = $("#mediaChecksub").val()
+      var form = document.querySelector("#mediaSocialMedia");
+      var token = $("[name=csrfmiddlewaretoken]").val();
+      var formData = new FormData(form);
+      formData.append("profile_photo", $("#profile_photo")[0].files[0]);
+      formData.append("csrfmiddlewaretoken", token);
+      formData.append("mediaTitle", $("#mediaTitle").val());
+
+      $.ajax({
+        type: "POST",
+        url: "mediaSocialMedia",
+        data: formData,
+        contentType: false,
+        processData: false,
+        beforeSend: function (xhr) {
+          $("#payloader").show();
+        },
+        success: function (response) {
+          $("#payloader").hide();
+          Command: toastr["success"]("Changes Saved")
+          $("#mediassdata").show()
+          if(response[3]!=''){
+          $('#virtualTour_show').attr('data', 'static/uploads/virtualTour/'+response[3]);
+          $("#virtualTour_showId").attr("onclick", "openVideoPop('virtualTour_show')");
+          }
+           if(submitType == 'save'){
+              if(response[0] != ''){
+                $("#tile_imageold").val(response[0])
+              }
+              if(response[1] != ''){
+                $("#virtual_tourold").val(response[1])
+              }
+              if(response[2] != ''){
+                $("#profile_photoold").val(response[2])
+              }
+           }else if(submitType == 'submit'){
+            if(response[0] != ''){
+                $("#tile_imageold").val(response[0])
+              }
+              if(response[1] != ''){
+                $("#virtual_tourold").val(response[1])
+              }
+              if(response[2] != ''){
+                $("#profile_photoold").val(response[2])
+              }
+              $("#collapseThree").collapse("toggle");
+              
+           $([document.documentElement, document.body]).animate({
+                  scrollTop: $("#media-section-main").offset().top
+              }, 500);
+           }
+
+         
+        },
+        error: function (response) {
+          $("#payloader").hide();
+          console.log("error", response);
+        },
+      });
+      return false;
+      }
+      
+    },
+  });
+  
+  
+
+  $.validator.addMethod(
+    "instagramUrl",
+    function (input) {
+      var reg =
+        /(?:(?:http|https):\/\/)?(?:www.)?instagram.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[?\w\-]*\/)?(?:profile.php\?id=(?=\d.*))?([\w\-]*)?/;
+      return reg.test(input);
+    },
+    "Please enter valid Instagram URL."
+  );
+
+  $.validator.addMethod(
+    "twitterUrl",
+    function (input) {
+      var reg =
+        /(?:(?:http|https):\/\/)?(?:www.)?twitter.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[?\w\-]*\/)?(?:profile.php\?id=(?=\d.*))?([\w\-]*)?/;
+      return reg.test(input);
+    },
+    "Please enter valid Twitter URL."
+  );
+
+  $("#profile_photo").change(function (e) {
+    // console.log('this',this)
+    $("#checkIdPreview").val("#profile_photo_show");
+    $("#checkIdClick").val("#preViewProfileId");
+    if (imageValidation("profile_photo", this) != false) {
+      //                readPDFURL(this);
+    }
+  });
+
+  $("#tile_image").change(function (e) {
+    $("#checkIdPreview").val("#tile_photo_show");
+    $("#checkIdClick").val("#preViewTitlId");
+    if (imageValidation("tile_image", this) != false) {
+      //                readPDFURL(this);
+    }
+  });
+
+  $("#myMedia").change(function (e) {
+    var filenameType = $("#myMedia").val();
+    var extn = getExt(filenameType);
+    extn = extn.toLowerCase();
+    var imagefiletype = ["jpg", "jpeg", "png", "gif", "svg"];
+    var videofiletype = ["mp4"];
+    var checktypeextnImage = in_array(extn, imagefiletype);
+    var checktypeextnVideo = in_array(extn, videofiletype);
+    $("#checkIdPreview").val("#myMedia_show");
+    if (checktypeextnImage) {
+      if (imageValidation("myMedia", this) != false) {
+        //                readPDFURL(this);
+      }
+    }
+    if (checktypeextnVideo) {
+      if (videoValidation("myMedia", this) != false) {
+        //            readURL1(this);
+      }
+    }
+    if (!checktypeextnVideo && !checktypeextnImage) {
+      alert(ext + " file not allowed.");
+      document.getElementById("myMedia").value = "";
+      return false;
+    }
+    
+    
+  });
+  $("#virtual_tour").change(function (e) {
+  var name = e.target.files[0].name;
+         $(".videoVir").html(name)
+    $("#checkIdPreview").val("virtualTour_show");
+    swal('',"Video can be previewed after saving details.");
+    $("#checkIdClick").val("#virtualTour_showId");
+    if (videoValidation("virtual_tour", this) != false) {
+      //            readURL1(this);
+    }
+  });
+
+  function in_array(needle, haystack) {
+    for (var i = 0, j = haystack.length; i < j; i++) {
+      if (needle == haystack[i]) return true;
+    }
+    return false;
+  }
+
+  function getExt(filename) {
+    var dot_pos = filename.lastIndexOf(".");
+    if (dot_pos == -1) return "";
+    return filename.substr(dot_pos + 1).toLowerCase();
+  }
+
+  function imageValidation(imageId, event) {
+    var filename = document.getElementById(imageId).value;
+    var filetype = ["jpg", "jpeg", "png"];
+    if (filename != "") {
+      var ext = getExt(filename);
+      ext = ext.toLowerCase();
+      var checktype = in_array(ext, filetype);
+      if (!checktype) {
+        alert(ext + " file not allowed.");
+        document.getElementById(imageId).value = "";
+        return false;
+      } else {
+        var fi = document.getElementById(imageId);
+        var filesize = fi.files[0].size; //check uploaded file size
+        if (filesize > 8388608) {
+          alert("Maximum 8MB file size allowed.");
+          document.getElementById(imageId).value = "";
+          return false;
+        }
+      }
+
+      $("#cancelCropBtn").data("id", imageId);
+      console.log(event);
+      readFile(event);
+    }
+  }
+
+  function videoValidation(imageId, event) {
+    var filename = document.getElementById(imageId).value;
+    var filetype = ["mp4"];
+    if (filename != "") {
+      var ext = getExt(filename);
+      ext = ext.toLowerCase();
+      var checktype = in_array(ext, filetype);
+      if (!checktype) {
+        alert(ext + " file not allowed.");
+        document.getElementById(imageId).value = "";
+        return false;
+      } else {
+        var fi = document.getElementById(imageId);
+        var filesize = fi.files[0].size; //check uploaded file size
+        if (filesize > 12097152) {
+          alert("Maximum 12MB file size allowed.");
+          document.getElementById(imageId).value = "";
+          return false;
+        }
+      }
+      if (imageId == "myMedia") {
+        console.log("imageId", imageId);
+        $("#titleShow").modal("show");
+      }
+    }
+  }
+
+  function openVideoPop(id) {
+//     console.log(id)
+//     alert(id);
+    var data = $("#" + id).attr("data");
+//     console.log(data)
+    if (data != "") {
+      var video = document.getElementById("video_bx");
+      $("#videoModalCenter").modal("show");
+      $("#video_bx source").attr("src", data);
+      video.play();
+    }
+  }
+  function  closeVideoModal(id){
+      var video = document.getElementById("video_bx");
+      video.pause();
+    }
+  function mediaView(id, img){
+    $("#myMedia").val('');
+    $('#imageModalCenter').modal('show');
+    $('#image_dv img').attr('src',img)
+
+    }
+
+    function editMedia(id){
+        $('.disabledField').removeAttr("disabled");
+        $('#media_view_btn').hide();
+        $('#media_edit_btn').show();
+        $('.media_view_img').hide();
+        $('.media_edit_img').show();
+        $('#view_btn_media'+id).hide();
+        $('#edit_btn_media'+id).show();
+    }
+    function closeMedia(id){
+        $('#view_btn_media'+id).show();
+        $('#edit_btn_media'+id).hide();
+        $("#modalShowMedia").modal('hide')
+
+<!--        $('#viewMedia' + id).modal('hide');-->
+    }
+    
+    function deleteMedia(id){
+        swal({
+            title: "Are you sure?",
+            text: "You want to delete this record!",
+            icon: "warning",
+            buttons: [
+              'No',
+              'Yes'
+            ],
+            dangerMode: true,
+        }).then(function(isConfirm) {
+        if(isConfirm){
+        var token = $("[name=csrfmiddlewaretoken]").val();
+        
+        $.ajax({
+            type: 'POST',
+            url: 'deleteMedia',
+            data: {'id': id, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+              $(".btnhide1").show()
+              $(".btnshow1").hide()
+                $('#payloader').hide();
+                $('#media-'+id).remove();
+                setNumberingMedia();
+                $('#media_table').html(response);
+                $("#modalShowMedia").modal('hide')
+<!--                $('#viewMedia'+id).modal('hide');-->
+<!--                $(".modal-backdrop").removeClass('modal-backdrop')-->
+<!--                $(".modal-open").removeClass("modal-open")-->
+            },
+            error: function (response) {
+                $('#payloader').hide();
+                console.log('error', response)
+            }
+        })
+                }
+
+        })
+    }
+    {% comment %} document.getElementById("myAnchor").getAttribute("target");  {% endcomment %}
+    function setNumberingMedia() {
+        var total_requirement = $('.media-box tr').length;
+        for (var r = 0; r < total_requirement; r++) {
+            var r_no = r + 1;
+            $(".media-box tr:eq(" + r + ") td:eq(0)").html(r_no+'.');
+        }
+    }
+</script>

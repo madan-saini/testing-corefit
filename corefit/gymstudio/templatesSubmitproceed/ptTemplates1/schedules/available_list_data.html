@@ -1,0 +1,262 @@
+
+{% load static %}
+
+{% block content %}
+
+
+<div class="row mt-3">
+    
+    <div class="col-sm-8  pl-3 availability-settime-boxx">
+        <div class="set-open-time-box">
+            <div class="set-top-row">
+                <div class="emp-left">
+                    <h4 class="schedule_name">{{scheduleData.schedule_name}}</h4>
+                    {% if scheduleData.is_default == 1%}
+                    <div class="d-she">
+                        <img src="{% static 'images/awesome-star.svg' %}">
+                        <span>Default Schedule</span>
+                    </div>
+                    {% endif%}
+                </div>
+                
+                <div class="action-box">
+                    
+                        <div class="edit-main">
+                            <a href="javascript:void(0);" class="border-btn-small edit-she-btn">Edit Name</a>
+                            <div class="pop-schedule edit-pop-schedule" style="display: none;">
+                                <h4 class="schedule_name">New Schedule</h4>
+                                <form class="" name='scheduleForm1' id='scheduleForm1' method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                                <div class="form-group form-field-main">
+                                    <label class="label-field">Schedule name:</label>
+                                    <div class="form-field-input">
+                                        <input type="text" name="edit_schedule_name" value="{{scheduleData.schedule_name}}" id="edit_schedule_name" class="required" placeholder="Working hours, Exclusive hours, etc...">
+                                    </div>
+                                </div>
+                                <div class="btn-btm-group">
+                                    <button class="border-btn" type='button' onclick="closeSPop()">Discard</button> 
+                                    <button class="btn-pink ml-10">Save</button>
+                                </div>
+                        </form>
+                            </div>
+                        </div>
+                        <div class="clone-main">
+                            <a href="javascript:void(0);" class="btn-red-one  clone-she-btn">Clone</a>
+
+                            <form class="" name='scheduleForm2' id='scheduleForm2' method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                            <div class="pop-schedule clone-pop-schedule" style="display: none;">
+                                <h4>New Schedule</h4>
+                                <div class="form-group form-field-main">
+                                    <label class="label-field">Schedule name:</label>
+                                    <div class="form-field-input">
+                                        <input type="text" name="clone_schedule_name" id="clone_schedule_name" class="required" placeholder="Working hours, Exclusive hours, etc...">
+                                    </div>
+                                </div>
+                                <div class="btn-btm-group">
+                                    <button class="border-btn" type='button' onclick="closeSPop()">Discard</button> 
+                                    <button class="btn-pink ml-10">Save</button>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    
+                </div>
+                        
+            </div>
+            <form class="" name='profileForm1' id='profileForm1' method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% include 'elements/schedule/calender.html' %}
+            <input type="hidden" name="schedule_id" id="schedule_id">
+            <input type="hidden" name="emp_id" id="emp_id">
+            </form>
+        </div>
+    </div>
+
+    <div class="col-sm-4  availability-overide pr-3">
+        
+            <div class="Add-date-overrides" id="overwrite_section">
+                {% include 'elements/schedule/overwrite_section.html' %}
+            </div>
+            
+        
+    </div>
+            
+    <div class="col-sm-12 text-right mt-3">
+        <div class="btm-btn-box bg-border">
+            <a href="javascript:void(0);" class="btn-red-one" onclick="makeDefault()">Set as Default Schedule</a>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<script type="text/javascript">
+    $(".edit-she-btn").click(function () {
+        $(".add-pop-schedule").hide();
+        $(".edit-pop-schedule").toggle();
+        $(".clone-pop-schedule").hide();
+    });
+
+    $(".clone-she-btn").click(function () {
+        $(".add-pop-schedule").hide();
+        $(".edit-pop-schedule").hide();
+        $(".clone-pop-schedule").toggle();
+    });
+
+    $("#scheduleForm1").validate({
+        submitHandler: function (form) {
+            var emp_id = $('#emp_id').val();
+            var schedule_id = $('#schedule_id').val();
+            var schedule_name = $('#edit_schedule_name').val();
+            var token = $("[name=csrfmiddlewaretoken]").val();
+
+            $.ajax({
+                type: 'POST',
+                url: 'editSchedule',
+                data: {'schedule_name':schedule_name, 'schedule_id': schedule_id, csrfmiddlewaretoken: token},
+                beforeSend: function () {
+                    $('#payloader').show();
+                },
+                success: function (response) {
+                    $('#payloader').hide();
+                    $('.pop-schedule').hide();
+                    $('#schedule_name').val('');
+                    
+                    $('#schedule-emp-'+schedule_id).html('<span onclick="selectSchedule('+schedule_id+','+emp_id+')">'+schedule_name+' </span><img onclick="deleteSchedule('+schedule_id+')" src="{% static 'images/close-tag.svg' %}">');
+                    $('.schedule_name').html(schedule_name);
+                    Command: toastr["success"]("Changes Saved")
+                    
+//                    showCalender(s_id, emp_id);
+//                    $('#employee_list').html();
+
+                },
+                error: function (response) {
+                    $('#payloader').hide();
+                    console.log('error', response)
+                }
+            })
+
+            return false;
+        }
+    });
+    
+    $("#scheduleForm2").validate({
+        submitHandler: function (form) {
+            var emp_id = $('#emp_id').val();
+            var schedule_id = $('#schedule_id').val();
+            var schedule_name = $('#clone_schedule_name').val();
+            var token = $("[name=csrfmiddlewaretoken]").val();
+
+            $.ajax({
+                type: 'POST',
+                url: 'cloneSchedule',
+                data: {'schedule_name':schedule_name, 'schedule_id': schedule_id, csrfmiddlewaretoken: token},
+                beforeSend: function () {
+                    $('#payloader').show();
+                },
+                success: function (response) {
+                    $('#payloader').hide();
+                    $('.pop-schedule').hide();
+                    updateEmpList(emp_id);
+                    Command: toastr["success"]("Changes Saved")
+                    
+//                    showCalender(s_id, emp_id);
+//                    $('#employee_list').html();
+
+                },
+                error: function (response) {
+                    $('#payloader').hide();
+                    console.log('error', response)
+                }
+            })
+
+            return false;
+        }
+    });
+    
+    $("#scheduleForm3").validate({
+        submitHandler: function (form) {
+            var emp_id = $('#emp_id').val();
+            var schedule_id = $('#schedule_id').val();
+            var schedule_name = $('#edit_schedule_name3').val();
+            var token = $("[name=csrfmiddlewaretoken]").val();
+
+            $.ajax({
+                type: 'POST',
+                url: 'editSchedule',
+                data: {'schedule_name':schedule_name, 'schedule_id': schedule_id, csrfmiddlewaretoken: token},
+                beforeSend: function () {
+                    $('#payloader').show();
+                },
+                success: function (response) {
+                    $('#payloader').hide();
+                    $('.pop-schedule').hide();
+                    $('#schedule_name').val('');
+                    
+                    $('#schedule-emp-'+schedule_id).html('<span onclick="selectSchedule('+schedule_id+','+emp_id+')">'+schedule_name+' </span><img onclick="deleteSchedule('+schedule_id+')" src="{% static 'images/close-tag.svg' %}">');
+                    $('.schedule_name').html(schedule_name);
+                    Command: toastr["success"]("Changes Saved")
+                    
+//                    showCalender(s_id, emp_id);
+//                    $('#employee_list').html();
+
+                },
+                error: function (response) {
+                    $('#payloader').hide();
+                    console.log('error', response)
+                }
+            })
+
+            return false;
+        }
+    });
+    
+    $("#scheduleForm4").validate({
+        submitHandler: function (form) {
+            var emp_id = $('#emp_id').val();
+            var schedule_id = $('#schedule_id').val();
+            var schedule_name = $('#clone_schedule_name4').val();
+            var token = $("[name=csrfmiddlewaretoken]").val();
+
+            $.ajax({
+                type: 'POST',
+                url: 'cloneSchedule',
+                data: {'schedule_name':schedule_name, 'schedule_id': schedule_id, csrfmiddlewaretoken: token},
+                beforeSend: function () {
+                    $('#payloader').show();
+                },
+                success: function (response) {
+                    $('#payloader').hide();
+                    $('.pop-schedule').hide();
+                    updateEmpList(emp_id);
+                    Command: toastr["success"]("Changes Saved")
+                    
+//                    showCalender(s_id, emp_id);
+//                    $('#employee_list').html();
+
+                },
+                error: function (response) {
+                    $('#payloader').hide();
+                    console.log('error', response)
+                }
+            })
+
+            return false;
+        }
+    });
+</script>
+
+<style>
+    .edit-main{
+        position: relative;
+    }
+
+    .clone-main{
+        position: relative;
+    }
+</style>
+
+{% endblock content %}

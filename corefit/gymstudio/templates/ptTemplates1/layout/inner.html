@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{pageTitle}}</title>
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/responsive.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-datepicker.css' %}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+    <link rel="shortcut icon" href="{{ FAVICON_PATH }}" type="image/x-icon"/>
+    <link rel="icon" href="{{ FAVICON_PATH }}" type="image/x-icon"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{% static 'js/jquery.validate.min.js' %}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+
+
+<body>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+    <main class="content-wrapper">
+        <div class="container-fluid">
+
+            {% include  'ptTemplates/elements/header.html' %}
+
+            {% include  'ptTemplates/elements/side_menu.html' %}
+        
+            {% block content %}
+
+            {% endblock content %}
+
+        </div>
+    </main>
+
+    {% include 'ptTemplates/elements/models.html' %}
+
+    <!-- script -->
+    {% comment %} <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> {% endcomment %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js"></script>
+    {% comment %} <script type="text/javascript" src="{% static 'js/bootstrap-datepicker.min.js' %}"></script> {% endcomment %}
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.14/js/bootstrap-multiselect.min.js"></script>
+
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $(".add-accord .card-header").click(function() {
+            $(".add-accord").toggleClass("add-accord-new");
+        });
+
+        $(".card-main-accord").not(':first').click(function() {
+            $(".add-accord").removeClass("add-accord-new");
+        });
+    });
+
+
+    $(document).ready(function() {
+        $(".drodown-overflow").hover(function() {
+
+            $("#navAccordion").css('overflow-y', 'unset');
+        });
+
+    });
+    </script>
+    <script type="text/javascript">
+    // Tooltips
+    $('.tip').each(function() {
+        $(this).tooltip({
+            html: true,
+            title: $('#' + $(this).data('tip')).html()
+        });
+    });
+    </script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+
+        var multipleCancelButton = new Choices('#choices-multiple-remove-button', {
+            removeItemButton: true,
+            maxItemCount: 3,
+            searchResultLimit: 5,
+            renderChoiceLimit: 5
+        });
+
+        var multipleCancelButton = new Choices('#choices-multiple-remove-button-3', {
+            removeItemButton: true,
+            maxItemCount: 3,
+            searchResultLimit: 5,
+            renderChoiceLimit: 5
+        });
+
+
+    });
+    </script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $(".div-check").click(function() {
+
+            if ($(this).is(":checked")) {
+                if (this.id == "e-option1") {
+                    $("#option_1").show();
+                    $("#change-div1").show();
+                    $("#change-div2").hide();
+                    $("#change-div3").hide();
+                    $("#profile_remain").hide();
+                } else if (this.id == "e-option2") {
+                    $("#option_1").hide();
+                    $("#change-div2").show();
+                    $("#change-div1").hide();
+                    $("#change-div3").hide();
+                    $("#profile_remain").show();
+                } else if (this.id == "e-option3") {
+                    $("#option_1").hide();
+                    $("#change-div3").show();
+                    $("#change-div1").hide();
+                    $("#change-div2").hide();
+                    $("#profile_remain").show();
+                }
+            }
+        });
+    });
+    </script>
+    <script type="text/javascript">
+    $(function() {
+
+        // INITIALIZE DATEPICKER PLUGIN
+        $('.datepicker').datepicker({
+            clearBtn: false,
+            weekStart: 1,
+            orientation: "bottom",
+            format: "dd/mm/yyyy"
+        });
+        $(".datepicker").datepicker().on('show', function(e) {
+            $('.prev').html('<img src="images/left-cal-arrow.svg">');
+            $('.next').html('<img src="images/rt-cal-arrow.svg">');
+        });
+    });
+    </script>
+    <script type="text/javascript">
+    $(function() {
+        var taeb = $(".taeb-switch");
+        taeb.find(".taeb").on("click", function() {
+            var $this = $(this);
+
+            if ($this.hasClass("active")) return;
+
+            var direction = $this.attr("taeb-direction");
+
+            taeb.removeClass("left right").addClass(direction);
+            taeb.find(".taeb.active").removeClass("active");
+            $this.addClass("active");
+        });
+    });
+    </script>
+    <script type="text/javascript" language="javascript">
+    function scrollDetect() {
+        var lastScroll = 0;
+
+        window.onscroll = function() {
+            let currentScroll = document.documentElement.scrollTop || $('#fixed').scrollTop; // Get Current Scroll Value
+
+            if (currentScroll > 0 && lastScroll <= currentScroll) {
+                lastScroll = currentScroll;
+                $('.sidenav').addClass('add-fix');
+                $('.sidenav').removeClass('add-abs');
+            } else {
+                lastScroll = currentScroll;
+                $('.sidenav').removeClass('add-fix');
+                $('.sidenav').addClass('add-abs');
+
+            }
+        };
+    }
+
+
+    scrollDetect();
+    </script>
+    <script type="text/javascript" language="javascript">
+    function scrollDetect() {
+        var lastScroll = 0;
+
+        window.onscroll = function() {
+            let currentScroll = document.documentElement.scrollTop || $('#fixed').scrollTop; // Get Current Scroll Value
+
+            if (currentScroll > 0 && lastScroll <= currentScroll) {
+                lastScroll = currentScroll;
+                $('.sidenav').addClass('add-fix');
+                $('.sidenav').removeClass('add-abs');
+            } else {
+                lastScroll = currentScroll;
+                $('.sidenav').removeClass('add-fix');
+                $('.sidenav').addClass('add-abs');
+
+            }
+        };
+    }
+
+
+    scrollDetect();
+    </script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $('#purpose').on('change', function() {
+            if (this.value == '0') {
+                $("#Session").show();
+            } else {
+                $("#Session").hide();
+            }
+            if (this.value == '1') {
+                $("#Services").show();
+            } else {
+                $("#Services").hide();
+            }
+            if (this.value == '2') {
+                $("#DayPass").show();
+            } else {
+                $("#DayPass").hide();
+            }
+            if (this.value == '3') {
+                $("#Membership").show();
+            } else {
+                $("#Membership").hide();
+            }
+            if (this.value == '4') {
+                $("#Amenity").show();
+            } else {
+                $("#Amenity").hide();
+            }
+        });
+    });
+
+    </script>
+
+    
+
+    
+</body>
+
+</html>

@@ -1,0 +1,32 @@
+
+{% load static %}
+{% if faq_tabless %}
+
+<div class="table-box table-w-4">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Sr.no</th>
+                <th scope="col">Question</th>
+                <th scope="col">Answer</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for faq_tab in faq_tabless %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td> {{faq_tab.question}}</td>
+                <td>{{faq_tab.answer}}</td>
+                <td>
+                    <div class="action-box">
+                        <a href="javascript:void(0);" class="border-btn-small" onclick="viewFaq('{{faq_tab.id}}')">View</a>
+                        <a href="javascript:void(0);" class="btn-red-one" onclick="deleteFaq('{{faq_tab.id}}')">Delete</a>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif%}

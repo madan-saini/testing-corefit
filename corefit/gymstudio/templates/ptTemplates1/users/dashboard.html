@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/all.min.css">
+</head>
+
+<body class="fixed-nav sticky-footer" id="page-top">
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg  fixed-top nav-top" id="mainNav">
+        <div class="navbar-nav sidenav-toggler">
+            <a class="nav-link text-center" id="sidenavToggler" href="#">
+                <img src="images/bars.svg">
+            </a>
+        </div>
+        <a class="navbar-brand" href="index.html">Corefit</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+                <li>
+                    <div class="corefit-logo-icon">
+                        <a href="#"><img src="images/corefit-icon.png"></a>
+                    </div>
+                </li>
+                <li class="nav-item active" data-toggle="tooltip" data-placement="right" title="Dashboard">
+                    <a class="nav-link " href="index.html">
+                        <i class="fas fa-home"></i>
+                        <span class="nav-link-text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExampleone" data-parent="#exampleAccordion">
+                        <i class="fas fa-users"></i>
+                        <span class="nav-link-text">Profile Setup</span>
+                    </a>
+                    <ul class="sidenav-second-level collapse" id="collapseExampleone">
+                        <li>
+                            <a href="navbar.html">My Profile</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link" href="tables.html">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span class="nav-link-text">My Schedule</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseComponents" data-parent="#exampleAccordion">
+                        <i class="fas fa-book"></i>
+                        <span class="nav-link-text">Bookings</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
+                        <i class="fas fa-file"></i>
+                        <span class="nav-link-text">Requests</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMulti" data-parent="#exampleAccordion">
+                        <i class="fa fa-fw fa-sitemap"></i>
+                        <span class="nav-link-text">Classes Management</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
+                        <i class="fas fa-file"></i>
+                        <span class="nav-link-text">Subscriptions</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
+                        <i class="fas fa-file"></i>
+                        <span class="nav-link-text">Client Reviews</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
+                        <i class="fas fa-file"></i>
+                        <span class="nav-link-text">Video On Demand</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
+                        <i class="fas fa-file"></i>
+                        <span class="nav-link-text">Live Classes</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
+                        <i class="fas fa-file"></i>
+                        <span class="nav-link-text">Reports</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
+                        <i class="fas fa-file"></i>
+                        <span class="nav-link-text">Message</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
+                        <i class="fas fa-setting"></i>
+                        <span class="nav-link-text">Settings</span>
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto rt-head">
+                <li>
+                    <a href="#">Big Gym 1</a>
+                </li>
+                <li>
+                    <a href="#">Gym & Studio </a>
+                </li>
+                <li>
+                    <a href="#"><img src="images/email.svg"></a>
+                </li>
+                <li>
+                    <a href="#"><img src="images/bell.svg"></a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class=" login-profile-top" id="messagesDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <div class="img-login"></div> <span>John Doe</span>
+                    </a>
+                    <ul class="dropdown-menu drop-pro" aria-labelledby="messagesDropdown">
+                        <li><a href="#">My Profile</a></li>
+                        <li><a href="#">Log out</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="content-wrapper">
+        <div class="container-fluid">
+            <ul class="nav nav-tabs tabs-dashboard" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">Bookings / Revenue</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">Bolt Ons</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">Leads</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#tabs-4" role="tab">Search Results</a>
+                </li>
+            </ul><!-- Tab panes -->
+            <div class="tab-content  mt-4">
+                <div class="tab-pane active" id="tabs-1" role="tabpanel">
+                    <div class="row mb-4">
+                        <div class="col-sm-6">
+                            <div class="statistics-dah-top">
+                                <div class="btn-row-stat">
+                                    <div>
+                                        <h2>Statistics</h2>
+                                        <h4>Hello John Doe</h4>
+                                        <h6>Joined in Jun 18, 2021</h6>
+                                    </div>
+                                    <div class="stat-pro-img">
+                                        <img src="images/pro-dp.jpg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-sm-3">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading">Total Clients</h4>
+                                <div class="c-black mb-2">
+                                    0
+                                </div>
+                                <div class="c-green">
+                                    0%
+                                </div>
+                                <img src="images/graph1.png">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading">Active Clients</h4>
+                                <div class="c-black mb-2">
+                                    0
+                                </div>
+                                <div class="c-green">
+                                    0%
+                                </div>
+                                <img src="images/graph1.png">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading">Number of Day Passes Purchased</h4>
+                                <div class="c-black mb-2">
+                                    0
+                                </div>
+                                <div class="c-green">
+                                    0%
+                                </div>
+                                <img src="images/graph1.png">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading">Number of Membership Purchased</h4>
+                                <div class="c-black mb-2">
+                                    0
+                                </div>
+                                <div class="c-green">
+                                    0%
+                                </div>
+                                <img src="images/graph1.png">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="book-revenue">
+                                <h4 class="box-heading mb-3">Bookings / Revenue</h4>
+                                <ul class="nav nav-tabs tabs-dashboard tab-small" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" data-toggle="tab" href="#tabs-5" role="tab">Bookings / Revenue</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#tabs-6" role="tab">Revenue</a>
+                                    </li>
+                                </ul><!-- Tab panes -->
+                                <div class="tab-content  mt-2">
+                                    <div class="tab-pane active" id="tabs-5" role="tabpanel">
+                                        <p class="nodata">No Data Available</p>
+                                        <div class="row p-3">
+                                            <div class="col-sm-6 count-book">
+                                                <h5>0</h5>
+                                                <p>Daily Count</p>
+                                            </div>
+                                            <div class="col-sm-6 count-book">
+                                                <h5>0</h5>
+                                                <p>Weekly Count</p>
+                                            </div>
+                                            <div class="col-sm-6 count-book">
+                                                <h5>0</h5>
+                                                <p>Monthly Count</p>
+                                            </div>
+                                            <div class="col-sm-6 count-book">
+                                                <h5>0</h5>
+                                                <p>Yearly Count</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="tabs-6" role="tabpanel">
+                                        <div class="row p-3">
+                                            <div class="col-sm-6 count-book">
+                                                <h5>0</h5>
+                                                <p>Daily Count</p>
+                                            </div>
+                                            <div class="col-sm-6 count-book">
+                                                <h5>0</h5>
+                                                <p>Weekly Count</p>
+                                            </div>
+                                            <div class="col-sm-6 count-book">
+                                                <h5>0</h5>
+                                                <p>Monthly Count</p>
+                                            </div>
+                                            <div class="col-sm-6 count-book">
+                                                <h5>0</h5>
+                                                <p>Yearly Count</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="book-revenue">
+                                <h4 class="box-heading mb-3">Sessions Booked <a href="#">View all </a></h4>
+                                <p class="nodata">No Data Available</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="tabs-2" role="tabpanel">
+                    <div class="row mb-4">
+                        <div class="col-sm-6">
+                            <div class="statistics-dah-top">
+                                <div class="btn-row-stat">
+                                    <div>
+                                        <h2>Statistics</h2>
+                                        <h4>Hello John Doe</h4>
+                                        <h6>Joined in Jun 18, 2021</h6>
+                                    </div>
+                                    <div class="stat-pro-img">
+                                        <img src="images/pro-dp.jpg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="statistics-dah-top">
+                                <h4 class="box-heading">Number of times Virtual Tour has been viewed </h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h3 class="section-heading">Virtual Workouts</h3>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col ">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading">Number of Subscribers</h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                        <div class="col ">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading">Workout Series Purchased</h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                        <div class="col ">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading">Workout Lesson Purchased</h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                        <div class="col ">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading">Workout Watched</h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                        <div class="col ">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading">Series Watched</h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 ">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading">Gender Split Of Users (Virtual Workout)</h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 ">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading">Most Popular Workout/Series <a href="#">View All</a></h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="book-revenue">
+                                <h4 class="box-heading mb-3">Booking/ Revenue (Virtual workout)</h4>
+                                <ul class="nav nav-tabs tabs-dashboard tab-small" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" data-toggle="tab" href="#tabs-5" role="tab">Bookings / Revenue</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#tabs-6" role="tab">Revenue</a>
+                                    </li>
+                                </ul><!-- Tab panes -->
+                                <div class="tab-content  mt-2">
+                                    <div class="tab-pane active" id="tabs-5" role="tabpanel">
+                                        <p class="nodata">No Data Available</p>
+                                    </div>
+                                    <div class="tab-pane" id="tabs-6" role="tabpanel">
+                                        <div class="row p-3">
+                                            <div class="col-sm-6 count-book">
+                                                <h5>0</h5>
+                                                <p>Daily Count</p>
+                                            </div>
+                                            <div class="col-sm-6 count-book">
+                                                <h5>0</h5>
+                                                <p>Weekly Count</p>
+                                            </div>
+                                            <div class="col-sm-6 count-book">
+                                                <h5>0</h5>
+                                                <p>Monthly Count</p>
+                                            </div>
+                                            <div class="col-sm-6 count-book">
+                                                <h5>0</h5>
+                                                <p>Yearly Count</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h3 class="section-heading">Live Classes</h3>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-sm-3 ">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading">Number of Participants</h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 ">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading">Single Live classes Booked </h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 ">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading">Multiple Live classes Booked</h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 ">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading">Total Page Visits for live class </h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-sm-6">
+                            <div class="book-revenue">
+                                <h4 class="box-heading mb-3">Booking / Revenue (live classes)</h4>
+                                <ul class="nav nav-tabs tabs-dashboard tab-small" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" data-toggle="tab" href="#tabs-5" role="tab">Bookings / Revenue</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#tabs-6" role="tab">Revenue</a>
+                                    </li>
+                                </ul><!-- Tab panes -->
+                                <div class="tab-content  mt-2">
+                                    <div class="tab-pane active" id="tabs-5" role="tabpanel">
+                                        <p class="nodata">No Data Available</p>
+                                    </div>
+                                    <div class="tab-pane" id="tabs-6" role="tabpanel">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="book-revenue">
+                                <h4 class="box-heading mb-3">Gender split of Users (live classes) </h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-sm-4">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading"><span>Most Popular Live Classes </span><a href="#">View All</a></h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading"><span>Re-occurring User bookings for live classes </span><a href="#">View All</a></h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading"><span>Most Searched live classes on corefit</span><a href="#">View All</a></h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h3 class="section-heading">Classes</h3>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-6 mb-4">
+                                    <div class="stat-dash-thumbs">
+                                        <h4 class="box-heading">Total Number of Participants</h4>
+                                        <p>To view this kpi purchase premium subscriptions</p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 mb-4">
+                                    <div class="stat-dash-thumbs">
+                                        <h4 class="box-heading">Total Page Visits for class </h4>
+                                        <p>To view this kpi purchase premium subscriptions</p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 ">
+                                    <div class="stat-dash-thumbs">
+                                        <h4 class="box-heading">Single classes Booked </h4>
+                                        <p>To view this kpi purchase premium subscriptions</p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="stat-dash-thumbs">
+                                        <h4 class="box-heading">Multiple classes Booked </h4>
+                                        <p>To view this kpi purchase premium subscriptions</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading">Gender Split of Users (classes) </h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-sm-6">
+                            <div class="book-revenue">
+                                <h4 class="box-heading mb-3">Booking/ Revenue (classes)</h4>
+                                <ul class="nav nav-tabs tabs-dashboard tab-small" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" data-toggle="tab" href="#tabs-5" role="tab">Bookings / Revenue</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#tabs-6" role="tab">Revenue</a>
+                                    </li>
+                                </ul><!-- Tab panes -->
+                                <div class="tab-content  mt-2">
+                                    <div class="tab-pane active" id="tabs-5" role="tabpanel">
+                                        <p class="nodata">To view this kpi purchase premium subscriptions</p>
+                                    </div>
+                                    <div class="tab-pane" id="tabs-6" role="tabpanel">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="book-revenue">
+                                <h4 class="box-heading mb-3">Age Range of Users (classes)</h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-sm-4">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading"><span>Re-occurring User Bookings for classes</span><a href="#">View All</a></h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading"><span>Most Search Classes On Corefit </span><a href="#">View All</a></h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading"><span>Most popular classes</span><a href="#">View All</a></h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="tabs-3" role="tabpanel">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="statistics-dah-top">
+                                <div class="btn-row-stat">
+                                    <div>
+                                        <h2>Statistics</h2>
+                                        <h4>Hello John Doe</h4>
+                                        <h6>Joined in Jun 18, 2021</h6>
+                                    </div>
+                                    <div class="stat-pro-img">
+                                        <img src="images/pro-dp.jpg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading">Number of Profile Visits</h4>
+                                <div class="c-black mb-2">
+                                    0
+                                </div>
+                                <div class="c-green">
+                                    0%
+                                </div>
+                                <img src="images/graph1.png">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading">Number of PT sessions booked via click through from Gym/Studio page</h4>
+                                <div class="c-black mb-2">
+                                    0
+                                </div>
+                                <div class="c-green">
+                                    0%
+                                </div>
+                                <img src="images/graph1.png">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="tabs-4" role="tabpanel">
+                    <div class="row mb-4">
+                        <div class="col-sm-6">
+                            <div class="statistics-dah-top">
+                                <div class="btn-row-stat">
+                                    <div>
+                                        <h2>Statistics</h2>
+                                        <h4>Hello John Doe</h4>
+                                        <h6>Joined in Jun 18, 2021</h6>
+                                    </div>
+                                    <div class="stat-pro-img">
+                                        <img src="images/pro-dp.jpg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading">Spotlight Search</h4>
+                                <div class="c-black mb-2">
+                                    0
+                                </div>
+                                <div class="c-green">
+                                    0%
+                                </div>
+                                <img src="images/graph1.png">
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading">Filtered Search</h4>
+                                <div class="c-black mb-2">
+                                    0
+                                </div>
+                                <div class="c-green">
+                                    0%
+                                </div>
+                                <img src="images/graph1.png">
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading">Introductory Video views</h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-sm-4">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading"><span>Areas/cities searched the most in your Country </span><a href="#">View All</a></h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading"><span>Most popular Trainer at the Gym/Studio </span><a href="#">View All</a></h4>
+                                <p>No Data Available</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-sm-5">
+                            <div class="book-revenue">
+                                <h4 class="box-heading mb-3">Booking/ Revenue (Virtual workout)</h4>
+                                <ul class="nav nav-tabs tabs-dashboard tab-small" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" data-toggle="tab" href="#tabs-5" role="tab">Bookings / Revenue</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#tabs-6" role="tab">Revenue</a>
+                                    </li>
+                                </ul><!-- Tab panes -->
+                                <div class="tab-content  mt-2">
+                                    <div class="tab-pane active" id="tabs-5" role="tabpanel">
+                                        <p class="nodata">No Data Available</p>
+                                    </div>
+                                    <div class="tab-pane" id="tabs-6" role="tabpanel">
+                                        <div class="row p-3">
+                                            <div class="col-sm-6 count-book">
+                                                <h5>0</h5>
+                                                <p>Daily Count</p>
+                                            </div>
+                                            <div class="col-sm-6 count-book">
+                                                <h5>0</h5>
+                                                <p>Weekly Count</p>
+                                            </div>
+                                            <div class="col-sm-6 count-book">
+                                                <h5>0</h5>
+                                                <p>Monthly Count</p>
+                                            </div>
+                                            <div class="col-sm-6 count-book">
+                                                <h5>0</h5>
+                                                <p>Yearly Count</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-7">
+                            <div class="row mb-4">
+                                <div class="col-sm-6">
+                                    <div class="stat-dash-thumbs">
+                                        <h4 class="box-heading">Average Age Range of Users visiting your Profile</h4>
+                                        <p>No Data Available</p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="stat-dash-thumbs">
+                                        <h4 class="box-heading">Gender split based on membership</h4>
+                                        <p>To view this kpi purchase premium subscriptions</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="stat-dash-thumbs">
+                                        <h4 class="box-heading"><span>Validity Information</span><a href="#">View All</a></h4>
+                                        <p>To view this kpi purchase premium subscriptions</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-sm-4 mb-4">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading"><span>Amenities that have been searched the most in your Country </span><a href="#">View All</a></h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 mb-4">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading"><span>Equipment that have been searched the most in your Country</span><a href="#">View All</a></h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                          <div class="col-sm-4 mb-4">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading"><span>Sports / Services that have been searched the most in your Country</span><a href="#">View All</a></h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                          <div class="col-sm-4">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading">Average Age Range Info Based on Membership</h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                           <div class="col-sm-4">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading">Gender split of Users visiting your Profile</h4>
+                                <p>No Data Available</p>
+                            </div>
+                        </div>
+                          <div class="col-sm-4">
+                            <div class="stat-dash-thumbs">
+                                <h4 class="box-heading">Average Age Range Info Based on Day Passes</h4>
+                                <p>To view this kpi purchase premium subscriptions</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.container-fluid-->
+        <!-- /.content-wrapper-->
+        <footer class="sticky-footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <small>Created with ♥ by </small>
+                    </div>
+                    <div class="col-sm-6 text-right social-ftr">
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- Scroll to Top Button-->
+        <a class="scroll-to-top rounded" href="#page-top">
+            <i class="fa fa-angle-up"></i>
+        </a>
+    </div>
+    <!-- script -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/custom.js"></script>
+    <script src="https://kit.fontawesome.com/cd05e4ba4d.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+    // Toggle the side navigation
+    $("#sidenavToggler").click(function(e) {
+        e.preventDefault();
+        $("body").toggleClass("sidenav-toggled");
+        $(".navbar-sidenav .nav-link-collapse").addClass("collapsed");
+        $(".navbar-sidenav .sidenav-second-level, .navbar-sidenav .sidenav-third-level").removeClass("show");
+    });
+    // Force the toggled class to be removed when a collapsible nav link is clicked
+    $(".navbar-sidenav .nav-link-collapse").click(function(e) {
+        e.preventDefault();
+        $("body").removeClass("sidenav-toggled");
+    });
+    // Prevent the content wrapper from scrolling when the fixed side navigation hovered over
+    $('body.fixed-nav .navbar-sidenav, body.fixed-nav .sidenav-toggler, body.fixed-nav .navbar-collapse').on('mousewheel DOMMouseScroll', function(e) {
+        var e0 = e.originalEvent,
+            delta = e0.wheelDelta || -e0.detail;
+        this.scrollTop += (delta < 0 ? 1 : -1) * 30;
+        e.preventDefault();
+    });
+    </script>
+</body>
+
+</html>

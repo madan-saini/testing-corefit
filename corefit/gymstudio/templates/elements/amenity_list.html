@@ -1,0 +1,204 @@
+
+{% if ameniinfo %}
+<div class="table-box table-w-3">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col" width="30%">Amenity name</th>
+                <th scope="col" width="30%">Quantity</th>
+                <th scope="col">Visible to user</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody id="amenity_body">
+            {% for amenRecord_val in ameniinfo %}
+            <tr id="amenity_recort_row{{amenRecord_val.amenity_id}}" class="amenity_count">
+                <td>{{amenRecord_val.amenity}}</td>
+                <td id="edit_box{{amenRecord_val.id}}"> 
+                    <input type="text" id="inp_id{{amenRecord_val.id}}" maxlength="4" name="ament_quantity[{{amenRecord_val.amenity_id}}]" value="{{amenRecord_val.quantity}}" class="quan-input digits">
+                    
+                </td>
+                <td>
+                    <div class="can-toggle">
+                        <input id="b{{amenRecord_val.id}}" type="checkbox" {% if amenRecord_val.visible_status == 'No'%} checked{% endif%} name="visible_status[{{amenRecord_val.amenity_id}}]" value='No'>
+                        <label for="b{{amenRecord_val.id}}">
+                            
+                            <div class="can-toggle__switch" data-checked="No" data-unchecked="Yes"></div>
+                        </label>
+                    </div>
+                </td>
+                <th>
+                    <div class="action-box">
+                        <div class="dropdown drop-more">
+                            <button class="btn-pink " onclick="deleteAmenity('{{amenRecord_val.amenity_id}}')">Delete</button>
+<!--                            <button class="more-btn dropdown-toggle ml-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                More
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="editAmenity('{{amenRecord_val.id}}')">Edit</a>
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="deleteAmenity('{{amenRecord_val.amenity_id}}')">Delete</a>
+                            </div>-->
+                        </div>
+                    </div>
+                </th>
+            </tr>
+            {% endfor %}
+            
+        </tbody>
+    </table>
+    
+                                                            
+    </div>
+{% else %}
+
+
+
+{% if all == 1 %}
+<div class="table-box table-w-3">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col" width="30%">Amenity name</th>
+                <th scope="col" width="30%">Quantity</th>
+                <th scope="col">Visible to user</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody id="amenity_body">
+            {% for amenRecord_id, amenRecord_val in amenData %}
+            <tr id="amenity_recort_row{{amenRecord_id}}" class="amenity_count">
+                <td>{{amenRecord_val}}</td>
+                <td id="edit_box{{amenRecord_id}}"> 
+                    <input type="text" id="inp_id{{amenRecord_id}}" maxlength="4" name="ament_quantity[{{amenRecord_id}}]" value="1"  class="quan-input digits">
+                </td>
+                <td>
+                    <div class="can-toggle">
+                        <input id="b{{amenRecord_id}}" type="checkbox" name="visible_status[{{amenRecord_id}}]" value='No'>
+                        <label for="b{{amenRecord_id}}">
+                            <div class="can-toggle__switch" data-checked="No" data-unchecked="Yes"></div>
+                        </label>
+                    </div>
+                </td>
+                <th>
+                    <div class="action-box">
+                        <div class="dropdown drop-more">
+                            <button class="btn-pink " onclick="deleteAmenity('{{amenRecord_id}}')">Delete</button>
+<!--                            <button class="more-btn dropdown-toggle ml-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                More
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="editAmenity('{{amenRecord_id}}')">Edit</a>
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="deleteAmenity('{{amenRecord_id}}')">Delete</a>
+                            </div>-->
+                        </div>
+                    </div>
+                </th>
+            </tr>
+            {% endfor %}
+            
+        </tbody>
+    </table>
+    
+                                                            
+    </div>
+{% else %}
+{% if numItems == 0 %}
+<div class="table-box table-w-3">
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col" width="30%">Amenity name</th>
+            <th scope="col" width="30%">Quantity</th>
+            <th scope="col">Visible to user</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody id="amenity_body">
+        <tr id="amenity_recort_row{{id_val}}" class="amenity_count">
+            <td>{{amenData.name}}</td>
+            <td id="edit_box{{id_val}}"> 
+                <input type="text" id="inp_id{{id_val}}" maxlength="4" name="ament_quantity[{{id_val}}]" value="1"  class="quan-input digits">
+            </td>
+            <td>
+                <div class="can-toggle">
+                    <input id="b{{id_val}}" type="checkbox" name="visible_status[{{id_val}}]" value='No'>
+                    <label for="b{{id_val}}">
+                        <div class="can-toggle__switch" data-checked="No" data-unchecked="Yes"></div>
+                    </label>
+                </div>
+            </td>
+            <th>
+                <div class="action-box">
+                    <div class="dropdown drop-more">
+                        <button class="btn-pink " onclick="deleteAmenity('{{id_val}}')">Delete</button>
+<!--                        <button class="more-btn dropdown-toggle ml-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            More
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="javascript:void(0);" onclick="editAmenity('{{id_val}}')">Edit</a>
+                            <a class="dropdown-item" href="javascript:void(0);" onclick="deleteAmenity('{{id_val}}')">Delete</a>
+                        </div>-->
+                    </div>
+                </div>
+            </th>
+        </tr>
+    </tbody>
+</table>
+
+                                                        
+</div>
+{% else %}
+
+<tr id="amenity_recort_row{{id_val}}" class="amenity_count">
+    <td>{{amenData.name}}</td>
+    <td id="edit_box{{id_val}}"> 
+        <input type="text" id="inp_id{{id_val}}" maxlength="4" name="ament_quantity[{{id_val}}]" value="1"  class="quan-input digits">
+    </td>
+    <td>
+        <div class="can-toggle">
+            <input id="b{{id_val}}" type="checkbox" name="visible_status[{{id_val}}]" value='No'>
+            <label for="b{{id_val}}">
+                <div class="can-toggle__switch" data-checked="No" data-unchecked="Yes"></div>
+            </label>
+        </div>
+    </td>
+    <th>
+        <div class="action-box">
+            <div class="dropdown drop-more">
+                <button class="btn-pink " onclick="deleteAmenity('{{id_val}}')">Delete</button>
+<!--                <button class="more-btn dropdown-toggle ml-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="javascript:void(0);" onclick="editAmenity('{{id_val}}')">Edit</a>
+                    <a class="dropdown-item" href="javascript:void(0);" onclick="deleteAmenity('{{id_val}}')">Delete</a>
+                </div>-->
+            </div>
+        </div>
+    </th>
+</tr>
+
+{% endif %}
+{% endif %}
+{% endif %}
+
+<script>
+    function editAmenity(id){
+//        $('#inp_id'+id).attr('readonly',false);
+        //$('#edit_box'+id).html('<input type="text" name="ament_quantity['+id+']" placeholder="" class="quan-input">');
+    }
+
+    function deleteAmenity(id){
+
+        var numItems = $('.amenity_count').length;
+        if(numItems == 1){
+            $('#amenities_tablesec').html('');
+            $('#amenities').multiselect('deselect', [id]);
+        } else{
+            $('#amenity_recort_row'+id).remove();
+            $('#amenities').multiselect('deselect', [id]);
+        }
+        
+    }
+    
+</script>

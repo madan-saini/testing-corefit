@@ -1,0 +1,564 @@
+{% load static %}
+{% load fetch_user %}
+{% load split %}
+
+<div class="modal fade" id="viewOfferModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered new-offer-dialog" role="document">
+        <div class="modal-content upload-img-pop new-offer-pop disable-text-field">
+            <form class="" name='editOffer' id='editOffer' method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                    <h4 class="profile-setup-inner-block-heading">
+                        {% for key, cat in promotion_type.items%}
+                            {% if key == offer.promotion_type%}
+                                {{cat}}
+                            {% endif %}
+                        {% endfor %}
+                    </h4>
+                {% get_service_data offer.type_of_service as rVal %}
+                    <div class="row">
+                        <div class="col-sm-6 pro_sec change1 change2">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Type of service[*]</label>
+                                <div class="drop-down">                        
+                                    <select name='type_of_service' class='multiple-single required'>
+                                        <option value="">Select Type of Service</option>
+                                        {% if session_records %}
+                                        <optgroup label="Session" class="group-opt" value='1'>
+                                            {% for key, session_record in session_records %}
+                                            <option value="{{key}}" {% if key in rVal%} selected{% endif%}>{{session_record}}</option>                                                    
+                                            {% endfor %}
+                                        </optgroup>
+                                        {% endif %}
+                                        {% if service_records %}
+                                        <optgroup label="Service" class="group-opt" value='2'>
+                                            {% for key, service_record in service_records %}
+                                            <option value="{{key}}" {% if key in rVal%} selected{% endif%}>{{service_record}}</option>                                                    
+                                            {% endfor %}
+                                        </optgroup>
+                                        {% endif %}
+                                        {% if day_records %}
+                                        <optgroup label="Day Pass" class="group-opt" value='3'>
+                                            {% for key, day_record in day_records %}
+                                            <option value="{{key}}" {% if key in rVal%} selected{% endif%}>{{day_record}}</option>                                                    
+                                            {% endfor %}
+                                        </optgroup>
+                                        {% endif %}
+                                        {% if membership_records %}
+                                        <optgroup label="Membership" class="group-opt" value='4'>
+                                            {% for key, membership_record in membership_records %}
+                                            <option value="{{key}}" {% if key in rVal%} selected{% endif%}>{{membership_record}}</option>                                                    
+                                            {% endfor %}
+                                        </optgroup>
+                                        {% endif %}
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 pro_sec change3 change4" style="display:none">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Type of service[*]</label>
+                                <div class="drop-down drop-after">
+                                    <select class="multiple-checkboxes" name="multi_service" multiple="multiple">
+                                        {% if session_records %}
+                                        <optgroup label="Session" class="group-opt" id="group-opt1" value='1'>
+                                            {% for key, session_record in session_records %}
+                                            <option value="{{key}}" {% if key in rVal%} selected{% endif%}>{{session_record}}</option>                                                    
+                                            {% endfor %}
+                                        </optgroup>
+                                        {% endif %}
+                                        {% if service_records %}
+                                        <optgroup label="Service" class="group-opt" id="group-opt2" value='2'>
+                                            {% for key, service_record in service_records %}
+                                            <option value="{{key}}" {% if key in rVal%} selected{% endif%}>{{service_record}}</option>                                                    
+                                            {% endfor %}
+                                        </optgroup>
+                                        {% endif %}
+                                        {% if day_records %}
+                                        <optgroup label="Day Pass" class="group-opt" id="group-opt3" value='3'>
+                                            {% for key, day_record in day_records %}
+                                            <option value="{{key}}" {% if key in rVal%} selected{% endif%}>{{day_record}}</option>                                                    
+                                            {% endfor %}
+                                        </optgroup>
+                                        {% endif %}
+                                        {% if membership_records %}
+                                        <optgroup label="Membership" class="group-opt" id="group-opt4" value='4'>
+                                            {% for key, membership_record in membership_records %}
+                                            <option value="{{key}}" {% if key in rVal%} selected{% endif%}>{{membership_record}}</option>                                                    
+                                            {% endfor %}
+                                        </optgroup>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 pro_sec change1 change2 ">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Price before discount</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="before_price" value="{{offer.before_price}} {{offer.currency}}" id="before_price_edit" placeholder="" class="disabledField" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 pro_sec change3 change4" style="display:none">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Total Price before discount</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="total_before_price" value="{{offer.before_price}} {{offer.currency}}" id="total_before_price_edit" class="disabledField" placeholder="" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 pro_sec change5" style="display:none">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Type of service(Purchased)[*]</label>
+                                <div class="drop-down">
+                                    <select class="multiple-single" name="service_purchased">
+                                        <option value="">Select Type of Service</option>
+                                        {% if session_records %}
+                                        <optgroup label="Session" class="group-opt" value='1'>
+                                            {% for key, session_record in session_records %}
+                                            <option value="{{key}}" {% if key in rVal%} selected{% endif%}>{{session_record}}</option>                                                    
+                                            {% endfor %}
+                                        </optgroup>
+                                        {% endif %}
+                                        {% if service_records %}
+                                        <optgroup label="Service" class="group-opt" value='2'>
+                                            {% for key, service_record in service_records %}
+                                            <option value="{{key}}" {% if key in rVal%} selected{% endif%}>{{service_record}}</option>                                                    
+                                            {% endfor %}
+                                        </optgroup>
+                                        {% endif %}
+                                        {% if day_records %}
+                                        <optgroup label="Day Pass" class="group-opt" value='3'>
+                                            {% for key, day_record in day_records %}
+                                            <option value="{{key}}" {% if key in rVal%} selected{% endif%}>{{day_record}}</option>                                                    
+                                            {% endfor %}
+                                        </optgroup>
+                                        {% endif %}
+                                        {% if membership_records %}
+                                        <optgroup label="Membership" class="group-opt" value='4'>
+                                            {% for key, membership_record in membership_records %}
+                                            <option value="{{key}}" {% if key in rVal%} selected{% endif%}>{{membership_record}}</option>                                                    
+                                            {% endfor %}
+                                        </optgroup>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {% if offer.free_service != ''%}
+                        {% get_service_data offer.free_service as fVal %}
+                        <div class="col-sm-6 pro_sec change5" style="display:none">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Type of service(Free)[*]</label>
+                                <div class="drop-down drop-after">
+                                    <select class="multiple-checkboxes" name="multi_service_free" multiple="multiple">
+                                        {% if session_records %}
+                                        <optgroup label="Session" class="group-opt" id="group-opt1" value='1'>
+                                            {% for key, session_record in session_records %}
+                                            <option value="{{key}}" {% if key in fVal%} selected{% endif%}>{{session_record}}</option>                                                    
+                                            {% endfor %}
+                                        </optgroup>
+                                        {% endif %}
+                                        {% if service_records %}
+                                        <optgroup label="Service" class="group-opt" id="group-opt2" value='2'>
+                                            {% for key, service_record in service_records %}
+                                            <option value="{{key}}" {% if key in fVal%} selected{% endif%}>{{service_record}}</option>                                                    
+                                            {% endfor %}
+                                        </optgroup>
+                                        {% endif %}
+                                        {% if day_records %}
+                                        <optgroup label="Day Pass" class="group-opt" id="group-opt3" value='3'>
+                                            {% for key, day_record in day_records %}
+                                            <option value="{{key}}" {% if key in fVal%} selected{% endif%}>{{day_record}}</option>                                                    
+                                            {% endfor %}
+                                        </optgroup>
+                                        {% endif %}
+                                        {% if membership_records %}
+                                        <optgroup label="Membership" class="group-opt" id="group-opt4" value='4'>
+                                            {% for key, membership_record in membership_records %}
+                                            <option value="{{key}}" {% if key in fVal%} selected{% endif%}>{{membership_record}}</option>                                                    
+                                            {% endfor %}
+                                        </optgroup>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif%}
+
+                        <div class="col-sm-6 pro_sec change1 change2 change3 change4 change5">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Promotion Expiry Date[*]</label>
+                                <div class="form-field-input date">
+                                    {% change_dat offer.expiry_date as date_val %}
+                                    <input type="text" name="expiry_date" value="{{date_val}}" class="disabledField datepickerr required" placeholder="Choose date" id="reservationDate1Edit">
+                                    <div class="input-group-append"><img src="{% static 'images/noun_Calendar_1611923.svg' %}"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 pro_sec change1 change3">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Discount percentage[*]</label>
+                                <div class="form-field-input">
+                                    <div class="swith-overlay over-icon">
+                                        <input type="text" name="discount" value="{{offer.discount}}" id='discount_edit' placeholder="Type Number" min="1" max="100" class="disabledField required">
+                                        <span>%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 pro_sec change2 change4" style="display:none">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Discount reduction[*]</label>
+                                <div class="form-field-input">
+                                    <div class="swith-overlay over-icon">
+                                        <input type="text" name="discount_number" value="{{offer.discount}}" id='discount_number_edit' placeholder="Type Number" class="disabledField required">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 pro_sec change1 change2 change3 change4 change5">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">First Come First Serve Availability Limit</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="avail_limit" value="{{offer.avail_limit}}" id="avail_limit_edit" placeholder="Type Number" class="disabledField digits">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 pro_sec change1 change2">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Price after discount</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="after_price" value="{{offer.after_price}} {{offer.currency}}" id="after_price_edit" class="disabledField" placeholder="" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 pro_sec change3 change4" style="display:none">
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Total Price after discount</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="total_after_price" value="{{offer.after_price}} {{offer.currency}}" id="total_after_price_edit" placeholder="" class="disabledField" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                <input type="hidden" value="{{offer.promotion_type}}" name="promotion_type" id="promotion_type_edit">
+                <input type="hidden" value="{{offer.id}}" name="offer_id">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="action-box  btn-form acpt-rjt-btn action-one">
+                            <div id="price_view_btn" class="view-btn">
+                                <button class="border-btn-small" type="button" onclick="editPrice()">Edit</button>
+                                <button class="btn-red-one" type="button" onclick="deleteOffer('{{offer.id}}')">Delete</button>
+                            </div>
+
+                            <div id="price_edit_btn" class="edit-btn" style="display: none;">
+                                <button class="border-btn" type='button' onclick="closePrice()">Discard changes</button>
+                                <button class="btn-pink ml-10 savebtn" type="submit">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+            <button type="button" class="close-btn-pop" data-dismiss="modal"><img src="{% static 'images/material-cancel.svg'%}"></button>
+        </div>
+    </div>
+</div>
+<script>
+    
+    var val = {{offer.promotion_type}}
+    if (val == 5) {
+        $('.pro_sec').hide();
+        $('.change' + val).show();
+    } else if (val == 2) {
+        $('.pro_sec').hide();
+        $('.change' + val).show();
+    } else if (val == 3) {
+        $('.pro_sec').hide();
+        $('.change' + val).show();
+    } else if (val == 4) {
+        $('.pro_sec').hide();
+        $('.change' + val).show();
+    } else {
+        $('.pro_sec').hide();
+        $('.change1').show();
+    }
+    
+    $('.multiple-checkboxes').multiselect({
+//        includeSelectAllOption: true,
+        nonSelectedText: "Select Multiple",
+        enableFiltering: true,
+        enableCaseInsensitiveFiltering: true,
+//        enableClickableOptGroups: true,
+        checkboxName: function (option) {
+            var $optgroup = $(option).parent().attr("value");
+            var name = $(option).parent().parent().attr("name");
+            
+            return name+'-'+$optgroup;
+        },
+        onChange: function (option, checked, select) {
+            var val = $(option).val();
+            var label = $(option).parent().attr("label");
+            var value = $(option).parent().attr("value");
+//            alert(select);
+            
+            
+//            $("input[value='27']:checkbox").prop('checked',false);
+            
+            
+//            $('#multi_service_id').remove();
+            
+//            $('<input >').attr({type: 'hidden',id: 'multi_service_id',name: 'multi_service_id'}).appendTo('form');
+//            $('#multi_service_id').val(value);
+                if (checked == false) {
+                    updateServicePrice(val, label, checked, 'multi');
+                    
+                } else{
+                    updateServicePrice(val, label, checked, 'multi');
+                }
+                
+        }
+    });
+
+    $('.multiple-single').multiselect({
+        nonSelectedText: "Select from list",
+        enableFiltering: true,
+        enableCaseInsensitiveFiltering: true,
+        checkboxName: function (option) {
+            var $optgroup = $(option).parent().attr("value");
+            var name = $(option).parent().parent().attr("name");
+            
+            return name+'-'+$optgroup;
+        },
+        onChange: function (option, checked, select) { alert();
+            var val = $(option).val();
+            alert(val);
+            var label = $(option).parent().attr("label");
+            var value = $(option).parent().attr("value");
+            
+            $('#service_id').remove();
+            
+            $('<input >').attr({type: 'hidden',id: 'service_id',name: 'service_id'}).appendTo('form');
+            $('#service_id').val(value);
+            
+            if(val != ''){
+                updateServicePriceEdit(val, label, checked, 'single');
+            } else{
+                $('#before_price_edit').val('');
+                $('#after_price_edit').val('');
+            }
+            
+        }
+    });
+
+    $('.single-withoutsearch').multiselect({
+        nonSelectedText: "Select from list",
+    });
+
+    $("#editOffer").validate({
+        submitHandler: function (form) {
+            var token = $("[name=csrfmiddlewaretoken]").val();
+            var form = document.querySelector('#editOffer');
+            var formData = new FormData(form);
+
+            formData.append('csrfmiddlewaretoken', token);
+            console.log('error', formData)
+            $.ajax({
+                type: 'POST',
+                url: 'editOffer',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    $('#payloader').hide();
+                    $('#offer_table').html(response);
+                    $('#viewOfferModel').modal('hide');
+                    Command: toastr["success"]("Changes Saved")
+                },
+            })
+        }
+    });
+
+    $(function () {
+        var taeb1 = $(".taeb-switch-11");
+        taeb1.find(".taeb").on("click", function () {
+            var $this = $(this);
+
+            if ($this.hasClass("active"))
+                return;
+
+            var direction = $this.attr("taeb-direction");
+
+            taeb1.removeClass("left right").addClass(direction);
+            taeb1.find(".taeb.active").removeClass("active");
+            $this.addClass("active");
+        });
+    });
+    
+    function updateServicePriceEdit(value, category, checked, type) { 
+        var category = $('#category').val();
+        var token = $("[name=csrfmiddlewaretoken]").val();
+        $.ajax({
+            type: 'POST',
+            url: 'getServicePrice',
+            data: {'service': value, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+                
+                if(checked == false){
+                    if(type == 'single'){
+                        var amt = response[0]+' '+ response[1];
+                        $('#before_price_edit').val(amt);
+                        
+                        var str = $('#discount_edit').val();
+                        if(str != ''){
+                            calculateAmountEdit(response[0],str, response[1], type);
+                        }
+                    } else{
+                        var amt = response[0]+' '+ response[1];
+                        var alamt = $('#total_before_price_edit').val();
+                        
+                        if(alamt != ''){
+                            const myArray = alamt.split(" ");
+                            var vll = parseFloat(myArray[0]) - parseFloat(response[0]);  
+                            
+                            if(vll != 0){
+                                $('#total_before_price_edit').val(vll+' '+ response[1]);
+                                var str = $('#discount_edit').val();
+                                if(str != ''){
+                                    calculateAmountEdit(response[0],str, response[1], type);
+                                }
+                            } else{
+                                $('#total_before_price_edit').val('');
+                                $('#total_after_price_edit').val('');
+                            }
+                        } 
+                    }
+                } else{                  
+                    if(type == 'single'){
+                        var amt = response[0]+' '+ response[1];
+                        $('#before_price_edit').val(amt);
+                        
+                        var str = $('#discount_edit').val();
+                        if(str != ''){
+                            calculateAmountEdit(response[0],str, response[1], type);
+                        }
+                    } else{ 
+                        var amt = response[0]+' '+ response[1];
+                        var alamt = $('#total_before_price_edit').val();
+                        if(alamt != ''){
+                            const myArray = alamt.split(" ");
+                            if(response[1] != myArray[1]){
+                                swal('', "Can't select service with different currency", "error");  
+                                $(".multiple-checkboxes").multiselect('deselect', value);
+                            } else{
+                                var vll = parseFloat(response[0]) + parseFloat(myArray[0]);  
+                                
+                                $('#total_before_price_edit').val(vll+' '+ response[1]);
+
+                                var str = $('#discount_edit').val();
+                                if(str != ''){
+                                    calculateAmountEdit(response[0],str, response[1], type);
+                                }
+                            }
+                        } else{
+                            var amt = response[0]+' '+ response[1];
+                            if(type == 'single'){
+                                $('#before_price_edit').val(amt);
+                            } else{
+                                $('#total_before_price_edit').val(amt);
+                            }
+
+                            var str = $('#discount_edit').val();
+                            if(str != ''){
+                                calculateAmountEdit(response[0],str, response[1], type);
+                            }
+                        }                        
+                    }
+                    
+                }
+            },
+            error: function (response) {
+                $('#payloader').hide();
+            }
+        })
+    }
+    
+    $(document).ready(function () {
+        $('#discount_edit').on('keyup', function () { 
+            var str = $(this).val();
+            var before_price = $('#before_price_edit').val();
+            if (before_price != '' && str != '') {
+                const myArray = before_price.split(" ");
+                calculateAmountEdit(myArray[0], str, myArray[1]);
+            } else{
+                var before_price = $('#total_before_price_edit').val();
+                if (before_price != '' && str != '') {
+                    const myArray = before_price.split(" ");
+                    calculateAmountEdit(myArray[0], str, myArray[1]);
+                } else{
+                    $('#after_price_edit').val(before_price);
+                    $('#total_after_price_edit').val(before_price);
+                }
+            }
+        });
+
+        $('#discount_number_edit').on('keyup', function () {
+            var str = $(this).val();
+            var before_price = $('#before_price_edit').val();
+            if (before_price != '' && str != '') {
+                const myArray = before_price.split(" ");
+                calculateAmountEdit(myArray[0], str, myArray[1]);
+            } else{
+                var before_price = $('#total_before_price_edit').val();
+                if (before_price != '' && str != '') {
+                    const myArray = before_price.split(" ");
+                    calculateAmountEdit(myArray[0], str, myArray[1]);
+                } else{
+                    $('#after_price_edit').val(before_price);
+                    $('#total_after_price_edit').val(before_price);
+                }
+            }
+        });
+    });
+    
+    function calculateAmountEdit(val, discount, curr) {
+        var promotion_type = $('#promotion_type_edit').val();
+
+        if (promotion_type == 1 || promotion_type == 3) {
+            var dec = (discount / 100).toFixed(2); //its convert 10 into 0.10
+            var mult = val * dec; // gives the value for subtract from main value
+            var discont = val - mult;
+        } else {
+            var discont = val - discount;
+        }
+        
+        $('#after_price_edit').val(discont.toFixed(2) + ' ' + curr);
+        $('#total_after_price_edit').val(discont.toFixed(2) + ' ' + curr);
+        
+        
+    }
+    
+    $('.datepickerr').datepicker({
+        clearBtn: false,
+        weekStart: 1,
+        minDate: new Date(),
+        orientation: "bottom",
+        dateFormat: "dd/mm/yy"
+    });
+
+</script>
+

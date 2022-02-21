@@ -1,0 +1,27 @@
+{% load static %}
+
+<div class="copy_section" id="copy_part" style="display:none;">
+    <div class="main_copy_section">
+        <div>
+            <div id="copy_head">
+                COPY TIMES TO...
+            </div>
+        </div>
+        {% for i, day in day_array.items %}
+        <div>
+            <div class="radio-box">
+                <label for="copy-option{{i}}">{{day}}</label>
+                <input type="checkbox" id="copy-option{{i}}" value="{{i}}" class="copy-option" name="day_name_copy" data="{{day}}">
+                <div class="check"></div>
+            </div>
+        </div>
+        {% endfor %}
+        <input type="hidden" name="selected_box" id="selected_box" value="">
+
+        <div>
+            <div class="aply_btn">
+                <a href="javascript:void(0);" onclick="copyData()">Apply</a>
+            </div>
+        </div>
+    </div>
+</div>

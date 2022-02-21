@@ -1,0 +1,73 @@
+{% extends 'layout/inner.html' %} 
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+<script>
+
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-bottom-center",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "1000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+</script>
+<div class="content-page">
+    <div class="page-head-one">
+        <h2 class="bnk-info-head">My Bolt-Ons</h2>
+    </div>
+    {% if boltons%}
+    <div class="row">
+        {% for bolton in boltons%}
+        {{bolton.bolt}}
+        <div class="col-sm-6">
+            <div class="my-bolt-block">
+                <div class="bolt-head">
+                    <span>{{bolton.bolton.title}}</span>
+                    <div class="can-toggle" onclick="userVisibleBolt(this, {{bolton.id}})">
+                        <input id="c" type="checkbox" {% if bolton.status == 1%} checked {%endif%}>
+                        <label for="c">
+                            <div class="can-toggle__switch" data-checked="Off" data-unchecked="On"></div>
+                        </label>
+                    </div>
+                </div>
+                <p>{{bolton.bolton.description}}</p>
+                <a href="bolt-ons">Learn more about other available Bolt-Ons.</a>
+            </div>
+        </div>
+        {% endfor%}
+    </div>
+    {% endif%}
+</div>
+
+<script>
+    function userVisibleBolt(event, id){
+    var checkbox = event.children["0"];
+    checkbox['checked'] = !checkbox['checked'];
+    var token = $("[name=csrfmiddlewaretoken]").val();
+            $.ajax({
+            type: 'POST',
+                    url: 'updateBoltStatus',
+                    data: {'id':id, 'checkbox':checkbox['checked'], 'csrfmiddlewaretoken':token},
+                    success: function (response) {
+                        Command: toastr["success"]("Changes Saved")
+                    }
+            });
+    }
+</script>
+{% endblock content %}

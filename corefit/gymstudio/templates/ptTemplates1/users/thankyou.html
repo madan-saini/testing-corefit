@@ -1,0 +1,33 @@
+{% extends 'layout/loginbase.html' %} 
+{% load static %}
+
+{% block content %}
+
+<section class="before-login-form">
+    <div class="before-login-left thank-bg">
+        <div class="logo-before-log">
+            <a href="login"><img src="{{LOGO}}"></a>
+        </div>
+    </div>
+    <div class="before-login-right">
+        <h2 class="before-log-form-head thank-head">Thank you, <br> you’re all set!</h2>
+    
+        <div >
+           
+          
+           <div class="col-sm-12 thank-text">
+               <p>Thank you for joining the Corefit membership team! We will keep you updated with the progress of the platform and the plans for our launch.</p>
+           </div>
+            <div class="form-group col-sm-12 btn-box mt-3">
+                <a href="login">
+                <button>
+                    Log in <img src="{% static 'images/arrow-rt.svg'  %}">
+                </button>
+            </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock content %}

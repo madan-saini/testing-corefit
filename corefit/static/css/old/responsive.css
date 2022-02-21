@@ -1,0 +1,41 @@
+@media only screen and (max-width : 1500px){
+.form-before-log .form-group input{font-size: 12px;}
+}
+@media only screen and (max-width : 1366px) {
+.before-login-right{    padding: calc(100% - 94%) calc(100% - 94%);}
+.form-before-log .form-group input{font-size: 16px;}
+}
+
+@media only screen and (max-width : 1024px) {
+.before-login-left{width: 100%; position: relative; height: 350px; background-position: center;}
+
+.before-login-right{width: 100%; margin-left: 0;}
+.form-group.col-sm-6{flex: 0 0 100%; max-width: 100%;}
+}
+
+@media only screen and (max-width : 768px) {
+.before-log-form-head {
+font-size: 30px;
+}
+.before-log-form-subhead br{display: none;}
+.form-before-log{margin-top: 20px;}
+.logo-before-log {
+    padding: 30px 80px 0 38px;
+}
+.otp-fields input {
+    width: 40px;
+    height: 40px;}
+.before-log-form-head br{display: none;}
+.thank-text p{width: 100%;}
+.container-checkbox {
+    font-size: 12px;
+    padding-left: 30px;
+    margin-bottom: 0;
+    padding-top: 5px;
+}
+
+.fp a {
+    color: var(--darker-one-gray);
+    font-size: 12px;
+}
+}

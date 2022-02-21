@@ -1,0 +1,124 @@
+{% load static %}
+{% load fetch_user %}
+<form class="" name='calForm' id='calForm' method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div id="calendar" class="calendar"></div>
+</form>
+<style>
+    .modal { overflow-y: auto !important; }
+#calendar {
+  max-width: 100%;
+}
+
+.fc-today .fc-day-number {
+    color: #ED1F57 !important;
+}
+</style>
+<script>
+    (function () {
+        'use strict';
+        // ------------------------------------------------------- //
+        // Calendar
+        // ------------------------------------------------------ //
+        jQuery(function () {
+            // page is ready
+            jQuery('#calendar').fullCalendar({
+                themeSystem: 'bootstrap4',
+                // emphasizes business hours
+                businessHours: false,
+                defaultView: 'month',
+                titleFormat: 'MMMM YYYY',
+                displayEventTime: false,
+                // event dragging & resizing
+//                editable: true,
+//            allDaySlot: false,
+                // header
+                eventLimit: true,
+                header: {
+                    left: 'title',
+                    center: 'month',
+//                    center: 'month,agendaWeek,agendaDay',
+                    right: 'today prev,next',
+                },
+                events: function (start, end, timezone, callback) {
+                    var emp_id = $('#emp_id').val();
+                    var schedule_id = $('#schedule_id').val();
+                    var search_service = $('#search_service').val();
+                    var search_pt = $('#search_pt').val();
+                    var search_client = $('#search_client').val();
+                    var search_start_date = $('#search_start_date').val();
+                    var search_end_date = $('#search_end_date').val();
+
+                    var token = $("[name=csrfmiddlewaretoken]").val();
+                    $.ajax({
+                        url: 'getSEventData',
+                        type: 'POST',
+                        data: {
+                            emp_id: emp_id,
+                            schedule_id: schedule_id,
+                            search_service: search_service,
+                            search_pt: search_pt,
+                            search_client: search_client,
+                            search_start_date: search_start_date,
+                            search_end_date: search_end_date,
+                            start: moment(start).format('YYYY-MM-DD'),
+                            end: moment(end).format('YYYY-MM-DD'),
+                            csrfmiddlewaretoken: token
+                        },
+                        success: function (doc) {
+                            var events = [];
+                            var arr = $.parseJSON(doc);
+                            if (jQuery.isEmptyObject(arr) == false) {
+                                $.each(arr, function (key, value) {
+                                    events.push({
+                                        id: value[4],
+                                        title: value[2],
+                                        start: value[0],
+                                        end: value[1]
+                                    });
+                                });
+                                callback(events);
+                            }
+                        }
+                    });
+                },
+                dayClick: function (date, jsEvent, view, resource) { 
+                    
+                    var start = new Date();
+//
+                    
+                    if (date < start) {
+                        swal('', "Timeslot already passed.", 'error');
+                        return false;
+                    }
+
+                    $('#modal-ad-slot').modal('show');
+                    $('#reservationDatee').val(moment(date).format('DD/MM/YYYY'));
+                },
+//                dayClick: function (date, jsEvent, view, resource) { alert();
+//                    
+//                    var start = new Date();
+//
+//                    if (date < start) {
+//                        swal('', "Timeslot already passed.", 'error');
+//                        return false;
+//                    }
+//
+//                    var weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+//                    var date = new Date(date);
+//                    var day = weekday[date.getDay()];
+//                    $('#edit_day').val(weekday[date.getDay()]);
+//                    $('#edit_date').val(moment(date).format('YYYY-MM-DD'));
+//                    $('#day_vvl').html('all ' + day + 's');
+//                    $('#editCalCenter').modal('show');
+//                },
+                eventClick: function (date, jsEvent, view, resource) {
+                    console.log(date.id);
+                    eventPopup(date.id,'calendar')
+                },
+            })
+        });
+
+    })(jQuery);
+</script>
+

@@ -1,0 +1,232 @@
+{% load static %}
+<style>
+    .model-pdf {
+        max-width: 660px !important;
+    }
+</style>
+<!-- modal -->
+<div class="modal fade" id="imageModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content upload-img-pop">
+            <div class="uploded-images" id="image_dv">
+                <img src="{% static 'images/tomasz-wozniak-V62UrdknDCA-unsplash.jpg'%}">
+            </div>
+            <button type="button" class="close-btn-pop" data-dismiss="modal"><img src="{% static 'images/material-cancel.svg'%}"></button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" data-backdrop="static" id="titleShow" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content upload-img-pop new-offer-pop disable-text-field">
+            <form id="mediaSocialMediaTitle" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Media Title</label>
+                        <div class="form-field-input">
+                            <input name="mediaTitle"  class="required" type="text" id="mediaTitle">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="action-box  btn-form acpt-rjt-btn action-one">
+                        <div >
+                            <button type="button" class="btn-pink ml-10 titleEnter">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </form>
+            
+            <button type="button" class="close-btn-pop" data-dismiss="modal"><img src="{% static 'images/material-cancel.svg'%}"></button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="documentModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered model-pdf" role="document">
+        <div class="modal-content upload-img-pop">
+            <div class="uploded-images" id="doc_dv">
+                <object data="" type="application/pdf" width="620" height="550">
+                    <a href=""></a>
+                </object>
+            </div>
+            <button type="button" class="close-btn-pop" data-dismiss="modal"><img src="{% static 'images/material-cancel.svg'%}"></button>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content upload-img-pop">
+            <!--<h4>Image Title</h4>-->
+            <div class="uploded-images">
+                <img src="{% static 'images/tomasz-wozniak-V62UrdknDCA-unsplash.jpg'%}">
+            </div>
+            <button type="button" class="close-btn-pop" data-dismiss="modal"><img src="{% static 'images/material-cancel.svg'%}"></button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="termsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content upload-img-pop">
+            <h4>Terms and Conditions</h4>
+            <p>
+                YOUR AGREEMENT
+
+By using this Site, you agree to be bound by, and to comply with, these Terms and Conditions. If you do not agree to these Terms and Conditions, please do not use this site.
+
+    PLEASE NOTE: We reserve the right, at our sole discretion, to change, modify or otherwise alter these Terms and Conditions at any time. Unless otherwise indicated, amendments will become effective immediately. Please review these Terms and Conditions periodically. Your continued use of the Site following the posting of changes and/or modifications will constitute your acceptance of the revised Terms and Conditions and the reasonableness of these standards for notice of changes. For your information, this page was last updated as of the date at the top of these terms and conditions.
+
+            </p>
+            <button type="button" class="close-btn-pop" data-dismiss="modal"><img src="{% static 'images/material-cancel.svg'%}"></button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addBranchCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content upload-img-pop branch-pop">
+            <p class="headd_title">Adding a Primary Branch to your profile will make your profile both a brand and branch level profile.</p>
+            <p class="subb_title">Are you sure that you want to proceed?</p>
+            <div class="model_btn">
+                <button class="border-btn" onclick="showBranch('No')">No</button> 
+                <button class="btn-pink ml-10" onclick="showBranch('Yes')">Yes</button>
+            </div>
+            <button type="button" class="close-btn-pop" data-dismiss="modal"><img src="{% static 'images/material-cancel.svg'%}"></button>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="videoModalCenter" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content upload-img-pop">
+            <div class="uploded-images">
+                <video id="video_bx" width="420" height="420" controls>
+                    <source src="" type="video/mp4">
+                </video> 
+            </div>
+            <button onclick="closeVideoModal('video_bx')" type="button" class="close-btn-pop" data-dismiss="modal"><img src="{% static 'images/material-cancel.svg'%}"></button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModalCenter-one" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered new-offer-dialog" role="document">
+        <div class="modal-content upload-img-pop new-offer-pop disable-text-field">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Type of session[*]</label>
+                        <div class="form-field-input">
+                            <input type="text" name="" placeholder="" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Individual or group session[*]</label>
+                        <div class="form-field-input">
+                            <input type="text" name="" placeholder="" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Number of people[*]</label>
+                        <div class="form-field-input">
+                            <input type="text" name="" placeholder="" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Session name[*]</label>
+                        <div class="form-field-input">
+                            <input type="text" name="" placeholder="" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Number of sessions[*]</label>
+                        <div class="form-field-input">
+                            <input type="text" name="" placeholder="" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Duration(in minutes)[*]</label>
+                        <div class="form-field-input">
+                            <input type="text" name="" placeholder="" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Validity(from date of purchase)[*]</label>
+                        <div class="form-field-input">
+                            <input type="text" name="" placeholder="" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Price[*]</label>
+                        <div class="flex-input">
+                            <div class="drop-down">
+                                <select disabled>
+                                    <option>$ USD</option>
+                                    <option>$ USD</option>
+                                    <option>$ USD</option>
+                                </select>
+                            </div>
+                            <div class="form-field-input">
+                                <input type="text" name="" placeholder="" disabled>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Training location[*]</label>
+                        <div class="form-field-input">
+                            <input type="text" name="" placeholder="" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Assign Employees(s)[*]</label>
+                        <div class="form-field-input">
+                            <input type="text" name="" placeholder="" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Additional Notes</label>
+                        <div class="form-field-input">
+                            <textarea placeholder="" disabled></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="action-box  btn-form acpt-rjt-btn action-one">
+                        <div>
+                            <button class="border-btn-small">Edit</button>
+                            <button class="btn-red-one">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="close-btn-pop" data-dismiss="modal"><img src="{% static 'images/material-cancel.svg'%}"></button>
+        </div>
+    </div>
+</div>

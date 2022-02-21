@@ -1,0 +1,324 @@
+{% load static %}
+<div id="fixed" class="collapse navbar-collapse mobile-flex navbarCollapse">
+<div class="sidenav" id="navAccordion" style=" padding-bottom: 50px;">
+    <div class="menu-inner mb-4">
+        <h5>DASHBOARDS</h5>
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">
+                    <div class="menu-icon"><img src="{% static 'images/home-icon.svg' %}"></div> <span> Home </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="menu-inner">
+        <h5>CONTENT</h5>
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+
+                <a class="nav-link" {% if request.session.user_type == "Sports Facility" %} href="sportfacility-profile" {% elif request.session.user_type == "Gym or Studio" %} href="profile" {% endif %}>
+                    <div class="menu-icon"><img src="{% static 'images/profile-setup.svg' %}"></div> <span>Profile Setup
+                    </span>
+                </a>
+
+            </li>
+            <li class="nav-item drodown-overflow">
+                <a class="nav-link nav-link-collapse" href="#" id="hasSubItems" data-toggle="collapse" data-target="#collapseSubItems2" aria-controls="collapseSubItems2" aria-expanded="false">
+                    <div class="menu-icon"> <img src="{% static 'images/My-Schedule.svg' %}"></div><span> My Schedule</span>
+                </a>
+                <ul class="nav-second-level collapse" id="collapseSubItems2" data-parent="#navAccordion">
+                    <li class="nav-item">
+                        <a class="nav-link" href="calendar">
+                            <span class="nav-link-text">Calendar</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="set-your-availability">
+                            <span class="nav-link-text">Set Your Availability</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="bookings.html">
+                    <div class="menu-icon"><img src="{% static 'images/booking.svg' %}"></div> <span>Bookings</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link nav-link-collapse" href="#" id="hasSubItems" data-toggle="collapse" data-target="#collapseSubItems3" aria-controls="collapseSubItems3" aria-expanded="false">
+                    <div class="menu-icon"><img src="{% static 'images/client-manage.svg' %}"></div><span> Client Management</span>
+                </a>
+                <ul class="nav-second-level collapse" id="collapseSubItems3" data-parent="#navAccordion">
+                    <li class="nav-item">
+                        <a class="nav-link" href="client-summary.html">
+                            <span class="nav-link-text">Client Summary</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="services-purchased.html">
+                            <span class="nav-link-text">Services Purchased</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="memberships-day-passes.html">
+                            <span class="nav-link-text">Memberships & Day Passes</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="amenities-purchased.html">
+                            <span class="nav-link-text">Amenities Purchased</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="employee">
+                    <div class="menu-icon"> <img src="{% static 'images/employe.svg' %}"></div><span> Employee</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link nav-link-collapse" href="#" id="hasSubItems" data-toggle="collapse" data-target="#collapseSubItems4" aria-controls="collapseSubItems4" aria-expanded="false">
+                    <div class="menu-icon"> <img src="{% static 'images/Wallet.svg' %}"></div> <span>Wallet</span>
+                </a>
+                <ul class="nav-second-level collapse" id="collapseSubItems4" data-parent="#navAccordion">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span class="nav-link-text">Wallet Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="bank-and-cards">
+                            <span class="nav-link-text">Banks and Cards</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="payment.html">
+                            <span class="nav-link-text">Payments</span>
+                        </a>
+                    </li>
+                    <li class="nav-item third-dropdown  ">
+                        <a class="nav-link nav-link-collapse" href="#collapseSubItems4w" data-toggle="collapse" data-target="#collapseSubItems4w" aria-controls="collapseSubItems4w" aria-expanded="false">
+                            My Subscriptions
+                        </a>
+                        <ul class="nav-third-level collapse" id="collapseSubItems4w">
+                            <li class="nav-item">
+                                <a class="nav-link" href="available-subscription-plans.html">
+                                    <span class="nav-link-text">Available Subscription Plans</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="my-plan.html">
+                                    <span class="nav-link-text">My Plan</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item third-dropdown">
+                        <a class="nav-link nav-link-collapse" href="#" id="hasSubItems" data-toggle="collapse" data-target="#collapseSubItems4b" aria-controls="collapseSubItems4b" aria-expanded="false">
+                            <span class="nav-link-text">Bolt-Ons</span>
+                        </a>
+                        <ul class="nav-third-level collapse" id="collapseSubItems4b">
+                            <li class="nav-item">
+                                <a class="nav-link" href="MyBolt-Ons.html">
+                                    <span class="nav-link-text">My Bolt-Ons</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="List-of-Bolt-Ons.html">
+                                    <span class="nav-link-text">List of Bolt-Ons</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link nav-link-collapse" href="#" id="hasSubItems" data-toggle="collapse" data-target="#collapseSubItems5" aria-controls="collapseSubItems5" aria-expanded="false">
+                    <div class="menu-icon"><img src="{% static 'images/request.svg' %}"></div><span> Requests</span>
+                </a>
+                <ul class="nav-second-level collapse" id="collapseSubItems5" data-parent="#navAccordion">
+                    <li class="nav-item">
+                        <a class="nav-link" href="invite-employee.html">
+                            <span class="nav-link-text">Invite Employee</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="employee-requests.html">
+                            <span class="nav-link-text">Employee Requests</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="other-requests.html">
+                            <span class="nav-link-text">Other Requests</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link nav-link-collapse" href="#" id="hasSubItems" data-toggle="collapse" data-target="#collapseSubItems6" aria-controls="collapseSubItems6" aria-expanded="false">
+                    <div class="menu-icon"><img src="{% static 'images/class-manage.svg' %}"></div> <span>Classes Management</span>
+                </a>
+                <ul class="nav-second-level collapse" id="collapseSubItems6" data-parent="#navAccordion">
+                    <li class="nav-item">
+                        <a class="nav-link" href="class-schedule.html">
+                            <span class="nav-link-text">Class Schedule</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="create-new-class.html">
+                            <span class="nav-link-text">Create New Class</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="class-templates.html">
+                            <span class="nav-link-text">Class Templates</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="create-class-template.html">
+                            <span class="nav-link-text">Create Class Template</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="client-reviews.html">
+                    <div class="menu-icon"><img src="{% static 'images/client-review.svg' %}"></div><span> Client Reviews</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="refer-a-service-provider.html">
+                    <div class="menu-icon"><img src="{% static 'images/refer.svg' %}"></div> <span>Refer a Service Provider</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link nav-link-collapse" href="#" id="hasSubItems" data-toggle="collapse" data-target="#collapseSubItems7" aria-controls="collapseSubItems7" aria-expanded="false">
+                    <div class="menu-icon"><img src="{% static 'images/video-od.svg' %}"></div><span> Video On Demand</span>
+                </a>
+                <ul class="nav-second-level collapse" id="collapseSubItems7" data-parent="#navAccordion">
+                    <li class="nav-item">
+                        <a class="nav-link" href="vod-intro.html">
+                            <span class="nav-link-text">Video on Demand Introduction</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="video-management.html">
+                            <span class="nav-link-text">Video Management</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="subscription-list.html">
+                            <span class="nav-link-text">Video Subscription List</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link nav-link-collapse" href="#" id="hasSubItems" data-toggle="collapse" data-target="#collapseSubItems8" aria-controls="collapseSubItems8" aria-expanded="false">
+                    <div class="menu-icon"><img src="{% static 'images/live-classes.svg' %}"></div><span> Live Classes</span>
+                </a>
+                <ul class="nav-second-level collapse" id="collapseSubItems8" data-parent="#navAccordion">
+                    <li class="nav-item">
+                        <a class="nav-link" href="LIVE-class-schedule.html">
+                            <span class="nav-link-text">Live Class Schedule</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="add-live-class-schedule.html">
+                            <span class="nav-link-text">Add Live Class Schedule</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="create-new-live-class.html">
+                            <span class="nav-link-text">Create New Live Class</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="live-class-templates.html">
+                            <span class="nav-link-text"> Live Class Template</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="create-new-live-class-template.html">
+                            <span class="nav-link-text">Create Live Class Template</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link nav-link-collapse" href="#" id="hasSubItems" data-toggle="collapse" data-target="#collapseSubItems9" aria-controls="collapseSubItems9" aria-expanded="false">
+                    <div class="menu-icon"><img src="{% static 'images/reports.svg' %}"></div> <span>Reports</span>
+                </a>
+                <!--     <ul class="nav-second-level collapse" id="collapseSubItems9" data-parent="#navAccordion">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <span class="nav-link-text">Item 2.1</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <span class="nav-link-text">Item 2.2</span>
+                    </a>
+                </li>
+            </ul> -->
+            </li>
+            <li class="nav-item upper-drop">
+                <a class="nav-link nav-link-collapse" href="#" id="hasSubItems" data-toggle="collapse" data-target="#collapseSubItems10" aria-controls="collapseSubItems10" aria-expanded="false">
+                    <div class="menu-icon"><img src="{% static 'images/setting.svg' %}"></div> <span>Settings</span>
+                </a>
+                <ul class="nav-second-level collapse" id="collapseSubItems10" data-parent="#navAccordion">
+                    <li class="nav-item">
+                        <a class="nav-link" href="Support.html">
+                            <span class="nav-link-text">Support</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="report-a-User.html">
+                            <span class="nav-link-text">Report a User</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="terms-of-service.html">
+                            <span class="nav-link-text">Terms of Service</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="faq.html">
+                            <span class="nav-link-text">FAQs</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="Security.html">
+                            <span class="nav-link-text">Security</span>
+                        </a>
+                    </li>
+                    <li class="nav-item third-dropdown">
+                        <a class="nav-link nav-link-collapse" href="#" id="hasSubItems" data-toggle="collapse" data-target="#collapseSubItems20" aria-controls="collapseSubItems20" aria-expanded="false">
+                            <span>My Account</span>
+                        </a>
+                        <ul class="nav-third-level collapse" id="collapseSubItems20">
+                            <li class="nav-item">
+                                <a class="nav-link" href="Preferences.html">
+                                    <span class="nav-link-text">Preference</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="add-admin-account.html">
+                                    <span class="nav-link-text">Add Admin Account</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="admin-account-list.html">
+                                    <span class="nav-link-text">Admin Account List</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li class="menu-end"></li>
+        </ul>
+    </div>
+</div>
+</div>
+ 

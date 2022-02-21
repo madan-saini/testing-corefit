@@ -1,0 +1,115 @@
+{% extends 'layout/loginbase.html' %} 
+{% load static %}
+{% block content %}
+
+ <!-- Navigation-->
+    <div class="loader" id="payloader" style="display:none"><img src="{% static 'images/loading.gif' %}" alt=""></div>
+    
+    
+    
+    <section class="before-login-form">
+        <div class="before-login-left login-bg">
+            <div class="logo-before-log">
+                <a href="login"><img src="{{LOGO}}"></a>
+            </div>
+        </div>
+        <div class="before-login-right">
+            <h2 class="before-log-form-head ">Log in to your account</h2>
+            <p class="before-log-form-subhead">Enter your email and password to log in to your account</p>
+            {% include "layout/successerror.html" %}
+            <form class="" name='loginForm' id='loginForm' method="POST">
+                <div class="form-before-log">                    
+                    {% csrf_token %}
+                    <div class="form-group col-sm-12">
+                        <label>Email</label>
+                        <input type="email" value="{{user_email_address}}" name="email" fullwidth="" id="email" placeholder="Enter your email" formcontrolname="email" class="required" autocomplete="OFF">
+                        
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label>Password</label>
+                        <input type="password" name="password" fullwidth="" id="password" placeholder="Enter your password here" formcontrolname="password" class="required " autocomplete="OFF">
+                        
+                    </div>
+                    <div class="flex-text">
+                    <div class="col-sm-6">
+                        <label class="container-checkbox">
+                            <input type="checkbox" name="user_remember" id='user_remember' value="1">
+                            <span class="checkmark"></span>
+                            Keep me signed in
+                        </label>
+                    </div>
+                    <div class="col-sm-6 fp ">
+                    <a href="forgot-password">Forgot Password?</a>
+                    </div>
+                    </div>
+                    <div class="form-group col-sm-12 btn-box mt-3">
+                        <button class="loginbtn">
+                        Log in <img src="{% static 'images/arrow-rt.svg'  %}">
+                        </button>
+                    </div>
+
+                    <div class="col-sm-12 fp flp">
+                        Don't have an account? <a href="register">Register</a>
+                        </div>
+                    
+                
+                </div>
+            </form>
+        </div>
+    </section>
+<script>
+    $("#loginForm").validate({
+        rules: {
+            email: {
+                required: true,
+                email: true
+            },
+            password: {
+                required: true,
+            }
+        },
+        messages: {
+            password: {
+                required: "Password field is required",
+            },
+            email: {
+                required: "Email address field is required",
+                email: "Please enter a valid email address"
+            },
+            
+        },
+        submitHandler: function (form) {
+            var emailVal = $('#email').val()
+            var passwordVal = $('#password').val()
+            var user_remember = $('#user_remember').val()
+            var token = $("[name=csrfmiddlewaretoken]").val();
+
+            $.ajax({
+                type: 'POST',
+                url: 'login',
+                data: { 'email': emailVal,'password': passwordVal, 'user_remember': user_remember,  csrfmiddlewaretoken: token },
+                beforeSend: function () {
+                    $('#payloader').show();
+                },
+                success: function (response) {
+                    $('#payloader').hide();
+                    console.log('hey',response)
+                    if (response == 0) {
+                        location.href="login" 
+                    }else if(response=='False'){
+                        location.href="login" 
+                    }else {
+                        location.href="/profile"
+                    }
+                },
+                error: function (response) {
+                    $('#payloader').hide();
+                    console.log('error', response)
+                }
+            })
+            return false;
+        }
+    });
+</script>
+
+{% endblock content %}

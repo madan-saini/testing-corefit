@@ -1,0 +1,313 @@
+{% load static %}
+{% load fetch_user %}
+
+<div class="card-main-accord" id='identification-main-section'>
+    <div class="card-header collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven">
+        <a class="card-title">
+            Identification[*]
+            <i class="fa fa-check" id="identificationsdata" aria-hidden="true" {%if user.business_doc %}{%else%} style="display:none" {%endif%} ></i>
+        </a>
+    </div>
+    <div id="collapseSeven" class="collapse" data-parent="#accordion">
+        <form class="" name='idForm' id='idForm' method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="media-main">
+                <div class="row-new">
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Business License[*]</label>
+                            <div class="form-field-video">
+                                <div class="video-uploadbox">
+                                    <div class="custom-file">
+                                        <input type="file" value="{{user.business_doc}}" id="business_doc" name="business_doc" accept=".jpg, .pdf, .png" fullwidth="" formcontrolname="video" class=" custom-file-input">
+                                        <label for="business_doc" class="custom-file-label placeholder text-truncate">Upload document</label>
+                                    </div>
+                                </div>
+<!--                                <div class="upload-box" id="business_doc_box" onclick="idiView(0,'')">
+                                    <img src="{% static 'images/no-image.svg' %}">
+                                </div>-->
+                                
+                                {% check_ext user.business_doc as ext %}
+                                {% if ext == '.pdf' %}
+
+                                <div class="upload-box " id="business_doc_box" onclick='docView("{{user.id}}", "{% static DOCUMENT_URL %}{{user.business_doc}}")'>
+                                    <img id="business_d" src="{% static 'images/pdf.svg' %}">
+                                </div>
+                                {% elif ext == '.jpg' or ext == '.png' %}
+
+                                <div class="upload-box " id="business_doc_box" onclick="idiView('{{user.id}}', '{% static DOCUMENT_URL %}{{user.business_doc}}')">
+                                    <img id="business_d" src="{% static DOCUMENT_URL %}{{user.business_doc}}">
+                                </div>
+                                {% else %}
+                                <div class="upload-box" id="business_doc_box">
+                                    <img id="business_d" src="{% static 'images/no-image.svg' %}">
+                                </div>
+                                {% endif%}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Director Identification(Passport or Local ID)[*]</label>
+                            <div class="form-field-video">
+                                <div class="video-uploadbox">
+                                    <div class="custom-file">
+                                        <input type="file" value="{{user.director_doc}}" id="director_doc" name="director_doc" accept=".jpg, .pdf, .png" fullwidth="" formcontrolname="video" class=" custom-file-input">
+                                        <label for="director_doc" class="custom-file-label placeholder text-truncate">Upload document</label>
+                                    </div>
+                                </div>
+<!--                                <div class="upload-box" id="director_doc_box">
+                                    <img src="{% static 'images/no-image.svg' %}">
+                                </div>-->
+
+                                {% check_ext user.director_doc as ext %}
+                                {% if ext == '.pdf' %}
+
+                                <div class="upload-box  " id="director_doc_box" onclick='docView("{{user.id}}", "{% static DOCUMENT_URL %}{{user.director_doc}}")'>
+                                    <img id="director_d" src="{% static 'images/pdf.svg' %}">
+                                </div>
+                                {% elif ext == '.jpg' or ext == '.png' %}
+                                
+
+                                <div class="upload-box  " id="director_doc_box" onclick="idiView('{{user.id}}', '{% static DOCUMENT_URL %}{{user.director_doc}}')">
+                                    <img id="director_d" src="{% static DOCUMENT_URL %}{{user.director_doc}}">
+                                </div>
+                                {% else %}
+                                <div class="upload-box" id="director_doc_box">
+                                    <img id="director_d" src="{% static 'images/no-image.svg' %}">
+                                </div>
+                                {% endif%}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group form-field-main">
+                            <label class="container-checkbox clr-teal acpt-term acct-term-new">
+                                <input type="checkbox" name='terms' id="terms" class='required' {% if user.terms == 1%} checked{% endif%}>
+                                <span class="checkmark"></span>
+                            </label>
+                            <a class="clr-teal acpt" href="javascript:void(0);" data-toggle="modal" data-target="#termsModal">I Accept The Terms And Conditions</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-btm-group spece-btwn">
+                    <div></div>
+                    <div>
+                        <input type="hidden" id="i_submit_type">
+                        <input type="hidden" id="old_business_doc" name="old_business_doc" value="{{user.business_doc}}">
+                        <input type="hidden" id="old_director_doc"  name="old_director_doc" value="{{user.director_doc}}">
+                        <button class="border-btn"  type='button' onclick="resetForm20()">Discard changes</button> 
+
+                        <button class="border-btn ml-10" onclick="return submitTypeI('save')">Save</button>
+                        <button class="btn-pink ml-10" onclick="return submitTypeI('submit')">Submit & Proceed</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script>
+    
+    function resetForm20(){
+        var form = $('#idForm');
+        form[0].reset()
+        $([document.documentElement, document.body]).animate({
+            scrollTop: $("#identification-main-section").offset().top
+        }, 500);
+        if($("#old_business_doc").val()==''){
+            $("#business_d").attr("src", "{% static 'images/no-image.svg' %}");
+            $('#business_doc_box').attr("onclick", "");
+        }else{
+            {% check_ext user.business_doc as ext %}
+            {% if ext == '.pdf' %}
+            $("#business_d").attr("src", "{% static 'images/pdf.svg' %}");
+            $('#business_doc_box').attr("onclick", "docView('{{user.id}}', '{% static DOCUMENT_URL %}{{user.business_doc}}')");
+      
+            {% else %}
+            $("#business_d").attr("src", "{% static DOCUMENT_URL %}{{user.business_doc}}");
+            $('#business_doc_box').attr("onclick", "idiView('{{user.id}}', '{% static DOCUMENT_URL %}{{user.business_doc}}')");
+            
+     
+            {% endif %}
+            }
+        if($("#old_director_doc").val()==''){
+            $("#director_d").attr("src", "{% static 'images/no-image.svg' %}");
+            $('#director_doc_box').attr("onclick", "");
+        }else{
+            {% check_ext user.director_doc as ext %}
+            {% if ext == '.pdf' %}
+            $("#director_d").attr("src", "{% static 'images/pdf.svg' %}");
+            $('#director_doc_box').attr("onclick", "docView('{{user.id}}', '{% static DOCUMENT_URL %}{{user.director_doc}}')");
+      
+            {% else %}
+            $("#director_d").attr("src", "{% static DOCUMENT_URL %}{{user.director_doc}}");
+            $('#director_doc_box').attr("onclick", "idiView('{{user.id}}', '{% static DOCUMENT_URL %}{{user.director_doc}}')");
+      
+            {% endif %}
+              }
+       
+    }
+    function submitTypeI(type){
+        $('#i_submit_type').val(type);
+    }
+    function errorTo7(){
+        var basic_type = $('#i_submit_type').val();
+        if(basic_type == 'submit'){
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#identification-main-section").offset().top
+            }, 500);
+    $('#i_submit_type').val('');
+    }
+    }
+    $("#idForm").validate({
+        invalidHandler: function(event, validator) {
+            errorTo7()
+         },
+        submitHandler: function (form) {
+            var is_err = 0;
+            var business_doc = $('#business_doc').val();   
+            if($("#old_business_doc").val()==''){
+            if(business_doc == ''){
+                errorTo7()
+                swal('', "Please upload Business License document", "error");
+                is_err = 1;
+            }
+        }
+            var director_docs = $("#director_doc").val();    
+            if($("#old_director_doc").val()==''){
+
+            if(director_docs == ''){
+                errorTo7()
+                swal('', "Please upload Director Identification document", "error");
+                is_err = 1;
+            }}
+
+if(is_err == 0){
+            var submitType =  $('#i_submit_type').val();
+            var token = $("[name=csrfmiddlewaretoken]").val();
+            var form = document.querySelector('#idForm');
+
+            var formData = new FormData(form);
+//            console.log('error', formData)
+//            formData.append('imageFile', $('#business_doc')[0].files[0]);
+//            formData.append('imageFile', $('#director_doc')[0].files[0]);
+
+            formData.append('csrfmiddlewaretoken', token);
+
+            $.ajax({
+                type: 'POST',
+                url: 'identityForm',
+                contentType: false,
+                data: formData,
+                processData: false,
+                contentType: false,
+//                data: {'serializedData': serializedData, csrfmiddlewaretoken: token},
+                beforeSend: function () {
+                    $('#payloader').show();
+                },
+                success: function (response) {
+                    
+                    $('#payloader').hide();
+                    $("#identificationsdata").show()
+                    if(submitType == 'submit'){
+                        $("#collapseEight").collapse("toggle");
+                    }
+                    Command: toastr["success"]("Changes Saved")
+                },
+                error: function (response) {
+                    $('#payloader').hide();
+                    console.log('error', response)
+                }
+            })
+
+            return false;
+        }
+        }
+    });
+
+    $("#business_doc").change(function (e) {
+        if (fileValidation("business_doc", this) != false) {
+             var filename = document.getElementById('business_doc').value;
+            var ext = getExt(filename);
+            ext = ext.toLowerCase();
+            readFILEURL(this, 'business_doc_box',ext);
+        }
+    });
+    
+    $("#director_doc").change(function (e) {
+        if (fileValidation("director_doc", this) != false) {
+            var filename = document.getElementById('director_doc').value;
+            var ext = getExt(filename);
+            ext = ext.toLowerCase();
+            readFILEURL(this, 'director_doc_box',ext);
+        }
+    });
+
+    function readFILEURL(input, idVal, ext) { 
+        var reader = new FileReader();
+        reader.onload = function ()
+        {
+            var output = document.getElementById(idVal);
+            if(ext == 'pdf'){
+                $('#'+idVal + ' img').attr("src", "{% static 'images/pdf.svg' %}");
+                $('#'+idVal).attr("onclick", "docView('0','" + reader.result + "')");
+            } else{
+                $('#'+idVal + ' img').attr("src", reader.result);
+                $('#'+idVal).attr("onclick", "idiView('0','" + reader.result + "')");
+            }
+            
+            // output.src = reader.result;
+        }
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    function idiView(id, img) {
+        $('#image_dv img').attr('src', img)
+        if(img != '/static/images/no-image.svg'){
+        $('#imageModalCenter').modal('show');
+    }
+    }
+
+    function in_array(needle, haystack) {
+        for (var i = 0, j = haystack.length; i < j; i++) {
+            if (needle == haystack[i])
+                return true;
+        }
+        return false;
+    }
+
+    function getExt(filename) {
+        var dot_pos = filename.lastIndexOf(".");
+        if (dot_pos == -1)
+            return "";
+        return filename.substr(dot_pos + 1).toLowerCase();
+    }
+
+    function fileValidation(imageId, event) {
+        var filename = document.getElementById(imageId).value;
+        var filetype = ["jpg", "jpeg", "png", "pdf"];
+        if (filename != "") {
+            var ext = getExt(filename);
+            ext = ext.toLowerCase();
+            var checktype = in_array(ext, filetype);
+            if (!checktype) {
+                alert(ext + " file not allowed.");
+                document.getElementById(imageId).value = "";
+                return false;
+            } else {
+                var fi = document.getElementById(imageId);
+                var filesize = fi.files[0].size; //check uploaded file size
+                if (filesize > 2097152) {
+                    alert("Maximum 2MB file size allowed.");
+                    document.getElementById(imageId).value = "";
+                    return false;
+                }
+            }
+        }
+    }
+
+
+
+</script>

@@ -1,0 +1,356 @@
+{% extends 'layout/loginbase.html' %} 
+{% load static %}
+{% block content %}
+
+<style>
+    .otp-fields input.error {
+        border: 1px solid red !important;
+    }
+    
+    .otp-fields label.error {
+        display: none !important;
+    }
+</style>
+
+    <!-- Navigation-->
+    <div class="loader" id="payloader" style="display:none"><img src="{% static 'images/loading.gif' %}" alt=""></div>
+
+    {% include "layout/successerror.html" %}
+    
+    
+    <form class="" name='registerForm' id='registerForm' method="POST">
+    <section class="before-login-form" id="started-section">
+        <div class="before-login-left get-start-bg">
+            <div class="logo-before-log">
+                <a href="login"><img src="{{LOGO}}"></a>
+            </div>
+        </div>
+        <div class="before-login-right">
+            <h2 class="before-log-form-head ">Let’s Get Started</h2>
+            <p class="before-log-form-subhead">Create your free account with CoreFit and enjoy our <br> exclusive benefits.</p>
+            
+            <div class="form-before-log">
+                {% csrf_token %}
+                <div class="form-group col-sm-6">
+                    <label>First name</label>
+                    <input type="text" name="first_name" id="first_name" placeholder="Enter your first name" class="required" autocomplete="OFF">
+                    
+                </div>
+                <div class="form-group col-sm-6">
+                    <label>Last name</label>
+                    <input type="text" name="last_name" fullwidth="" id="last_name" placeholder="Enter your last name" formcontrolname="last_name" class="required" autocomplete="OFF">
+                    
+                </div>
+                <div class="form-group col-sm-6">
+                    <label>Mobile number</label>
+                    <div class="mobile-num">
+                        <input type="text" name="phone" id="phone" class="required digits" placeholder="Enter phone number" autocomplete="OFF"  minlength='6'>
+                    </div>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label>Email address</label>
+                    <input type="email" name="email" fullwidth="" id="email" placeholder="Enter your email here" formcontrolname="email" class="required email" autocomplete="off">
+                </div>
+                <div class="form-group col-sm-6">
+                    <label>Password</label>
+                    <input type="password" name="password" fullwidth="" id="password" placeholder="Enter your password here" formcontrolname="password" class="required passworreq" autocomplete="OFF" minlength='8'>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label>Confirm password</label>
+                    <input type="password" class="form-control required" id="cnf_password" name="" placeholder="Re-enter your password here" equalTo = '#password'>
+                    
+                </div>
+                <div class="col-sm-12">
+                    <label class="container-checkbox">I have read and agree to the CoreFit <a target="_blank" href="#">Terms of Use</a> and <a target="_blank" href="#">Privacy Policy</a>
+                        <input type="checkbox" name='terms' id='terms'>
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+                <div class="form-group col-sm-12 btn-box mt-3">
+                    <input type="hidden" name="contryCode" id="contryCode" value="">
+                    <button onclick="setCountryCode();">
+                        Sign up for free <img src="{% static 'images/arrow-rt.svg'  %}">
+                    </button>
+                </div>
+                <div class="col-sm-12 fp flp">
+                    Already have an account? <a href="login">Log in</a> 
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <section class="before-login-form" id="tribe-section" style="display: none;">
+        <div class="before-login-left choose-your-tribe-bg">
+            <div class="logo-before-log">
+                <a href="lets-get-started.html"><img src="{{LOGO}}"></a>
+            </div>
+        </div>
+        <div class="before-login-right">
+            <a href="javascript:void(0);" class="back-btn" onclick="backStep();">Back</a>
+            <h2 class="before-log-form-head ">Choose your tribe</h2>
+            <p class="before-log-form-subhead">Which one of the following best describes your <br> business/specialties</p>
+            <div class="form-before-log"> 
+                
+                {% for key, tes in user_list.items %}
+                    <div class="col-sm-6">
+                        <div class="radio-box"><input type="radio" id="e-option{{key}}" value="{{tes}}" name="user_type">
+                            <label for="e-option{{key}}">{{tes}}</label>
+                            <div class="check"></div>
+                        </div>
+                    </div>  
+                    
+                {% endfor %}
+                <div class="form-group col-sm-12 btn-box mt-3">
+                    <button>
+                    Continue <img src="{% static 'images/arrow-rt.svg'  %}">
+                    </button>
+                </div>
+
+<!--                <div class="col-sm-12 fp flp">-->
+<!--                    Already have an account? <a href="login">Log in</a> -->
+<!--                </div>-->
+            </div>
+        </div>
+    </section>
+
+    <section class="before-login-form" id="confrim-section" style="display:none;">
+        <div class="before-login-left Confirm-your-account">
+            <div class="logo-before-log">
+                <a href="login"><img src="{{LOGO}}"></a>
+            </div>
+        </div>
+        <div class="before-login-right">
+            <a href="javascript:void(0);" class="back-btn" onclick="backStep1();">Back</a>
+            <h2 class="before-log-form-head ">Confirm your account</h2>
+            <p class="before-log-form-subhead">We have sent you an OTP to your  email and your mobile <br> number. Please enter below for confirmation.</p>
+            <div class="form-before-log">
+                <div class="col-sm-12 otp-text">
+                    OTP code
+                </div>
+                <div class="col-sm-12 otp-fields">
+                    <input class="opt_input required digits" type="text" name="otp_code" placeholder="0" maxlength="1" autocomplete="off">
+                    <input class="opt_input required digits" type="text" name="otp_code1" placeholder="0" maxlength="1" autocomplete="off">
+                    <input class="opt_input required digits" type="text" name="otp_code2" placeholder="0" maxlength="1" autocomplete="off">
+                    <input class="opt_input required digits" type="text" name="otp_code3" placeholder="0" maxlength="1" autocomplete="off">
+                    <input class="opt_input required digits" type="text" name="otp_code4" placeholder="0" maxlength="1" autocomplete="off">
+                    <input class="opt_input required digits" type="text" name="otp_code5" placeholder="0" maxlength="1" autocomplete="off">
+                </div>
+                <div class="dint-rcv col-sm-12">Didn’t receive a code? <a href="javascript:void(0);" onclick="resentOTP()">Resend code</a></div>
+                <div class="form-group col-sm-12 btn-box mt-3">
+                    <button>
+                        Continue <img src="{% static 'images/arrow-rt.svg'  %}">
+                    </button>
+                </div>
+
+<!--                <div class="col-sm-12 fp flp">-->
+<!--                    Already have an account? <a href="login">Log in</a> -->
+<!--                </div>-->
+            </div>
+        </div>
+    </section>
+
+    <input type="hidden" name="stepCnt" id="stepCnt" value="1">
+    </form>
+      
+    <link rel="stylesheet" type="text/css" href="{% static '/css/front/intlTelInput.css' %}">
+    <script src="{% static 'js/front/intlTelInput.js' %}"></script>
+
+    <script>
+
+        var phone_number = window.intlTelInput(document.querySelector("#phone"), {
+            separateDialCode: true,
+            preferredCountries: false,
+            //onlyCountries: ['iq'],
+            hiddenInput: "phone",
+            utilsScript: "{% static 'js/front/utils.js' %}"
+        });
+
+        function setCountryCode()
+        {
+            var coCode = $('.iti__selected-dial-code').html();
+            document.getElementById('contryCode').value = coCode;
+            //alert(coCode+" :: "+document.getElementById('contryCode').value);	
+        }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $("input:radio[id='e-optionSports Coach']").attr('disabled','disabled');
+            $("input:radio[id='e-optionSports Facility']").attr('disabled','disabled');
+            $("input:radio[id='e-optionHealth & Wellness Individual']").attr('disabled','disabled');
+            $("input:radio[id='e-optionHealth & Wellness Company']").attr('disabled','disabled');
+            {% comment %} $("input:radio[id='e-optionPersonal Training Company']").attr('disabled','disabled'); {% endcomment %}
+            $("input:radio[id='e-optionSports Coaching Company']").attr('disabled','disabled');
+
+            $('#stepCnt').val('1');
+            $(".opt_input").keyup(function () { 
+                if (this.value.length == this.maxLength) { 
+                    $(this).next('label').remove();
+                    $(this).next('.opt_input').focus();
+                }
+            });    
+        });
+
+        function backStep(){
+            $('#stepCnt').val('1');
+            $('#tribe-section').hide();
+            $('#started-section').show();
+        }
+
+        function backStep1(){
+            $('#stepCnt').val('2');
+            $('#tribe-section').show();
+            $('#confrim-section').hide();
+        }
+
+        function resentOTP(){
+            var first_name = $('#first_name').val()
+            var last_name = $('#last_name').val()
+            var emailVal = $('#email').val()
+            var token = $("[name=csrfmiddlewaretoken]").val();
+
+            $.ajax({
+                type: 'POST',
+                url: 'otp_send',
+                data: { 'first_name':first_name,'last_name':last_name,'email': emailVal, csrfmiddlewaretoken: token },
+                beforeSend: function () {
+                    $('#payloader').show();
+                },
+                success: function (response) {
+
+                    $('#payloader').hide();
+                    if (response == '1') {
+                        swal('', "OTP sent successfully", "success");
+                    }                   
+
+                },
+                error: function (response) {
+                    $('#payloader').hide();
+                    // console.log('error', response)
+                }
+            })
+        }
+
+        $.validator.addMethod("passworreq", function (input) {
+            var reg = /[0-9]/; //at least one number
+            var reg2 = /[a-z]/; //at least one small character
+            var reg3 = /[A-Z]/; //at least one capital character
+            var reg4 = /[\W_]/; //at least one special character
+            return reg.test(input) && reg2.test(input) && reg3.test(input) && reg4.test(input);
+        }, "Password must be at least 8 characters long, contains an upper case letter, a lower case letter, a number and a symbol.");
+        $("#registerForm").validate({
+            
+            submitHandler: function (form) {
+                var stepCnt = $('#stepCnt').val()
+                var emailVal = $('#email').val()
+                var passwordVal = $('#password').val()
+                var token = $("[name=csrfmiddlewaretoken]").val();
+
+                var form = $("#registerForm");
+
+                var serializedData = form.serializeArray().reduce(function (obj, item) {
+                    obj[item.name] = item.value;
+                    return obj;
+                }, {});
+
+                if(stepCnt == 1){
+                    if($("#terms").prop('checked') == true){
+                        $.ajax({
+                            type: 'POST',
+                            url: 'checkValid',
+                            data: { 'serializedData': serializedData,  csrfmiddlewaretoken: token },
+                            beforeSend: function () {
+                                $('#payloader').show();
+                            },
+                            success: function (response) {
+                                $('#payloader').hide();
+                                if (response == "0") {
+                                    $('#stepCnt').val('2');
+                                    $('#tribe-section').show();
+                                    $('#started-section').hide();
+                                } else{
+                                    swal("", response, "error");
+                                }
+                            },
+                            error: function (response) {
+                                $('#payloader').hide();
+                                console.log('error', response)
+                            }
+                        })
+                    } else{
+                        swal('', "Please check terms and condition", "error");
+                    }
+                } else if(stepCnt == 2){ 
+                    if($("input:radio[name='user_type']").is(":checked") == true){
+                        var first_name = $('#first_name').val()
+            var last_name = $('#last_name').val()
+                        var emailVal = $('#email').val()
+                        var token = $("[name=csrfmiddlewaretoken]").val();
+
+                        $.ajax({
+                            type: 'POST',
+                            url: 'otp_send',
+                            data: { 'first_name':first_name,'last_name':last_name,'email': emailVal, csrfmiddlewaretoken: token },
+                            beforeSend: function () {
+                                $('#payloader').show();
+                            },
+                            success: function (response) {
+
+                                $('#payloader').hide();
+                                if (response == '1') {
+                                    $('#stepCnt').val('3');
+                                    $('#tribe-section').hide();
+                                    $('#confrim-section').show();
+                                }
+
+
+                            },
+                            error: function (response) {
+                                $('#payloader').hide();
+                            }
+                        });
+                    } else{
+                        swal('', "Please choose one tribe", "error");
+                    }
+                }  else if(stepCnt == 3){ 
+                    $.ajax({
+                        type: 'POST',
+                        url: 'otp_verify',
+                        data: { 'serializedData': serializedData, csrfmiddlewaretoken: token },
+                        success: function (response) {
+                            console.log('success', response)
+                            if (response == 1) {
+                                $.ajax({
+                                    type: 'POST',
+                                    url: "register",
+                                    data: { 'serializedData': serializedData, csrfmiddlewaretoken: token },
+                                    success: function (json) {
+                                        location.href="thank-you" 
+                                    },
+                                    error: function (response) {
+                                    }
+                                })
+                            } else {
+                                $(".opt_input").each(function() {
+                                    $(this).val('')
+                                });
+                                swal('', "Please enter valid OTP", "error");
+                                // console.log('else', response)
+                            }
+                        },
+                        error: function (response) {
+                            // console.log('error', response)
+                        }
+                    })
+                }
+                
+                return false;
+            }
+        });
+    </script>
+
+    
+
+{% endblock content %}
+  

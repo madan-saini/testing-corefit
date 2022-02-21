@@ -1,0 +1,1956 @@
+{% extends 'layout/inner.html' %}
+{% load static %}
+{% load define_action %}
+
+
+{% load split %}
+{% load change_type %}
+{% load getType %}
+
+{% block content %}
+
+
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<style>
+    .limitskill{
+    color:red
+    }
+
+</style>
+<script>
+
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-bottom-center",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "1000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+</script>
+
+<!-- Navigation-->
+<div class="loader" id="payloader" style=""><img src="{% static 'images/loading.gif' %}" alt=""></div>
+
+{% include "layout/successerror.html" %}
+<script src="{% static 'js/jquery-ui.min.js' %}"></script>
+<script src="{% static 'js/jquery-ui.multidatespicker.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.css' %}">
+
+<script>
+
+
+
+    var makeid1 = function (length) {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
+
+    function addSetCal(checked) {
+        var count = $('.cal_sett').length;
+        var vall = $('.cal_sett').html();
+        if (checked == true) {
+            var rand = makeid1(5);
+            if (count == 0 || (count == 1 && vall == '<p>Unavailable</p>')) {
+
+                var nav = '<div class="check-date-input cal_sett" id="cal_sett_' + rand + '"><div><input type="text" id="start_time_' + rand + '" name="over_start_time[]" class="o_start_timepicker">';
+                nav += '<span class="space">-</span>';
+                nav += '<input type="text" id="end_time_' + rand + '" name="over_end_time[]" class="o_end_timepicker">';
+                nav += '<a href="javascript:void(0);" class="trash-check-avail " id="delete_lnk_o_' + rand + '">';
+                nav += '<img src="/static/images/material-delete.svg">';
+                nav += '</a></div></div>';
+
+                $('#delete_lnk_o_'+rand).attr("onclick", "removeSetCal('" + rand + "')");
+
+                $('#cal_update').html(nav);
+                $('#cal_set').show();
+
+                setNumberingCal('9', '17');
+
+            } else {
+                checkValidationCal(rand);
+            }
+//                saveAvailability();
+        } else {
+            $('.cal_sett').html('<p>Unavailable</p>');
+//
+//            saveAvailability();
+        }
+    }
+
+        function checkValidationCal(rand) {
+        var start_var = document.getElementsByName("over_start_time[]");
+        var end_var = document.getElementsByName("over_end_time[]");
+
+        for (var i = 0; i < start_var.length; i++) {
+            var inp = start_var[i];
+//            alert("start_time[" + i + "].value=" + inp.value);
+        }
+        for (var i = 0; i < end_var.length; i++) {
+            var inp = end_var[i];
+            var lst_val = inp.value;
+        }
+
+        if (lst_val != '') {
+//            var next_start_val = lst_val;
+            var time_val = lst_val.split(' ')[0];
+            var time_ex = lst_val.split(' ')[1];
+            var hour_time = time_val.split(':')[0];
+            var min_time = time_val.split(':')[1];
+
+            if (time_ex == 'PM') {
+                hour_time = parseInt(hour_time) + 12;
+            }
+
+            var cont_val1 = (parseInt(hour_time) + 1);
+            var cont_val2 = (parseInt(hour_time) + 2);
+
+//            alert(cont_val1);
+//            alert(cont_val2);
+
+            var prec1 = ' AM';
+            if (cont_val1 >= 12 && cont_val1 < 24) {
+                prec1 = ' PM';
+            }
+            var hours1 = cont_val1 % 12 || 12;
+
+            var prec2 = ' AM';
+            if (cont_val2 >= 12 && cont_val2 < 24) {
+                prec2 = ' PM';
+            }
+            var hours2 = cont_val2 % 12 || 12;
+
+            var fnl_val = hours1 + ':' + min_time + prec1;
+            var fnl_end_val = hours2 + ':' + min_time + prec2;
+
+        }
+
+        var nav = '<div class="check-date-input cal_sett" id="cal_sett_' + rand + '"><div><input type="text" id="start_time_' + rand + '" name="over_start_time[]" class="o_start_timepicker">';
+        nav += '<span class="space">-</span>';
+        nav += '<input type="text" id="end_time_' + rand + '" name="over_end_time[]" class="o_end_timepicker">';
+        nav += '<a href="javascript:void(0);" class="trash-check-avail " id="delete_lnk_o_' + rand + '">';
+        nav += '<img src="/static/images/material-delete.svg">';
+        nav += '</a></div></div>';
+
+
+        $('#cal_update').append(nav);
+
+        $('#delete_lnk_o_'+rand).attr("onclick", "removeSetCal('" + rand + "')");
+
+        setNumberingCal(fnl_val.toString(), fnl_end_val.toString());
+
+    }
+
+
+
+        function setNumberingCal(time, endTime) {
+            $('.o_start_timepicker').timepicker({
+                timeFormat: 'h:mm p',
+                interval: 15,
+                minTime: '00',
+                maxTime: '11:45pm',
+                defaultTime: time,
+                startTime: '00:00',
+                dynamic: false,
+                dropdown: true,
+                scrollbar: true,
+                change: checkValidCal
+            });
+            $('.o_end_timepicker').timepicker({
+                timeFormat: 'h:mm p',
+                interval: 15,
+                minTime: '00',
+                maxTime: '11:45pm',
+                defaultTime: endTime,
+                startTime: '00:00',
+                dynamic: false,
+                dropdown: true,
+                scrollbar: true,
+                change: checkValidCal
+            });
+        }
+
+        function checkValidCal() {
+            var is_error = 0;
+            var start_var = document.getElementsByName("over_start_time[]");
+            var end_var = document.getElementsByName("over_end_time[]");
+
+            var start_array = new Array();
+            var end_array = new Array();
+
+            for (var i = 0; i < start_var.length; i++) {
+                var from = start_var[i].value;
+                var to = end_var[i].value;
+
+                if (moment(from, 'hh:mm a') > moment(to, 'hh:mm a')) {
+                    if (!$('#' + end_var[i].id).hasClass('error_range_o1')) {
+                        is_error = 1;
+                        $('#error_set_' + end_var[i].id).remove();
+                        $('#' + start_var[i].id).removeClass('error_range1');
+                        $('#' + end_var[i].id).addClass('error_range1');
+                        $('#' + end_var[i].id).addClass('error_range_o1');
+                        $('#' + end_var[i].id).parent().parent().append('<p id="error_set1_' + end_var[i].id + '" class="error_box">Choose an end time later than the start time.</p>');
+                    }
+
+                } else {
+                    $('#' + start_var[i].id).removeClass('error_range1');
+                    $('#' + end_var[i].id).removeClass('error_range1');
+                    $('#' + end_var[i].id).removeClass('error_range_o1');
+                    $('#error_set1_' + end_var[i].id).remove();
+//                is_error = is_error - 1;
+                }
+            }
+
+            for (var i = 0; i < start_var.length; i++) {
+                var inp_start = start_var[i];
+                start_array.push(inp_start.value);
+            }
+            for (var i = 0; i < end_var.length; i++) {
+                var inp_end = end_var[i];
+                end_array.push(inp_end.value);
+            }
+
+            $.each(start_array, function (index) {
+                var arr_len = start_array.length;
+                var first_val = start_array[index];
+
+                for (var i = 0; i < start_array.length; i++) {
+                    if (i != index) {
+                        if (moment(first_val, 'hh:mm a') >= moment(start_array[i], 'hh:mm a')) {
+                            if (moment(first_val, 'hh:mm a') < moment(end_array[i], 'hh:mm a')) {
+
+                                if (!$('#' + end_var[index].id).hasClass('error_range1')) {
+                                    is_error = 1;
+                                    $('#' + start_var[index].id).addClass('error_range1');
+                                    $('#' + end_var[index].id).addClass('error_range1');
+
+                                    $('#' + end_var[index].id).parent().parent().append('<p id="error_set1_' + end_var[index].id + '" class="error_box">Times overlap with another set of times.</p>');
+
+                                }
+
+                                if (!$('#' + end_var[i].id).hasClass('error_range1')) {
+                                    is_error = 1;
+                                    $('#' + start_var[i].id).addClass('error_range1');
+                                    $('#' + end_var[i].id).addClass('error_range1');
+
+                                    $('#' + end_var[i].id).parent().parent().append('<p id="error_set1_' + end_var[i].id + '" class="error_box">Times overlap with another set of times.</p>');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            $('#is_error').val(is_error);
+//            if (is_error == 0) {
+//                saveAvailability()
+//            }
+        }
+
+</script>
+<script>
+    function selectBranch(){
+        $('#addBranchCenter').modal('show');
+    }
+
+    function showBranch(val){
+        if(val == 'Yes'){
+            $('#e-option3').prop('checked',true);
+            $("#change-div3").show();
+            $("#change-div1").hide();
+            $("#change-div2").hide();
+            $("#profile_remain").show();
+            $("#option_1").hide();
+        } else{
+            $('#e-option1').prop('checked',true);
+            $("#change-div1").show();
+            $("#change-div2").hide();
+            $("#change-div3").hide();
+            $("#profile_remain").hide();
+            $("#option_1").show();
+        }
+        $('#addBranchCenter').modal('hide');
+    }
+</script>
+<style>
+    .ui-timepicker-standard{
+        z-index: 1100 !important;
+    }
+</style>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4SA7UBi6Yk3_IX3-U3qF7WSiTadRwFJU&libraries=places&sensor=true"></script>
+<div class="content-page">
+    <div id="accordion" class="accordion profile-set-accord">
+
+        <div class="card">
+            <div class="card-main-accord  ">
+
+                <div class="card-header open-ccrord" data-toggle="collapse" href="#collapseOne">
+                    <a class="card-title">
+                        Profile Setup
+                        <i class="fa fa-check" id="profdata" aria-hidden="true" {%if basicinfo %}{%else%} style="display:none" {%endif%} ></i>
+
+                    </a>
+
+                </div>
+                <div id="collapseOne" class="card-body collapse show" data-parent="#accordion">
+                    <form class="" name='profileForm1' id='profileForm1' method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div>
+
+
+
+                                <div class="media-main">
+ <div class="pro-set-top-bar" id="option_1" {% if basicinfo.facility_profile_level == 'Branch' or basicinfo.facility_profile_level == 'Both' %} style='display:none;'{% endif %}>
+<!--                        <div class="pro-set-top-bar" id="option_1" {% if basicinfo.facility_profile_level != 'Brand' %} style='display:none;'{% endif %}>-->
+                            <span>Would you like to add a primary branch</span>
+                            <div class="btn-group"><a href="javascript:void(0);" onclick="selectBranch()" class="btn-gray-one">Add primary branch</a></div>
+                        </div>
+
+                            <h4 class="profile-setup-inner-block-heading">Basic Information</h4>
+                            <div class="profile-form-block">
+                                <div class="row-new">
+                                    <div class="col-sm-12">
+                                        <div class="form-group form-field-main">
+                                            <label class="label-field">Facility Profile Level</label>
+                                            <div class="facility-radiobox">
+                                                <input type="hidden" id="radioType" value="{{basicinfo.facility_profile_level}}">
+                                                <div class="radio-box"><input type="radio" id="e-option1" {% if basicinfo.facility_profile_level == 'Brand' or basicinfo == '' %} checked{% endif %} name="facility_profile_level" value="Brand" class="div-check">
+                                                    <label for="e-option1" class="append  tip" data-tip="tip-first">Brand</label>
+                                                    <div class="check"></div>
+                                                    <div id="tip-first" class="tip-content hidden">
+                                                        <p>This is my first tip content</p>
+                                                    </div>
+                                                </div>
+                                                <div class="radio-box"><input type="radio" id="e-option2" {% if basicinfo.facility_profile_level == 'Branch' %} checked{% endif %} name="facility_profile_level" value="Branch" class="div-check">
+                                                    <label for="e-option2" class="append  tip" data-tip="tip-first">Branch</label>
+                                                    <div class="check"></div>
+                                                    <div id="tip-first" class="tip-content hidden">
+                                                        <p>This is my first tip content</p>
+                                                    </div>
+                                                </div>
+                                                <div class="radio-box"><input type="radio" id="e-option3" {% if basicinfo.facility_profile_level == 'Both' %} checked{% endif %} name="facility_profile_level" value="Both" class="div-check">
+                                                    <label for="e-option3" class="append  tip" data-tip="tip-first">Both</label>
+                                                    <div class="check"></div>
+                                                    <div id="tip-first" class="tip-content hidden">
+                                                        <p>This is my first tip content</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% define "display:none;" as style1 %}
+                                {% define "display:none;" as style2 %}
+                                {% define "display:none;" as style3 %}
+                                {% define "display:none;" as style4 %}
+
+                                {% if basicinfo.facility_profile_level == 'Brand' or basicinfo == '' %}
+                                {% define "" as style1 %}
+                                {% endif%}
+                                <div class="change-div" id="change-div1" style="{{style1}}">
+                                    <div class="row-new">
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Facility type[*]</label>
+                                                <div class="drop-down">
+                                                    <select id="facility_type_1" name='facility_type' class='single-withoutsearch required'>
+                                                        <option value="">Select Facility Type</option>
+
+                                                        {% for facility_type in facility_types %}
+                                                        <option value="{{facility_type}}" {% if facility_type == basicinfo.facility_type %} selected{% endif %}>{{facility_type}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Brand name[*]</label>
+                                                <div class="form-field-input">
+                                                    <input type="text" class='required' value="{{basicinfo.brand.brand_name}}" name="brand_name" placeholder="Add name here">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Brand address[*]</label>
+                                                <div class="form-field-input icon-overlay">
+                                                    <input type="text" class='required' value="{{basicinfo.brand.brand_address}}" id="brand_address" name="brand_address" placeholder="Add address here">
+                                                    <img src="{% static 'images/LocationArrow.svg' %}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Association with a Branch</label>
+                                                <div class="drop-down">
+                                                    <select name="branch_id" class='multiple-single'>
+                                                        <option value="">Choose from list</option>
+                                                        {% for key, branchRecord in branchRecords %}
+
+                                                        <option value="{{key}}">{{branchRecord}}</option>
+                                                        {% endfor %}
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h4 class="profile-setup-inner-block-heading">Primary Contact</h4>
+                                    <div class="row-new">
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">First name[*]</label>
+                                                <div class="form-field-input">
+                                                    <input type="text" class='required' name="first_name" value="{{user.first_name|title}}" placeholder="Enter your first name">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Last name[*]</label>
+                                                <div class="form-field-input">
+                                                    <input type="text" class='required' name="last_name" value="{{user.last_name|title}}" placeholder="Enter your last name">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Email address[*]</label>
+                                                <div class="form-field-input">
+                                                    <input type="text" class='required' name="email_address" value="{{user.email_address}}" readonly placeholder="Enter your email here">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Mobile number[*]</label>
+                                                <div class="mobile-num">
+                                                    <input type="text" class='required' id="phone" name="phone"  value="{{user.contact}}" readonly placeholder="55 400 6998">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type='hidden' name='brand_id' value="{{basicinfo.brand.id}}">
+                                    <div class="btn-btm-group">
+                                        <button class="border-btn"  type='reset' onclick="resetForm()">Discard changes</button> 
+                                        <button class="border-btn ml-10" onclick="return submitTypeBasic('save')">Save</button>
+                                        {%if basicinfo %}
+                                            {% define "display:none;" as style21 %}
+                                            {% define "" as style22 %}
+                                            {% else %}
+                                            {% define "" as style21 %}
+                                            {% define "display:none;" as style22 %}
+                                            {% endif %}
+                                            <button class="btn-pink ml-10 btnhide" style="{{style21}}"  onclick="return submitTypeBasic('submit')">Submit & Proceed</button>
+
+                                            <button type="button"  class="btn-pink ml-10 btnshow" style="{{style22}}"  onclick="proceedbtn1()">Submit & Proceed</button>
+                                    </div>
+                                </div>
+
+
+                                {% if basicinfo.facility_profile_level == 'Branch' %}
+                                {% define "" as style2 %}
+                                {% endif%}
+                                <div class="change-div" id="change-div2" style="{{style2}}">
+                                    <div class="row-new">
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Facility type[*]</label>
+                                                <div class="drop-down">
+                                                    <select name='facility_type_2' id="facility_type_2" class='single-withoutsearch required'>
+                                                        <option value="">Select Facility Type</option>
+                                                        {% for facility_type in facility_types %}
+                                                        <option value="{{facility_type}}" {% if facility_type == basicinfo.facility_type %} selected{% endif %}>{{facility_type}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Branch name[*]</label>
+                                                <div class="form-field-input">
+                                                    <input type="text" class='required' value="{{basicinfo.branch.branch_name}}" name="branch_name" placeholder="Add name here">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Association with a Brand</label>
+                                                <div class="drop-down">
+                                                    <select name="brand_id_2" class='multiple-single'>
+                                                        <option value="">Choose from list</option>
+                                                        {% for key, brandRecord in brandRecords %}
+
+                                                        <option value="{{key}}" {% if basicinfo.brand_id == key %} selected {% endif %}>{{brandRecord}}</option>
+                                                        {% endfor %}
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                {% if basicinfo.facility_profile_level == 'Both' %}
+                                {% define "" as style3 %}
+                                {% endif%}
+                                <div class="change-div" id="change-div3" style="{{style3}}">
+                                    <div class="row-new">
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Facility type[*]</label>
+                                                <div class="drop-down">
+                                                    <select name='facility_type_3' id="facility_type_3"  class='single-withoutsearch required'>
+                                                        <option value="">Select Facility Type</option>
+
+                                                        {% for facility_type in facility_types %}
+                                                        <option value="{{facility_type}}" {% if facility_type == basicinfo.facility_type %} selected{% endif %}>{{facility_type}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Brand name[*]</label>
+                                                <div class="form-field-input">
+                                                    <input type="text" class='required' value="{{basicinfo.brand.brand_name}}" name="brand_name_3" placeholder="Add name here">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Branch name[*]</label>
+                                                <div class="form-field-input">
+                                                    <input type="text" class='required' value="{{basicinfo.branch.branch_name}}" name="branch_name_3" placeholder="Add name here">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Brand address[*]</label>
+                                                <div class="form-field-input icon-overlay">
+                                                    <input type="text" class='required' value="{{basicinfo.brand.brand_address}}" id="brand_address_3" name="brand_address_3" placeholder="Add address here">
+                                                    <img src="{% static 'images/LocationArrow.svg' %}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Association with a Branch</label>
+                                                <div class="drop-down">
+                                                    <select name="branch_id_3" class='multiple-single'>
+                                                        <option value="">Choose from list</option>
+                                                        {% for key, branchRecord in branchRecords %}
+
+                                                        <option value="{{key}}">{{branchRecord}}</option>
+                                                        {% endfor %}
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                {% if basicinfo.facility_profile_level == 'Both' or basicinfo.facility_profile_level == 'Branch' %}
+                                {% define "" as style4 %}
+                                {% endif%}
+
+                                <div id="profile_remain" style="{{style4}}">
+                                    <h4 class="profile-setup-inner-block-heading">Primary Contact</h4>
+                                    <div class="row-new">
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">First name[*]</label>
+                                                <div class="form-field-input">
+                                                    <input type="text" class='required' name="first_name_2" value="{{user.first_name|title}}" placeholder="Enter your first name">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Last name[*]</label>
+                                                <div class="form-field-input">
+                                                    <input type="text" class='required' name="last_name_2" value="{{user.last_name|title}}" placeholder="Enter your last name">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Email address[*]</label>
+                                                <div class="form-field-input">
+                                                    <input type="text" class='required' name="email_address_2" value="{{user.email_address}}" readonly placeholder="Enter your email here">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Mobile number[*]</label>
+                                                <div class="mobile-num">
+                                                    <input type="text" class='required' id="phone_2" name="phone_2"  value="{{user.contact}}" readonly placeholder="55 400 6998">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h4 class="profile-setup-inner-block-heading">My profile</h4>
+                                    <div class="row-new">
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Years in business[*]</label>
+                                                <div class="form-field-input">
+                                                    <input type="text" class='required digits' name="year_of_experince" value="{{user.year_of_experince}}" placeholder="Enter business years">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Language (s)[*]</label>
+                                                <div class="drop-down drop-after">
+                                                    {% if user.languages%}
+                                                    {% with user.languages|split:"," as lang_arr %}
+                                                    <select name="languages" id="choices-multiple-remove-buttonns" class='multiple-checkboxes required' placeholder="Select Languages" multiple>
+                                                        {% for key, language in languages %}
+                                                        <option value="{{key}}" {% if key in lang_arr%} selected{%endif%}> {{language}}</option>
+                                                        {% endfor %}
+
+                                                    </select>
+                                                    {% endwith %}
+                                                    {% else %}
+                                                    <select name="languages" id="choices-multiple-remove-buttonns" class='multiple-checkboxes required' placeholder="Select Languages" multiple>
+                                                        {% for key, language in languages %}
+                                                        <option value="{{key}}"> {{language}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    {% endif %}
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row-new">
+                                        <div class="col-sm-12 ">
+                                            <div class="form-group form-field-main bt-gray pt3">
+                                                <label class="label-field">Training restrictions <span> (Our facility can accept…)[*]</span></label>
+                                                <div class="facility-radiobox">
+                                                    {% if basicinfo.training_type %}
+                                                    {% for key, train in training_restriction.items %}
+                                                    <div class="radio-box"><input type="radio" {% if key == basicinfo.training_type %} checked{% endif %} id="e-option{{key}}" value="{{train}}" name="training_type">
+                                                        <label for="e-option{{key}}">{{train}}</label>
+                                                        <div class="check"></div>
+                                                    </div>
+
+                                                    {% endfor %}
+                                                    {% else %}
+                                                    {% for key, train in training_restriction.items %}
+                                                    <div class="radio-box"><input type="radio" {% if train == "Male only" %} checked{% endif %} id="e-option{{key}}" value="{{train}}" name="training_type">
+                                                        <label for="e-option{{key}}">{{train}}</label>
+                                                        <div class="check"></div>
+                                                    </div>
+
+                                                    {% endfor %}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h4 class="profile-setup-inner-block-heading">About us</h4>
+                                    <div class="row-new">
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Introductory video</label>
+                                                <div class="form-field-video">
+                                                    <div class="video-uploadbox">
+                                                        <div class="custom-file">
+                                                            <input type="file" onchange="bioChange(event)" name="bio_video" id="bio_video" accept="video/mp4" fullwidth="" formcontrolname="video" class="custom-file-input">
+                                                            <label for="video" class="custom-file-label placeholder text-truncate">Upload Video</label>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                    {% define "display:none;" as style9 %}
+                                                    {% define "display:none;" as style10 %}
+                                                    {% if basicinfo.bio_video%}
+                                                    {% define "" as style9 %}
+                                                    {% else %}
+                                                    {% define "" as style10 %}
+                                                    {% endif %}
+                                                    <div class="upload-box" id="ShowBioId" style="{{style9}}" onclick="openVideoPop('ShowBio')">
+                                                        <img id="ShowBio" data="{% static BIO_URL %}{{basicinfo.bio_video}}" src="{% static 'images/videoPreview.png' %}">
+                                                    </div>
+                                                    <div class="upload-box" id="ShowBioIdEmpty" style="{{style10}}" >
+                                                        <img id="ShowBio" data="{% static BIO_URL %}{{basicinfo.bio_video}}" src="{% static 'images/videoPreview.png' %}">
+                                                    </div>
+
+
+                                                </div>
+                                               <div class="videolb" style="">{{basicinfo.bio_video}}</div>
+
+
+
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Website</label>
+                                                <div class="form-field-input">
+                                                    <input type="text" id="websiteurl" class='websiteurl' name="website" value="{{basicinfo.website}}" placeholder="Enter website">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">About me[*]</label>
+                                                <div class="form-field-input">
+                                                    <textarea placeholder="Enter about me" class='required' id="about_id" style="resize: none;" name="about" >{{basicinfo.about}}</textarea>
+                                                    <small id="about_count">0 of 500 words</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Short bio[*]</label>
+                                                <div class="form-field-input">
+                                                    <textarea placeholder="Enter short bio" class='required' id="bio_id" style="resize: none;" name="short_bio" >{{basicinfo.short_bio}}</textarea>
+                                                    <small id="bio_count">0 of 100 words</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h4 class="profile-setup-inner-block-heading">Branch location</h4>
+                                    <div class="row-new">
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Country[*]</label>
+                                                <div class="drop-down">
+                                                    <select class='multiple-single' name="country" id="country_id" class='required' onChange="updateCity(this.value)">
+                                                        <option value="">Choose from list</option>
+                                                        {% for key, country in countries %}
+                                                        <option value="{{key}}" {% if key == basicinfo.country %} selected{% endif %}>{{country}}</option>
+                                                        {% endfor %}
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">City[*]</label>
+                                                <div class="drop-down" id="city_section">
+                                                    {% if basicinfo.city%}
+                                                    {% change_type basicinfo.city as city_type %}
+                                                    <select class='multiple-single' name="city" id="city_id" class='required'>
+                                                        <option value="">Choose from list</option>
+
+                                                        {% for key, city in cities %}
+
+                                                        <option value="{{key}}" {% if key == city_type %} selected{% endif %}>{{city}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    {% else %}
+                                                    <select name="city" id="city_id" class='required'>
+                                                        <option value="">Choose from list</option>
+                                                    </select>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Facility location[*]</label>
+                                                <div class="form-field-input">
+                                                    <div class="icon-overlay">
+                                                    <input type="text" class='required' name="location" id="location" value="{{basicinfo.location}}" placeholder="Enter location">
+                                                    <img src="{% static 'images/LocationArrow.svg' %}">
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h4 class="profile-setup-inner-block-heading">Available Services</h4>
+                                    <div class="row-new">
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Key Services[*]</label>
+                                                <div class="drop-down drop-after">
+                                                   
+                                                    {% if basicinfo.key_skills%}
+                                                    {% with basicinfo.key_skills|split:"," as key_skills_arr %}
+                                                    <select class="" name="key_skills" id="key_skillss" placeholder="Select Key Skills" multiple="multiple">
+                                                        {% for key, service in services %}
+                                                        <option value="{{key}}" {% if key in key_skills_arr%} selected{%endif%}  >{{service}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    {% endwith %}
+                                                    {% else %}
+                                                    <select class="" name="key_skills" id="key_skillss" placeholder="Select Key Skills" multiple="multiple">
+                                                        {% for key, service in services %}
+                                                        <option value="{{key}}">{{service}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    {% endif %}
+                                                    <div class="limitskill" style="display:none">You reached Max. 4 selection </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Other Services</label>
+                                                <div class="drop-down drop-after">
+                                                    {% if basicinfo.other_skills%}
+                                                    {% with basicinfo.other_skills|split:"," as other_skills_arr %}
+                                                    <select class="" name="other_skills" id="other_skillss"  placeholder="Select Other Skills"multiple="multiple">
+                                                        {% for key, service in services %}
+                                                        <option value="{{key}}" {% if key in other_skills_arr%} selected{%endif%}>{{service}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    {% endwith %}
+                                                    {% else %}
+                                                    <select class="" name="other_skills" id="other_skillss"  placeholder="Select Other Skills"multiple="multiple">
+                                                        {% for key, service in services %}
+                                                        <option value="{{key}}" >{{service}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h4 class="profile-setup-inner-block-heading">Opening/Closing Times</h4>
+
+                                    <div class="row-new" id="calender_section">
+                                        {% include 'elements/calender.html' %}
+                                    </div>
+                                    <h4 class="profile-setup-inner-block-heading">Amenities & Equipment</h4>
+                                    <div class="row-new" id="amenities_sec">
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Amenities</label>
+                                                <div class="drop-down drop-after">
+                                                    <select class="multiple-checkboxess" id="amenities" name="amenities" multiple="multiple" >
+                                                        {% for key, amenity in amenities %}
+
+                                                        <option value="{{key}}" {% if key in amenityList %}
+                                                                selected
+                                                                {% endif %}>{{amenity}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12" id="amenities_tablesec">
+                                            {% if ameniinfo%}
+                                            {% include 'elements/amenity_list.html' %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="btn-btm-group btn-left">
+                                        <button class="btn-gray-one" type="button" onclick="addAmenity();">Add Another</button>
+                                    </div>
+                                    <div class="row-new mt-5" id="equipment_sec">
+                                        <div class="col-sm-6">
+                                            <div class="form-group form-field-main">
+                                                <label class="label-field">Equipment</label>
+                                                <div class="drop-down drop-after">
+                                                    <select class="multiple-checkboxess" id="equipments" name="equipments" multiple="multiple">
+                                                        {% for key, equipment in equipments %}
+                                                        <option value="{{key}}" {% if key in equipList %}
+                                                                selected
+                                                                {% endif %}>{{equipment}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12" id="equipments_tablesec">
+                                            {% if equipinfo%}
+                                            {% include 'elements/equipment_list.html' %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <input type='hidden' name='brand_id_3' value="{{basicinfo.brand_id}}">
+                                    <input type='hidden' name='branch_id_2' value="{{basicinfo.branch_id}}">
+                                    <input type="hidden" name="basic_submit_type" id="basic_submit_type">
+                                    <div class="btn-btm-group spece-btwn" id="submit_sec_2">
+                                        <div> <button class="btn-gray-two" type="button" onclick="addequipment();">Add Another</button></div>
+                                        <div> 
+                                            <button class="border-btn"  type='reset' onclick="resetForm2()">Discard changes</button> 
+                                            <button class="border-btn ml-10" onclick="return submitTypeBasic('save')">Save</button>
+                                            
+
+
+                                            <button  class="btn-pink ml-10 btnhide" style="{{style21}}" onclick="return submitTypeBasic('submit')">Submit & Proceed</button>
+
+                                            <button class="btn-pink ml-10 btnshow"  style="{{style22}}" type='button' onclick="proceedbtn1()">Submit & Proceed</button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                        <input type='hidden' id="basic_info_id" name='basic_info_id' value="{{basicinfo.id}}">
+                        <input type='hidden' name='old_bio_video' value="{{basicinfo.bio_video}}">
+                    </form>
+                </div>
+
+            </div>
+
+            {% include  'elements/myProfile/mediaSocialMedia.html' %}
+
+            {% include 'elements/users/user_awards.html' %}
+            {% include 'elements/users/user_price_section.html' %}
+            {% include  'elements/myProfile/clientTransformation.html' %}
+
+            {% include  'elements/myProfile/faq.html' %}
+
+            {% include 'elements/users/user_identi_section.html' %}
+
+                        <div class="card-main-accord">
+                            <div class="card-header collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseEight">
+                                <a class="card-title">
+                                    Profile Preview
+                                </a>
+                            </div>
+                            <div id="collapseEight" class="collapse" data-parent="#accordion">
+                                <div class="media-main"></div>
+                            </div>
+                        </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal modal-top fade calendar-modal modal-overide-date" id="modal-overide-date" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <form class="" name='calenderForm1' id='calenderForm1' method="POST">
+        {% csrf_token %}
+        <div class="modal-dialog modal-dialog-centered new-offer-dialog" role="document">
+            <div class="modal-content modal-date">
+                <div class="">
+                    <h4 class="selct-text text-center col-sm-12">Select the date(s) you want to assign specific hours</h4>
+                    <div class="cal-show-al">
+                        <div id="mdp-demo"></div>
+                        <!--<input name="calender_Val" id="mdp-demo">-->
+                        <!--<input type="button" name="" class="btn-cal choose-date-pik">-->
+
+                    </div>
+                    <div class="set-time-left new-pop-set" id="cal_set" style="display: none;">
+                        <div class="col-sm-8 d-flex">
+                            <div class="check-time-add" id="cal_update">
+
+
+                            </div>
+                        </div>
+                        <div class="col-sm-4 text-right rt-avail-icon">
+                            <a href="javascript:void(0);" onclick="addSetCal(true)"><img src="{% static 'images/feather-plus.svg' %}"></a>
+                        </div>
+                    </div>
+                    <div class="action-box text-right pop-btn">
+                        <input type="hidden" name="is_error" id="is_error" value="0">
+                        <input type="hidden" name="selected_values" id="DatesLabel">
+                        <a href="javascript:void(0);" onclick="closePop()" class="border-btn-small">Cancel</a>
+                        <a href="javascript:void(0);" class="btn-red-one" onclick="calenderPost()">Apply</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" id="maxsercont" value="">
+    </form>
+</div>
+
+<script type="text/javascript">
+    function proceedbtn1(){
+        $("#collapseTwo").collapse("toggle");
+
+        $([document.documentElement, document.body]).animate({
+            scrollTop: $("#media-section-main").offset().top
+        }, 500);
+    }
+    function closePop() {
+        $('#modal-overide-date').modal('hide');
+        $('#mdp-demo').multiDatesPicker('resetDates');
+
+        $('#cal_set').hide();
+        $('#cal_update').html('');
+    }
+    
+    function submitTypeBasic(type){
+        $('#basic_submit_type').val(type);
+    }
+
+    function resetForm2() {
+        location.reload();
+    }
+
+    function addAmenity() {
+        $([document.documentElement, document.body]).animate({
+            scrollTop: $("#amenities_sec").offset().top - 200
+        }, 500);
+    }
+
+    function addequipment() {
+        $([document.documentElement, document.body]).animate({
+            scrollTop: $("#equipment_sec").offset().top - 200
+        }, 500);
+    }
+
+    $(document).ready(function () {
+
+
+//        $([document.documentElement, document.body]).animate({
+//            scrollTop: $("#calender_section").offset().top - 200
+//        }, 500);
+
+        var multipleCancelButton = new Choices('#key_skills', {
+            removeItemButton: true,
+            maxItemCount: 4,
+            searchResultLimit: 5,
+            renderChoiceLimit: 5
+        });
+
+        var multipleCancelButton = new Choices('#other_skills', {
+            removeItemButton: true,
+//            maxItemCount: 4,
+            searchResultLimit: 5,
+            renderChoiceLimit: 5
+        });
+        var multipleCancelButton = new Choices('#key_skills_3', {
+            removeItemButton: true,
+            maxItemCount: 4,
+            searchResultLimit: 5,
+            renderChoiceLimit: 5
+        });
+
+        var multipleCancelButton = new Choices('#other_skills_3', {
+            removeItemButton: true,
+//            maxItemCount: 4,
+            searchResultLimit: 5,
+            renderChoiceLimit: 5
+        });
+
+        $('#key_skillss').multiselect({
+<!--            includeSelectAllOption: true,-->
+            nonSelectedText: "Select Multiple",
+            moveSelectedToTop: true,
+            numberDisplayed: 1,
+            enableFiltering: true,
+            maxHeight: 250,
+            enableCaseInsensitiveFiltering: true,
+            onInitialized: function(select, container) {
+                {% if basicinfo.other_skills%}
+                {% with basicinfo.other_skills|split:"," as other_skills_arr %}
+                let optVal 
+                    {% for key in other_skills_arr %}
+                     optVal = {{key}}
+              var input = $('#key_skillss').next('div').children('ul.multiselect-container').find('input[value="' + optVal +'"]');
+                input.prop('disabled', true);
+                var input2 = input.parent('label').parent('a').parent('li');
+                input2.removeClass('active');
+                input2.addClass('disabled_chck');
+                {% endfor %}
+                {% endwith %}
+                {% endif %}
+            },
+            onDropdownShown: function(even) {
+              this.$filter.find('.multiselect-search').focus();
+              
+            },
+            onChange: function(option, checked , element) {
+                let optVal = $(option).val()
+                var input = $('#other_skillss').next('div').children('ul.multiselect-container').find('input[value="' + optVal +'"]');
+                
+                if(checked){
+                    input.prop('disabled', true);
+                    var input2 = input.parent('label').parent('a').parent('li');
+                    input2.removeClass('active');
+                    input2.addClass('disabled_chck');
+                }else{
+                    input.prop('disabled', false);
+                    var input2 = input.parent('label').parent('a').parent('li');
+                    input2.addClass('active');
+                    input2.removeClass('disabled_chck');
+                }
+                var selectedOptions = jQuery('#key_skillss option:selected').length;
+                var nonSelectedOptions = $('#key_skillss option').filter(function() {
+                        return !$(this).is(':selected');
+                    });
+
+                if(selectedOptions >= 4){
+                   $("#maxsercont").val(selectedOptions);
+                   var vla = $("#maxsercont").val();
+                    $(".limitskill").show()
+
+                    nonSelectedOptions.each(function() {
+<!--                        var input = $('input[value="' + $(this).val() + '"]');-->
+<!--                        input.prop('disabled', true);-->
+<!--                        input.parent('li').addClass('disabled');-->
+                    });
+                }else{
+                $(".limitskill").hide()
+                }
+            }
+        });
+        $('.multiple-checkboxes').multiselect({
+            includeSelectAllOption: true,
+            nonSelectedText: "Select Multiple",
+            moveSelectedToTop: true,
+            numberDisplayed: 1,
+            enableFiltering: true,
+            maxHeight: 250,
+            enableCaseInsensitiveFiltering: true,
+            onDropdownShown: function(even) {
+              this.$filter.find('.multiselect-search').focus();
+            }
+        });
+       
+        
+        $('#other_skillss').multiselect({
+            includeSelectAllOption: true,
+            nonSelectedText: "Select Multiple",
+            moveSelectedToTop: true,
+            numberDisplayed: 1,
+            enableFiltering: true,
+            maxHeight: 250,
+            enableCaseInsensitiveFiltering: true,
+            onDropdownShown: function(even) {
+              this.$filter.find('.multiselect-search').focus();
+              {% if basicinfo.key_skills%}
+                {% with basicinfo.key_skills|split:"," as key_skills_arr %}
+                let optVal 
+                    {% for key in key_skills_arr %}
+                     optVal = {{key}}
+              var input = $('#other_skillss').next('div').children('ul.multiselect-container').find('input[value="' + optVal +'"]');
+                input.prop('disabled', true);
+                var input2 = input.parent('label').parent('a').parent('li');
+                input2.removeClass('active');
+                input2.addClass('disabled_chck')
+                {% endfor %}
+                {% endwith %}
+                {% endif %}
+            },
+            onChange: function(option, checked , element) {
+                let optVal = $(option).val()
+                var input = $('#key_skillss').next('div').children('ul.multiselect-container').find('input[value="' + optVal +'"]');
+                if(checked){
+                    input.prop('disabled', true);
+                    var input2 = input.parent('label').parent('a').parent('li');
+                    input2.removeClass('active');
+                    input2.addClass('disabled_chck');
+                }else{
+                    input.prop('disabled', false);
+                    var input2 = input.parent('label').parent('a').parent('li');
+                    input2.addClass('active');
+                    input2.removeClass('disabled_chck');
+                }
+            },
+            onSelectAll: function() {
+                var input = $('#key_skillss').next('div').children('ul.multiselect-container').find('input[type="checkbox"]');
+                input.prop('disabled', true);
+                var input2 = input.parent('label').parent('a').parent('li');
+                input2.removeClass('active');
+                input2.addClass('disabled_chck');
+            },
+            onDeselectAll: function() {
+                
+                let input = $('#key_skillss').next('div').children('ul.multiselect-container').find('input[type="checkbox"]');
+                $(input).each(function() {
+                    $(this).prop('disabled', false);
+                     var input2 = $( this ).parent('label').parent('a').parent('li');
+                     input2.removeClass('disabled_chck');
+                     input2.addClass('active');
+
+                  });
+
+                {% comment %} $('#other_skillss').multiselect({
+                    
+                }) {% endcomment %}
+                {% comment %} let input = $('#key_skillss').next('div').children('ul.multiselect-container').find('input[type="checkbox"]');
+                input.prop('disabled', false);
+                input.removeAttr("disabled");
+                kSelect()
+                let input2 = input.parent('label').parent('a').parent('li');
+                for(i=0;i>input2.length;i++)
+                {
+                    $(input2[i]).addClass('active');
+                    $(input2[i]).removeClass('disabled_chck');
+                } {% endcomment %}
+                {% comment %} input2.addClass('active');
+                input2.addClass('active'); {% endcomment %}
+
+            }
+        });
+
+
+        $('.multiple-single').multiselect({
+            nonSelectedText: "Select from list",
+            enableFiltering: true,
+            maxHeight: 250,
+            numberDisplayed: 1,
+            enableCaseInsensitiveFiltering: true,
+            onDropdownShown: function(even) {
+              this.$filter.find('.multiselect-search').focus();
+            }
+        });
+
+        $('.single-withoutsearch').multiselect({
+            maxHeight: 250,
+            numberDisplayed: 1,
+            nonSelectedText: "Select from list"
+        });
+
+
+
+
+        $('#amenities').multiselect({
+            includeSelectAllOption: true,
+            nonSelectedText: "Select Multiple",
+            selectAllValue: 'select-all-value',
+            enableFiltering: true,
+            maxHeight: 250,
+            numberDisplayed: 1,
+            enableCaseInsensitiveFiltering: true,
+            onDropdownShown: function(even) {
+              this.$filter.find('.multiselect-search').focus();
+            },
+            onChange: function (option, checked, select) {
+                var val = $(option).val();
+                var numItems = $('.amenity_count').length;
+
+                if (checked == false && numItems == 1) {
+                    $('#amenities_tablesec').html('');
+                } else if (checked == false) {
+                    $('#amenity_recort_row' + val).remove();
+                } else {
+                    var token = $("[name=csrfmiddlewaretoken]").val();
+                    $.ajax({
+                        type: 'POST',
+                        url: 'updateAmenity',
+                        data: {'is_select_all': false, 'numItems': numItems, 'value': val, csrfmiddlewaretoken: token},
+                        beforeSend: function () {
+                    $('#payloader').show();
+                },
+                        success: function (response) {
+                            if (numItems == 0) {
+                                $('#amenities_tablesec').html(response);
+                            } else {
+                                $('#amenity_body').append(response);
+                            }
+                            $('#payloader').hide();
+
+                        }
+                    });
+                }
+            },
+            onSelectAll: function () {
+                var token = $("[name=csrfmiddlewaretoken]").val();
+                $.ajax({
+                    type: 'POST',
+                    url: 'updateAmenity',
+                    data: {'is_select_all': true, csrfmiddlewaretoken: token},
+                    beforeSend: function () {
+                    $('#payloader').show();
+                },
+                    success: function (response) {
+                        $('#amenities_tablesec').html(response);
+                        $('#payloader').hide();
+                    }
+                });
+            },
+            onDeselectAll: function () {
+                $('#amenities_tablesec').html('');
+            }
+        });
+
+        $('#equipments').multiselect({
+            includeSelectAllOption: true,
+            nonSelectedText: "Select Multiple",
+            selectAllValue: 'select-all-value',
+            enableFiltering: true,
+            maxHeight: 250,
+            numberDisplayed: 1,
+            enableCaseInsensitiveFiltering: true,
+            onDropdownShown: function(even) {
+              this.$filter.find('.multiselect-search').focus();
+            },
+            onChange: function (option, checked, select) {
+                var val = $(option).val();
+                var numItems = $('.eq_count').length;
+
+                if (checked == false && numItems == 1) {
+                    $('#equipments_tablesec').html('');
+                } else if (checked == false) {
+                    $('#eq_recort_row' + val).remove();
+                } else {
+                    var token = $("[name=csrfmiddlewaretoken]").val();
+                    $.ajax({
+                        type: 'POST',
+                        url: 'updateEquipment',
+                        data: {'is_select_all': false, 'numItems': numItems, 'value': val, csrfmiddlewaretoken: token},
+                        beforeSend: function () {
+                    $('#payloader').show();
+                },
+                        success: function (response) {
+                            if (numItems == 0) {
+                                $('#equipments_tablesec').html(response);
+                            } else {
+                                $('#equipment_body').append(response);
+                            }
+                            $('#payloader').hide();
+
+                        }
+                    });
+                }
+            },
+            onSelectAll: function () {
+                var token = $("[name=csrfmiddlewaretoken]").val();
+                $.ajax({
+                    type: 'POST',
+                    url: 'updateEquipment',
+                    data: {'is_select_all': true, csrfmiddlewaretoken: token},
+                    beforeSend: function () {
+                    $('#payloader').show();
+                },
+                    success: function (response) {
+                        $('#equipments_tablesec').html(response);
+                        $('#payloader').hide();
+                    }
+                });
+            },
+            onDeselectAll: function () {
+                $('#equipments_tablesec').html('');
+            }
+        });
+    });
+</script>
+
+<script>
+    function dataURLtoBlob(dataURL) {
+        var BASE64_MARKER = ';base64,';
+        if (dataURL.indexOf(BASE64_MARKER) == -1) {
+            var parts = dataURL.split(',');
+            var contentType = parts[0].split(':')[1];
+            var raw = decodeURIComponent(parts[1]);
+
+            return new Blob([raw], {type: contentType});
+        }
+        var parts = dataURL.split(BASE64_MARKER);
+        var contentType = parts[0].split(':')[1];
+        var raw = window.atob(parts[1]);
+        var rawLength = raw.length;
+        var uInt8Array = new Uint8Array(rawLength);
+        for (var i = 0; i < rawLength; ++i) {
+            uInt8Array[i] = raw.charCodeAt(i);
+        }
+
+        return new Blob([uInt8Array], {type: contentType});
+    }
+
+$('#location').on('keypress', function(e) {
+    return e.which !== 13;
+});
+    $("#profileForm1").validate({
+
+        submitHandler: function (form) {
+//            var img_data = $('#bio_video').get(0).files[0];
+//            var token = $("[name=csrfmiddlewaretoken]").val();
+//            var form = $("#profileForm1");
+
+            var basic_submit_type = $('#basic_submit_type').val();
+
+            var token = $("[name=csrfmiddlewaretoken]").val();
+            var form = document.querySelector('#profileForm1');
+
+            var formData = new FormData(form);
+            formData.append('imageFile', $('#bio_video')[0].files[0]);
+            formData.append('csrfmiddlewaretoken', token);
+
+
+                var cb = document.querySelector('#e-option1');
+                var cbs = document.querySelector('#e-option2');
+                var cbd = document.querySelector('#e-option3');
+                console.log(cb.checked);
+                console.log(cbs.checked);
+                console.log(cbd.checked);
+                var erro_show = 0
+                var inputF = $('#country_id').val();
+                var inputO = $('#other_skillss').val();
+                var inputK = $('#key_skillss').val();
+                var inputT = $('#city_id').val();
+                var inputTT = $('#facility_type_3').val();
+                var inputTT2 = $('#facility_type_2').val();
+                var inputTT1 = $('#facility_type_1').val();
+                var inputLL = $('#choices-multiple-remove-buttonns').val();
+                var vla = $("#maxsercont").val();
+                var inputW = $('#websiteurl').val();
+                var reg =/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
+                if(cb.checked && (cbd.checked==false && cbs.checked == false)){
+                    if(inputTT1 == ''){
+                        swal('',"Please select Facility type.",'error');
+                        erro_show = 1;
+                        return false;
+                    }
+                }else if(cbd.checked==true || cbs.checked == true){
+                    if(cbs.checked){
+                    if(inputTT2 == ''){
+                                swal('',"Please select Facility type.",'error');
+                                erro_show = 1;
+                                return false;
+                            }else if(inputLL == ''){
+                                        swal('',"Please select Language.",'error');
+                                        erro_show = 1;
+                                        return false;
+                                    }else if(inputF == ''){
+                                        swal('',"Please select Country.",'error');
+                                        erro_show = 1;
+                                        return false;
+                                    }else if(inputT==''){
+                                        swal('',"Please select City.",'error');
+                                        erro_show = 1;
+                                        return false;
+                                    }else if(inputK==''){
+                                        swal('',"Please select Key Services.",'error');
+                                        erro_show = 1;
+                                        return false;
+                                    }else if(vla > 4){
+                             swal('',"Please select only 4 key services.",'error');
+                                      erro_show = 1;
+                            }else if(inputW != ''){
+                                if((!reg.test(inputW))) {
+                                      swal('',"Please enter valid Website URL.",'error');
+                                      erro_show = 1;
+                                      return false;
+                                  }
+                            }
+                            }else if(cbd.checked){
+                            if(inputTT == ''){
+                                        swal('',"Please select Facility type.",'error');
+                                        erro_show = 1;
+                                        return false;
+                                    }else if(inputLL == ''){
+                                                swal('',"Please select Language.",'error');
+                                                erro_show = 1;
+                                                return false;
+                                            }else if(inputF == ''){
+                                                swal('',"Please select Country.",'error');
+                                                erro_show = 1;
+                                                return false;
+                                            }else if(inputT==''){
+                                                swal('',"Please select City.",'error');
+                                                erro_show = 1;
+                                                return false;
+                                            }else if(inputK==''){
+                                                swal('',"Please select Key Services.",'error');
+                                                erro_show = 1;
+                                                return false;
+                                            }else if(vla > 4){
+                                     swal('',"Please select only 4 key services.",'error');
+                                              erro_show = 1;
+                                    }else if(inputW != ''){
+                                        if((!reg.test(inputW))) {
+                                              swal('',"Please enter valid Website URL.",'error');
+                                              erro_show = 1;
+                                              return false;
+                                          }
+                                    }
+
+                }
+            }
+if(erro_show==0){
+            $.ajax({
+                type: 'POST',
+                url: 'basicProfile',
+                contentType: false,
+                data : formData,
+                processData: false,
+                contentType: false,
+//                data: {'serializedData': serializedData, csrfmiddlewaretoken: token},
+                beforeSend: function () {
+                    $('#payloader').show();
+                },
+                success: function (response) {
+                    $(".btnhide").hide()
+                    $(".btnshow").show()
+
+                    $("#basic_info_id").val(response[0])
+<!--                    console.log(response[1])-->
+                    radioType = $("#radioType").val(response[1]);
+                    radioType = $("#radioType").val();
+                    if(radioType=="Branch"){
+<!--                    console.log($("#e-option1"))-->
+                        $("#e-option1").prop('disabled', true);
+            <!--            $("#e-option3").prop('disabled', true);-->
+                    }else if(radioType=="Brand"){
+                        $("#e-option2").prop('disabled', true);
+            <!--            $("#e-option3").prop('disabled', true);-->
+                    }else if(radioType=="Both"){
+                        $("#e-option1").prop('disabled', true);
+                        $("#e-option2").prop('disabled', true);
+                    }
+<!--                    console.log("response[2]","/static/uploads/bioVideo/",response[2])-->
+<!--                    $('#ShowBio').attr('src', '/static/uploads/bioVideo/'+response[2]);-->
+
+                    $('#ShowBio').attr('data', '/static/uploads/bioVideo/'+response[2]);
+                    $("#ShowBioIdEmpty").hide()
+                    $(".videolb").show()
+                    if(response[3]){
+                        $('#namehead').html(response[3])
+                    }else if(response[4]){
+                        $('#namehead').html(response[4])
+                    }else{
+                        $('#namehead').html(response[3])
+                    }
+
+                    $("#ShowBioId").show()
+                    $('#payloader').hide();
+                    Command: toastr["success"]("Changes Saved")
+                    {% comment %} $('.quan-input').prop('readonly',true); {% endcomment %}
+                    val = $("#location").val()
+                    $("#training_location_1").val(val);
+                    $("#training_location_2").val(val);
+                    $("#training_location_3").val(val);
+                    $("#training_location_4").val(val);
+                    $("#training_location_5").val(val);
+                    $("#profdata").show()
+                    
+                    
+                    if(basic_submit_type == 'submit'){
+                        $("#collapseTwo").collapse("toggle");
+
+                        $([document.documentElement, document.body]).animate({
+                            scrollTop: $("#media-section-main").offset().top
+                        }, 500);
+                    }
+                },
+                error: function (response) {
+                    $('#payloader').hide();
+                    console.log('error', response)
+                }
+            })
+}
+
+            return false;
+        }
+    });
+</script>
+
+<link rel="stylesheet" type="text/css" href="{% static '/css/front/intlTelInput.css' %}">
+<script src="{% static 'js/front/intlTelInput.js' %}"></script>
+
+<script>
+
+    $(document).ready(function () {
+        radioType = $("#radioType").val();
+        if(radioType=="Branch"){
+        console.log($("#e-option1"))
+            $("#e-option1").prop('disabled', true);
+<!--            $("#e-option3").prop('disabled', true);-->
+        }else if(radioType=="Brand"){
+            $("#e-option2").prop('disabled', true);
+<!--            $("#e-option3").prop('disabled', true);-->
+        }else if(radioType=="Both"){
+            $("#e-option1").prop('disabled', true);
+            $("#e-option2").prop('disabled', true);
+        }
+    });
+    var phone_number = window.intlTelInput(document.querySelector("#phone"), {
+        separateDialCode: true,
+        preferredCountries: false,
+        //onlyCountries: ['iq'],
+        hiddenInput: "phone",
+        utilsScript: "{% static 'js/front/utils.js' %}"
+    });
+
+    var phone_number = window.intlTelInput(document.querySelector("#phone_2"), {
+        separateDialCode: true,
+        preferredCountries: false,
+        //onlyCountries: ['iq'],
+        hiddenInput: "phone_2",
+        utilsScript: "{% static 'js/front/utils.js' %}"
+    });
+
+    function setCountryCode()
+    {
+        var coCode = $('.iti__selected-dial-code').html();
+        document.getElementById('contryCode').value = coCode;
+    }
+
+    $(document).ready(function () {
+        $location_input = $("#location");
+        var options = {
+        };
+        autocomplete = new google.maps.places.Autocomplete($location_input.get(0), options);
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            return false;
+        });
+    });
+    $(document).ready(function () {
+        $location_input = $("#brand_address");
+        var options = {
+        };
+        autocomplete = new google.maps.places.Autocomplete($location_input.get(0), options);
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            return false;
+        });
+    });
+    $(document).ready(function () {
+        $location_input = $("#brand_address_3");
+        var options = {
+        };
+        autocomplete = new google.maps.places.Autocomplete($location_input.get(0), options);
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            return false;
+        });
+    });
+
+    function show_submit_data(data) {
+        $("#result").html(data);
+    }
+
+    $(document).ready(function () {
+
+        str = $('#about_id').val();
+        str = str.replace(/(^\s*)|(\s*$)/gi, "");
+        str = str.replace(/[ ]{2,}/gi, " ");
+        str = str.replace(/\n /, "\n");
+        words = str.split(' ').length;
+        if (words >= 1 && $('#about_id').val() != '')
+        {
+            if (words <= 500) {
+                $('#about_count').html(words + ' of 500 words');
+            } else {
+                if (e.which !== 8)
+                    e.preventDefault();
+                var trimmed = $('#about_id').val().split(/\s+/, 500).join(" ");
+                // Add a space at the end to make sure more typing creates new words
+                $('#about_id').val(trimmed + " ");
+            }
+        } else {
+            $('#about_count').html('0 of 500 words');
+        }
+
+        str = $('#bio_id').val();
+        str = str.replace(/(^\s*)|(\s*$)/gi, "");
+        str = str.replace(/[ ]{2,}/gi, " ");
+        str = str.replace(/\n /, "\n");
+        words = str.split(' ').length;
+        if (words >= 1 && $('#bio_id').val() != '')
+        {
+            if (words <= 100) {
+                $('#bio_count').html(words + ' of 100 words');
+            } else {
+                if (e.which !== 8)
+                    e.preventDefault();
+                var trimmed = $('#bio_id').val().split(/\s+/, 100).join(" ");
+                // Add a space at the end to make sure more typing creates new words
+                $('#bio_id').val(trimmed + " ");
+            }
+
+        } else {
+            $('#bio_count').html('0 of 100 words');
+        }
+
+        $('#about_id').on('keyup', function (e) {
+            str = $(this).val();
+            str = str.replace(/(^\s*)|(\s*$)/gi, "");
+            str = str.replace(/[ ]{2,}/gi, " ");
+            str = str.replace(/\n /, "\n");
+            words = str.split(/\s/).length;
+            if (words >= 1 && $(this).val() != '')
+            {
+                if (words <= 500) {
+                    $('#about_count').html(words + ' of 500 words');
+                } else {
+                    if (e.which !== 8)
+                        e.preventDefault();
+                    var values = $(this).val().split(" ").splice(0,500).join(" ")
+                    $(this).val(values)
+                    var trimmed = $(this).val().split(/\s+/, 500).join(" ");
+                    // Add a space at the end to make sure more typing creates new words
+                    $(this).val(trimmed + " ");
+                }
+            } else {
+                $('#about_count').html('0 of 500 words');
+            }
+        });
+
+        $('#bio_id').on('keyup', function (e) {
+            str = $(this).val();
+            str = str.replace(/(^\s*)|(\s*$)/gi, "");
+            str = str.replace(/[ ]{2,}/gi, " ");
+            str = str.replace(/\n /, "\n");
+            words = str.split(/\s/).length;
+            if (words >= 1 && $(this).val() != '')
+            {
+                if (words <= 100) {
+                    $('#bio_count').html(words + ' of 100 words');
+                } else {
+                    if (e.which !== 8)
+                        e.preventDefault();
+
+                    var values = $(this).val().split(" ").splice(0,100).join(" ")
+                    $(this).val(values)
+                    var trimmed = $(this).val().split(/\s+/, 100).join(" ");
+                    // Add a space at the end to make sure more typing creates new words
+                    $(this).val(trimmed + " ");
+                }
+
+            } else {
+                $('#bio_count').html('0 of 100 words');
+            }
+        });
+
+        $('#about_id_3').on('keyup', function () {
+            str = $(this).val();
+            str = str.replace(/(^\s*)|(\s*$)/gi, "");
+            str = str.replace(/[ ]{2,}/gi, " ");
+            str = str.replace(/\n /, "\n");
+            words = str.split(' ').length;
+            if (words >= 1 && $(this).val() != '')
+            {
+                if (words <= 500) {
+                    $('#about_count_3').html(words + ' of 500 words');
+                } else {
+                    if (e.which !== 8)
+                        e.preventDefault();
+                    var trimmed = $(this).val().split(/\s+/, 500).join(" ");
+                    // Add a space at the end to make sure more typing creates new words
+                    $(this).val(trimmed + " ");
+                }
+            } else {
+                $('#about_count_3').html('0 of 500 words');
+            }
+        });
+
+        $('#bio_id_3').on('keydown', function (e) {
+            str = $(this).val();
+            str = str.replace(/(^\s*)|(\s*$)/gi, "");
+            str = str.replace(/[ ]{2,}/gi, " ");
+            str = str.replace(/\n /, "\n");
+            words = str.split(' ').length;
+            if (words >= 1 && $(this).val() != '')
+            {
+                if (words <= 100) {
+                    $('#bio_count_3').html(words + ' of 100 words');
+                } else {
+                    if (e.which !== 8)
+                        e.preventDefault();
+                    var trimmed = $(this).val().split(/\s+/, 100).join(" ");
+                    // Add a space at the end to make sure more typing creates new words
+                    $(this).val(trimmed + " ");
+                }
+
+            } else {
+                $('#bio_count_3').html('0 of 100 words');
+            }
+        });
+    });
+
+    function updateCity(value) {
+        var token = $("[name=csrfmiddlewaretoken]").val();
+        $.ajax({
+            type: 'POST',
+            url: 'getCityList',
+            data: {'country_id': value, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+                $('#city_section').html(response);
+            },
+            error: function (response) {
+                $('#payloader').hide();
+                console.log('error', response)
+            }
+        })
+    }
+
+    function updateCity3(value) {
+        var token = $("[name=csrfmiddlewaretoken]").val();
+        $.ajax({
+            type: 'POST',
+            url: 'getCityList',
+            data: {'country_id': value, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+                $('#city_section_3').html(response);
+            },
+            error: function (response) {
+                $('#payloader').hide();
+                console.log('error', response)
+            }
+        })
+    }
+
+</script>
+
+<script>
+//    $(".datepickerr").click(function(){
+        $('.datepickerr').datepicker({
+            clearBtn: false,
+            weekStart: 1,
+            maxDate: new Date(),
+            orientation: "bottom",
+            dateFormat: "dd/mm/yy",
+            changeYear: true,
+            yearRange: '1970:' + new Date().getFullYear().toString()
+        });
+//    });
+var today = new Date();
+
+$('#mdp-demo').multiDatesPicker({
+//        addDates: [new Date('2022-01-26'),new Date('2022-01-27')],
+	numberOfMonths: [1,2],
+        minDate: new Date(Date.now()+1*24*60*60*1000),
+        opens: 'center',
+        onSelect: function() {
+            var values = $(this).multiDatesPicker("getDates");
+            var style = $('#cal_set').attr('style');
+
+
+
+            if(values.length == 1 && style == 'display: none;'){
+                var token = $("[name=csrfmiddlewaretoken]").val();
+                $.ajax({
+                    type: 'POST',
+                    url: 'checkCalVal',
+                    data: {'date': values, csrfmiddlewaretoken: token},
+                    beforeSend: function () {
+                        $('#payloader').show();
+                    },
+                    success: function (response) {
+                        $('#payloader').hide();
+                        $('#cal_set').show();
+                        $('#cal_update').html(response);
+                    }
+                });
+            } else{
+                if(values.length == 0){
+                    $('#cal_set').hide();
+                    $('#cal_update').html('');
+                }
+            }
+            $("#DatesLabel").val(JSON.stringify($(this).multiDatesPicker("getDates")))
+
+        }
+});
+</script>
+
+<script>
+    function openVideoPop(id){
+        var data = $('#'+id).attr('data');
+        if(data != ''){
+            var video = document.getElementById('video_bx');
+            $('#videoModalCenter').modal('show');
+            $('#video_bx source').attr('src', data);
+            video.load();
+  video.play();
+        }
+    }
+
+//    function readURL1(input) {
+//        if (input.files && input.files[0]) {
+//            var reader = new FileReader();
+//
+//            reader.onload = function (e) {
+//                $('#ShowBio').attr('data', e.target.result);
+//            }
+//
+//            reader.readAsDataURL(input.files[0]);
+//        }
+//    }
+
+function bioChange(event){
+var name = event.target.files[0].name;
+         $(".videolb").html(name)
+ swal('',"Video can be previewed after saving details.");
+
+
+<!--             $(".videolb").show()-->
+        if (bioValidation("bio_video") != false) {
+//            readURL1(this);
+        }
+}
+    $("#bio_video").change(function () {
+
+
+    });
+
+
+    function in_array(needle, haystack) {
+        for (var i = 0, j = haystack.length; i < j; i++) {
+            if (needle == haystack[i])
+                return true;
+        }
+        return false;
+    }
+
+    function getExt(filename) {
+        var dot_pos = filename.lastIndexOf(".");
+        if (dot_pos == -1)
+            return "";
+        return filename.substr(dot_pos + 1).toLowerCase();
+    }
+
+    function bioValidation(imageId) {
+        var filename = document.getElementById(imageId).value;
+        var filetype = ['mp4','mov'];
+        if (filename != '') {
+            var ext = getExt(filename);
+            ext = ext.toLowerCase();
+            var checktype = in_array(ext, filetype);
+            if (!checktype) {
+                alert(ext + " file not allowed.");
+                document.getElementById(imageId).value = '';
+                return false;
+            } else {
+
+//                var fi = document.getElementById(imageId);
+//                var filesize = fi.files[0].size;//check uploaded file size
+//                if (filesize > 2097152) {
+//                    alert('Maximum 2MB file size allowed.');
+//                    document.getElementById(imageId).value = '';
+//                    return false;
+//                }
+            }
+        }
+    }
+    $(window).on('load', function () {
+       setTimeout(function () {$('#payloader').hide()}, 5000);
+  })
+  function resetForm() {
+        location.href="/profile";
+    }
+
+    </script>
+
+
+
+
+{% endblock content %}

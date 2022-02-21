@@ -1,0 +1,568 @@
+{% load static %} {% load fetch_user %}{% load define_action %}
+
+<div  id="client-section-main"  class="card-main-accord">
+    <div class="card-header collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive">
+        <a class="card-title">
+            Client Transformation
+            <i class="fa fa-check" id="clientssdata" aria-hidden="true" {%if userClientTransformationData %}{%else%} style="display:none" {%endif%} ></i>
+        </a>
+    </div>
+    <div id="collapseFive" class="collapse" data-parent="#accordion">
+        <div class="media-main">
+            <form name="clientTransformationForm" id="clientTransformationForm" method="POST" enctype="multipart/form-data" >
+            {% csrf_token %}
+                <input id="checkClientIdPreview" type="hidden" />
+                <input id="checkClientIdClick" type="hidden" />
+
+            <div class="row-new">
+                <div class="col-sm-6">
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Client name</label>
+                        <div class="form-field-input" id="client_nameerr">
+                            <input name="client_name" id="client_name" class="required" type="text"  placeholder="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Client Description</label>
+                        <div class="form-field-input">
+                            <textarea name="client_Description" id="client_Description" class=""  placeholder="Enter client description"></textarea>
+                            <small id="client_Description_count">0 of 100 words</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Profile image</label>
+                        <div class="form-field-video">
+                            <div class="video-uploadbox">
+                                <div class="custom-file">
+                                    <input type="file" name="client_ProfileImage" id="client_ProfileImage" class="custom-file-input " accept=".jpg, .jpeg, .png" fullwidth=""  >
+                                    <label for="video" class="custom-file-label placeholder text-truncate">Upload image</label>
+                                </div>
+                            </div>
+                            <div id="client_ProfileImagePreview_showId" class="upload-box" data-toggle="modal">
+                                <img id="client_ProfileImagePreview" data="{% static 'images/no-image.svg' %}" src="{% static 'images/no-image.svg' %}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row-new">
+                <div class="col-sm-6">
+                    <div class="form-group form-field-main">
+                        <h4 class="before-head mb-3">Before image</h4>
+                        <label class="label-field">Front</label>
+                        <div class="form-field-video mb-3">
+                            <div class="video-uploadbox">
+                                <div class="custom-file">
+                                    <input type="file"  name="client_BeforeImageFront" id="client_BeforeImageFront" accept=".jpg, .jpeg, .png" fullwidth="" class="custom-file-input ">
+                                    <label for="video" class="custom-file-label placeholder text-truncate">Upload image</label>
+                                </div>
+                            </div>
+                            <div id="client_BeforeImageFrontPreview_showId" class="upload-box" data-toggle="modal" >
+                                <img id="client_BeforeImageFrontPreview" data="{% static 'images/no-image.svg' %}" src="{% static 'images/no-image.svg' %}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-field-main">
+                        <label class="label-field"> Side</label>
+                        <div class="form-field-video mb-3">
+                            <div class="video-uploadbox">
+                                <div class="custom-file">
+                                    <input type="file" name="client_BeforeImageSide" id="client_BeforeImageSide"  accept=".jpg, .jpeg, .png" fullwidth=""  class="custom-file-input ">
+                                    <label for="video" class="custom-file-label placeholder text-truncate">Upload image</label>
+                                </div>
+                            </div>
+                            <div id="client_BeforeImageSidePreview_showId" class="upload-box" data-toggle="modal" >
+                                <img id="client_BeforeImageSidePreview" data="{% static 'images/no-image.svg' %}" src="{% static 'images/no-image.svg' %}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Back</label>
+                        <div class="form-field-video mb-3">
+                            <div class="video-uploadbox">
+                                <div class="custom-file">
+                                    <input type="file" name="client_BeforeImageBack" id="client_BeforeImageBack"  accept=".jpg, .jpeg, .png" fullwidth=""  class="custom-file-input " >
+                                    <label for="video" class="custom-file-label placeholder text-truncate">Upload image</label>
+                                </div>
+                            </div>
+                            <div id="client_BeforeImageBackPreview_showId" class="upload-box" data-toggle="modal" >
+                                <img id="client_BeforeImageBackPreview" data="{% static 'images/no-image.svg' %}" src="{% static 'images/no-image.svg' %}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group form-field-main">
+                        <h4 class="before-head mb-3">After image</h4>
+                        <label class="label-field">Front</label>
+                        <div class="form-field-video mb-3">
+                            <div class="video-uploadbox">
+                                <div class="custom-file">
+                                    <input type="file" name="client_AfterImageFront" id="client_AfterImageFront"  accept=".jpg, .jpeg, .png" fullwidth="" class="custom-file-input ">
+                                    <label for="video" class="custom-file-label placeholder text-truncate">Upload image</label>
+                                </div>
+                            </div>
+                            <div id="client_AfterImageFrontPreview_showId" class="upload-box" data-toggle="modal" >
+                                <img id="client_AfterImageFrontPreview" data="{% static 'images/no-image.svg' %}" src="{% static 'images/no-image.svg' %}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Side</label>
+                        <div class="form-field-video mb-3">
+                            <div class="video-uploadbox">
+                                <div class="custom-file">
+                                    <input type="file" name="client_AfterImageFrontSide" id="client_AfterImageFrontSide"  accept=".jpg, .jpeg, .png" fullwidth=""  class="custom-file-input ">
+                                    <label for="video" class="custom-file-label placeholder text-truncate">Upload image</label>
+                                </div>
+                            </div>
+                            <div id="client_AfterImageSidePreview_showId" class="upload-box" data-toggle="modal" >
+                                <img id="client_AfterImageFrontSidePreview" data="{% static 'images/no-image.svg' %}" src="{% static 'images/no-image.svg' %}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Back</label>
+                        <div class="form-field-video mb-3">
+                            <div class="video-uploadbox">
+                                <div class="custom-file">
+                                    <input type="file" name="client_AfterImageFrontBack" id="client_AfterImageFrontBack"  accept=".jpg, .jpeg, .png" fullwidth=""  class=" custom-file-input ">
+                                    <label for="video" class="custom-file-label placeholder text-truncate">Upload image</label>
+                                </div>
+                            </div>
+                            <div id="client_AfterImageFrontBackPreview_showId" class="upload-box" data-toggle="modal" >
+                                <img id="client_AfterImageFrontBackPreview" data="{% static 'images/no-image.svg' %}" src="{% static 'images/no-image.svg' %}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <div class="col-sm-12 border-table" id="clientDataTable">
+              {% include 'elements/users/client_table.html' %}
+
+            </div>
+
+            </div>
+            <input type="hidden" name="clientTransformation_submit_type" id="clientTransformation_submit_type">
+
+
+            <div class="btn-btm-group spece-btwn">
+                <div> <button class="btn-gray-two" onclick="return submitType('add')">Add Another</button></div>
+                <div> <button class="border-btn ml-10" onclick="return submitType('save')">Save</button> 
+                    {%if userClientTransformationData %}
+                    {% define "display:none;" as style41 %}
+                    {% define "" as style42 %}
+                    {% else %}
+                    {% define "" as style41 %}
+                    {% define "display:none;" as style42 %}
+                    {% endif %}
+                    <button class="btn-pink ml-10 btnhide2" style="{{style41}}"  onclick="return submitType('submit')">Submit & Proceed</button>
+
+                    <button type="button"  class="btn-pink ml-10 btnshow2" style="{{style42}}"  onclick="proceedbtn3()">Submit & Proceed</button>
+          
+                    {% comment %} <button class="btn-pink ml-10" onclick="return submitType('submit')">Submit & Proceed</button> {% endcomment %}
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="clientmodel">
+
+</div>
+
+<script>
+    function proceedbtn3(){
+        $("#collapseSix").collapse("toggle");
+
+        $([document.documentElement, document.body]).animate({
+            scrollTop: $("#client-section-main").offset().top
+        }, 500);
+    }
+    function submitType(type){
+        $('#clientTransformation_submit_type').val(type);
+    }
+    $("#clientTransformationForm").validate({
+    errorPlacement: function (error, element) {
+            console.log('dd', element.attr("name"))
+            if (element.attr("name") == "client_name") {
+                error.appendTo("#client_nameerr");
+                $([document.documentElement, document.body]).animate({
+                            scrollTop: $("#client-section-main").offset().top
+                        }, 500);
+            }
+            },
+    submitHandler: function (form, event) {
+       var submitType =  $('#clientTransformation_submit_type').val();
+      var form = document.querySelector("#clientTransformationForm");
+      var token = $("[name=csrfmiddlewaretoken]").val();
+      var formData = new FormData(form);
+<!--      formData.append("profile_photo", $("#profile_photo")[0].files[0]);-->
+      formData.append("csrfmiddlewaretoken", token);
+      $.ajax({
+        type: "POST",
+        url: "clientTransformation",
+        data: formData,
+        contentType: false,
+        processData: false,
+        beforeSend: function (xhr) {
+          $("#payloader").show();
+        },
+        success: function (response) {
+          $("#payloader").hide();
+          Command: toastr["success"]("Changes Saved")
+          $(".btnhide2").hide()
+          $(".btnshow2").show()
+          $("#clientssdata").show()
+          if(submitType == 'add'){
+                        $("#client-section-main").html(response)
+                        $("#collapseFive").collapse("toggle");
+
+                        form.reset();
+                        $([document.documentElement, document.body]).animate({
+                            scrollTop: $("#client-section-main").offset().top
+                        }, 500);
+                    } else if(submitType == 'submit'){
+<!--                          console.log("response", response);-->
+                          $("#client-section-main").html(response)
+                          form.reset()
+                            $("#collapseSix").collapse("toggle");
+
+                        $([document.documentElement, document.body]).animate({
+                            scrollTop: $("#client-section-main").offset().top
+                        }, 500);
+                    } else{
+                    form.reset()
+                        $("#client-section-main").html(response)
+                        $("#collapseFive").collapse("toggle");
+                    }
+<!--          console.log("response", response);-->
+<!--          $("#client-section-main").html(response)-->
+<!--          form.reset()-->
+        },
+        error: function (response) {
+          $("#payloader").hide();
+<!--          console.log("error", response);-->
+        },
+      });
+
+      return false;
+    },
+  });
+function userVisibleClient(event,id){
+       var checkbox = event.children["0"];
+       console.log(checkbox['checked'])
+       checkbox['checked']=!checkbox['checked'];
+       console.log(checkbox['checked'])
+       var token = $("[name=csrfmiddlewaretoken]").val();
+       type="client"
+       $.ajax({
+                type: 'POST',
+                url: 'updateUserStatus',
+                data: {'id':id,'checkbox':checkbox['checked'],"type":type,'csrfmiddlewaretoken':token},
+                success: function (response) {
+<!--                 $('#clientDataTable').html(response);-->
+                }
+            });
+}
+  function clientPreViewEdit(id, img){
+        image = $("#"+id).attr('src')
+        $('#imageModalCenter').modal('show');
+        $('#image_dv img').attr('src',image)
+        $('#image_dv img').attr('data',image)
+
+    }
+    function clientPreView(id, img){
+        $('#imageModalCenter').modal('show');
+        $('#image_dv img').attr('src',img)
+        $('#image_dv img').attr('data',img)
+
+    }
+
+    $('#client_Description').on('keyup', function (e) {
+            str = $(this).val();
+            str = str.replace(/(^\s*)|(\s*$)/gi, "");
+            str = str.replace(/[ ]{2,}/gi, " ");
+            str = str.replace(/\n /, "\n");
+            words = str.split(/\s/).length;
+            if (words >= 1 && $(this).val() != '')
+            {
+                if (words <= 100) {
+                    $('#client_Description_count').html(words + ' of 100 words');
+                } else {
+                    if (e.which !== 8)
+                        e.preventDefault();
+
+                    var values = $(this).val().split(" ").splice(0,100).join(" ")
+                        $(this).val(values)
+                        var trimmed = $(this).val().split(/\s+/, 100).join(" ");
+                    // Add a space at the end to make sure more typing creates new words
+                    $(this).val(trimmed + " ");
+                }
+            } else {
+                $('#client_Description_count').html('0 of 100 words');
+            }
+        });
+
+
+
+
+  $("#client_ProfileImage").change(function (e) {
+    $("#checkClientIdPreview").val("#client_ProfileImagePreview");
+    $("#checkClientIdClick").val("#client_ProfileImagePreview_showId");
+    if (imageValidationClient("client_ProfileImage", this) != false) {
+    }
+  });
+
+   $("#client_BeforeImageFront").change(function (e) {
+    $("#checkClientIdPreview").val("#client_BeforeImageFrontPreview");
+    $("#checkClientIdClick").val("#client_BeforeImageFrontPreview_showId");
+    if (imageValidationClient("client_BeforeImageFront", this) != false) {
+    }
+  });
+  $("#client_BeforeImageSide").change(function (e) {
+    $("#checkClientIdPreview").val("#client_BeforeImageSidePreview");
+    $("#checkClientIdClick").val("#client_BeforeImageSidePreview_showId");
+    if (imageValidationClient("client_BeforeImageSide", this) != false) {
+    }
+  });
+
+  $("#client_BeforeImageBack").change(function (e) {
+    $("#checkClientIdPreview").val("#client_BeforeImageBackPreview");
+    $("#checkClientIdClick").val("#client_BeforeImageBackPreview_showId");
+    if (imageValidationClient("client_BeforeImageBack", this) != false) {
+    }
+  });
+
+   $("#client_AfterImageFront").change(function (e) {
+    $("#checkClientIdPreview").val("#client_AfterImageFrontPreview");
+    $("#checkClientIdClick").val("#client_AfterImageFrontPreview_showId");
+    if (imageValidationClient("client_AfterImageFront", this) != false) {
+    }
+  });
+
+  $("#client_AfterImageFrontBack").change(function (e) {
+    $("#checkClientIdPreview").val("#client_AfterImageFrontBackPreview");
+    $("#checkClientIdClick").val("#client_AfterImageFrontBackPreview_showId");
+    if (imageValidationClient("client_AfterImageFrontBack", this) != false) {
+    }
+  });
+
+   $("#client_AfterImageFrontSide").change(function (e) {
+    $("#checkClientIdPreview").val("#client_AfterImageFrontSidePreview");
+    $("#checkClientIdClick").val("#client_AfterImageSidePreview_showId");
+    if (imageValidationClient("client_AfterImageFrontSide", this) != false) {
+    }
+  });
+  function changeEditPreview(input,id,showid,previewId){
+        var input_id =  $(input).attr("id")
+
+        $("#checkClientIdPreview").val("#"+previewId+id);
+        $("#checkClientIdClick").val("#"+showid+id);
+        if (imageValidationClient(input_id, this) != false) {
+    }
+  }
+
+
+
+
+  function in_array(needle, haystack) {
+    for (var i = 0, j = haystack.length; i < j; i++) {
+      if (needle == haystack[i]) return true;
+    }
+    return false;
+  }
+
+  function getExt(filename) {
+    var dot_pos = filename.lastIndexOf(".");
+    if (dot_pos == -1) return "";
+    return filename.substr(dot_pos + 1).toLowerCase();
+  }
+    function readFileClient(input) {
+        var reader = new FileReader();
+        var idVal = $("#checkClientIdPreview").val();
+        var idValClick = $("#checkClientIdClick").val();
+        reader.onload = function ()
+        {
+            var output = document.getElementById(idVal);
+            $(idVal).attr("src", reader.result);
+            $(idVal).attr("data", reader.result);
+            $(idValClick).attr("onclick", "clientPreView('0','"+reader.result+"')");
+          // output.src = reader.result;
+        }
+        reader.readAsDataURL(event.target.files[0]);
+    }
+  function imageValidationClient(imageId, event) {
+    var filename = document.getElementById(imageId).value;
+    var filetype = ["jpg", "jpeg", "png"];
+    if (filename != "") {
+      var ext = getExt(filename);
+      ext = ext.toLowerCase();
+      var checktype = in_array(ext, filetype);
+      if (!checktype) {
+        alert(ext + " file not allowed.");
+        document.getElementById(imageId).value = "";
+        return false;
+      } else {
+        var fi = document.getElementById(imageId);
+        var filesize = fi.files[0].size; //check uploaded file size
+        if (filesize > 8388608) {
+          alert("Maximum 8MB file size allowed.");
+          document.getElementById(imageId).value = "";
+          return false;
+        }
+      }
+<!--      console.log(event);-->
+      readFileClient(event);
+    }
+  }
+  function deleteClientTransformation(id){
+  
+  swal({
+            title: "Are you sure?",
+            text: "You want to delete this record!",
+            icon: "warning",
+            buttons: [
+              'No',
+              'Yes'
+            ],
+            dangerMode: true,
+        }).then(function(isConfirm) {
+        if(isConfirm){
+        var token = $("[name=csrfmiddlewaretoken]").val();
+
+        $.ajax({
+            type: 'POST',
+            url: 'deleteClientTransformation',
+            data: {'id': id, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+                $(".btnhide2").show()
+                $(".btnshow2").hide()
+                $("#clientDataTable").html(response)
+<!--                $("#viewclientTransformationData-"+id).modal('hide');-->
+                $("#modalShowClient").modal('hide');
+
+            },
+            error: function (response) {
+                $('#payloader').hide();
+<!--                console.log('error', response)-->
+            }
+        })
+        }
+        })
+    }
+    function viewClientTransformation(id){
+
+<!--        strs = $("#client_Description_id"+id).val()-->
+<!--        strs = strs.replace(/(^\s*)|(\s*$)/gi, "");-->
+<!--        strs = strs.replace(/[ ]{2,}/gi, " ");-->
+<!--        strs = strs.replace(/\n /, "\n");-->
+<!--        wordss = strs.split(/\s/).length;-->
+<!--        $('.client_Description_edit_count'+id).html(wordss + ' of 100 words');-->
+<!--        $('.view_btn_clientTransformationData').show()-->
+<!--        $('.edit_btn_clientTransformationData').hide()-->
+
+<!--        $('#viewclientTransformationData-' + id).modal('show');-->
+
+        $('.disabledField').prop("disabled", true);
+        var token = $("[name=csrfmiddlewaretoken]").val();
+
+        $.ajax({
+            type: 'POST',
+            url: 'viewClient',
+            data: {'id': id, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+                $("#clientmodel").html(response)
+                strs = $("#client_Description_id"+id).val()
+                strs = strs.replace(/(^\s*)|(\s*$)/gi, "");
+                strs = strs.replace(/[ ]{2,}/gi, " ");
+                strs = strs.replace(/\n /, "\n");
+                wordss = strs.split(/\s/).length;
+                $('.client_Description_edit_count'+id).html(wordss + ' of 100 words');
+                $("#modalShowClient").modal('show')
+
+            },
+            error: function (response) {
+                $('#payloader').hide();
+<!--                console.log('error', response)-->
+            }
+        })
+
+    }
+
+    function editclientTransformationData(id){
+        $('.profile_client_view_img').hide();
+        $('.profile_client_edit_img').show();
+
+<!--        $('.profile_client_view_img').hide();-->
+        $('.disabledField').removeAttr("disabled");
+        $('#view_btn_clientTransformationData'+id).hide();
+        $('.view_btn_clientTransformationData').hide()
+        $('.edit_btn_clientTransformationData').show()
+
+        $('#edit_btn_clientTransformationData'+id).show();
+    }
+    function closeclientTransformationData(id){
+        $('#view_btn_clientTransformationData'+id).show();
+        $('.disabledField').prop("disabled", true);
+
+        $('#edit_btn_clientTransformationData'+id).hide();
+        $('.profile_client_view_img').show();
+        $('.profile_client_edit_img').hide();
+        $("#modalShowClient").modal('hide');
+<!--        $("#viewclientTransformationData-"+id).modal('hide');-->
+    }
+    function editClientTransformationSubmit(id){
+
+    $("#clientTransformationFormEdit-"+id).validate({
+    submitHandler: function (form, event) {
+
+      var form = document.querySelector("#clientTransformationFormEdit-"+id);
+      var token = $("[name=csrfmiddlewaretoken]").val();
+      var formData = new FormData(form);
+      formData.append("csrfmiddlewaretoken", token);
+      formData.append("id", id);
+      $.ajax({
+        type: "POST",
+        url: "updateClientTransformationSubmit",
+        data: formData,
+        contentType: false,
+        processData: false,
+        beforeSend: function (xhr) {
+          $("#payloader").show();
+        },
+        success: function (response) {
+          $("#payloader").hide();
+          Command: toastr["success"]("Changes Saved")
+<!--          console.log("response", response);-->
+          $("#clientDataTable").html(response)
+          $('.profile_client_view_img').show();
+          $('.profile_client_edit_img').hide();
+<!--          $("#viewclientTransformationData-"+id).modal('hide');-->
+          $("#modalShowClient").modal('hide');
+
+        },
+        error: function (response) {
+          $("#payloader").hide();
+<!--          console.log("error", response);-->
+        },
+      });
+    return false;
+    }
+    })
+    return false;
+   }
+
+
+</script>

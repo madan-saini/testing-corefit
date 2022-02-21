@@ -1,0 +1,295 @@
+
+    <!-- Navigation-->
+    <div class="corefit-main-container">
+        <div class="corefit-header corefit-flex">
+            <div class="logo-small"><img src="images/corefit-logo.png" alt=""></div>
+            <div class="login-btn-right"><button class="btn float-right appearance-filled size-medium status-basic shape-rectangle " tabindex="0" aria-disabled="false"> Login </button></div>
+        </div>
+        <div class="corefit-container container signup-main-parent">
+            <div class="corefit-flex">
+                <div class="corefit-left-signup">
+                    <h4>Step 1 of 4</h4>
+                    <ul>
+                        <li id="one" class="addreset active">Who are you</li>
+                        <li id="two" class="display">Your details</li>
+                        <li id="three" class="display">Contact details</li>
+                        <li id="four" class="display">Verification</li>
+                    </ul>
+                    <div class="bottom-guide-text"> Read our <a href="">Help Guide</a> for support </div>
+                </div>
+                <div class="corefit-right-signup">
+                    <div class="row registerhome" style="width: 100%;">
+                        <div class="col-md-12">
+                            <h4 class="signup-heading">Tell us a bit about yourself to continue</h4>
+                        </div>
+                        <div class="signup-cat-box">
+                            <div class="img-box" style="background-image: url(images/05.jpg);">
+                                <h4>Personal Trainer</h4>
+                            </div>
+                        </div>
+                        <div class="signup-cat-box gymStudio">
+                            <div class="img-box" style="background-image: url(images/03.jpg);">
+                                <h4>Gym &amp; Studio</h4>
+                            </div>
+                        </div>
+                        <div class="signup-cat-box">
+                            <div class="img-box" style="background-image: url(images/PersonalTraining.jpg);">
+                                <h4>Personal Training <br>Company</h4>
+                            </div>
+                        </div>
+                        <div class="signup-cat-box sportsCoach">
+                            <div class="img-box sports-coach" style="background-image: url(images/04.jpg);">
+                                <h4>Sports Coach</h4>
+                            </div>
+                        </div>
+                        <div class="signup-cat-box">
+                            <div class="img-box sport-facility" style="background-image: url(images/02.jpg);">
+                                <h4>Sports Facility</h4>
+                            </div>
+                        </div>
+                        <div class="signup-cat-box">
+                            <div class="img-box" style="background-image: url(images/SportsCoaching.jpg);">
+                                <h4>Sports Coaching <br> Company</h4>
+                            </div>
+                        </div>
+                        <div class="signup-cat-box">
+                            <div class="img-box" style="background-image: url(images/Health&Wellness.jpg);">
+                                <h4>Health & Wellness <br> Individual</h4>
+                            </div>
+                        </div>
+                        <div class="signup-cat-box">
+                            <div class="img-box" style="background-image: url(images/Health&WellnesscOMPANY.jpg);">
+                                <h4>Health & Wellness <br> Company</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <form id="register_form" class="register_form" type="POST">
+                        <div class="row gymstudio-step-one" style="width: 100%; display:none">
+                            <form id="register_form_one" name="registration-one" class="register_form_one">
+                                <input type="hidden" id="registrationtype" name="user_type" value="">
+                                <div class="col-md-12">
+                                    <h4 class="signup-heading">Tell us a bit about yourself to continue</h4>
+                                </div>
+                                <div class="col-sm-12 label-field">
+                                    PERSONAL DETAILS
+                                </div>
+                                <div class="col-sm-6 input-form mb-3">
+                                    <input class="form-control" type="text" id="first_name" name="firstname" placeholder="Main Contact First Name">
+                                </div>
+                                <div class="col-sm-6 input-form mb-3">
+                                    <input class="form-control" type="text" id="last_name" name="lastname" placeholder="Main Contact Last Name">
+                                </div>
+                                <div class="col-sm-6 input-form mb-3">
+                                    <input class="form-control" type="email" id="email" name="email_address" placeholder="Email address">
+                                </div>
+                            
+                                <div class="col-sm-6 select-multi mb-3">
+                                    <select class="form-control" name="country" id="country">
+                                        <option value="">Select Country</option>
+                                        <option value="{{ country.name }}">ABC</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-12 input-form">
+                                    <div class="radio-new">
+                                        <input class="form-control" type="checkbox" id="live" name="">
+                                        <label for="live">I LIVE IN MORE THAN ONE PLACE ( ? )
+                                        </label>
+                                        <p class="under-para">Select your primary locations at this stage.You can add additional locations in your dashboard later.</p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 label-field">
+                                    CREATE A PASSWORD
+                                </div>
+                                <div class="col-sm-6 input-form mb-3">
+                                    <input class="form-control" type="password" id="password" name="password" placeholder="Password*">
+                                </div>
+                                <div class="col-sm-6 input-form mb-3">
+                                    <input type="password" id="cnf_password" name="" placeholder="Confirm Password*">
+                                </div>
+                                <div class="radio-new col-sm-12">
+                                    <input class="form-control" type="checkbox" id="live1" name="">
+                                    <label for="live1">I ACCEPT THE TERMS AND CONDITIONS
+                                    </label>
+                                </div>
+                                <div class="radio-new col-sm-12">
+                                    <input class="form-control" type="checkbox" id="live2" name="live_place">
+                                    <label for="live2">SEND ME PROMOTIONAL OFFERS AND SURVERYS VIA EMAIL OR SMS
+                                    </label>
+                                </div>
+                                <form>
+                        </div>
+                        <div class="row  gymstudio-step-two" style="width: 100%; display:none">
+                            <form id="register_form-two" class="register_form-two" type="POST">
+                                <div class="col-md-12">
+                                    <h4 class="signup-heading">How can we get in touch with you? </h4>
+                                </div>
+                                <div class="col-sm-12 input-form mb-3 mob-cntry">
+                                    <select class="form-control" name="country_code" id="country_code">
+                                        <option>Country code</option>
+                                        {% for country in countries %}
+                                        <option value="{{ country.country_code }}">>{{ country.country_code }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <input type="text" name="contact" id="mobile" placeholder="Enter Mobile Number">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="row gymstudio-step-three" style="width: 100%;padding-left: 50px;display: none; ">
+                            <form id="register_form-three" class="register_form-three" type="POST">
+                                <div class="col-md-12">
+                                    <h4 class="signup-heading">Enter the verification
+                                    </h4>
+                                </div>
+                                <div class="col-sm-12 input-form mb-3 veri-code">
+                                    <input class="form-control" type="" maxlength="1" minength="1" name="" placeholder="0">
+                                    <input class="form-control" type="" maxlength="1" minength="1" name="" placeholder="0">
+                                    <input class="form-control" type="" maxlength="1" minength="1" name="" placeholder="0">
+                                    <input class="form-control" type="" maxlength="1" minength="1" name="" placeholder="0">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="row signstep-one mt-3">
+                            <div class="back-btn backbutton" style="display:none"><button shape="round" size="small" type="button" class="signup-continue-btn btn mr-42 appearance-filled size-small status-basic shape-round blck-btn" aria-disabled="false" tabindex="0">Back</button></div>
+                            <div class=" continue-btn continuebutton"><button shape="round" size="small" type="submit" class="signup-continue-btn btn mr-4 appearance-filled size-small status-basic shape-round " aria-disabled="false" tabindex="0">Continue</button></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- script -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/custom.js"></script>
+    <script src="https://kit.fontawesome.com/cd05e4ba4d.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+    // Toggle the side navigation
+    $("#sidenavToggler").click(function(e) {
+        e.preventDefault();
+        $("body").toggleClass("sidenav-toggled");
+        $(".navbar-sidenav .nav-link-collapse").addClass("collapsed");
+        $(".navbar-sidenav .sidenav-second-level, .navbar-sidenav .sidenav-third-level").removeClass("show");
+    });
+    // Force the toggled class to be removed when a collapsible nav link is clicked
+    $(".navbar-sidenav .nav-link-collapse").click(function(e) {
+        e.preventDefault();
+        $("body").removeClass("sidenav-toggled");
+    });
+    // Prevent the content wrapper from scrolling when the fixed side navigation hovered over
+    $('body.fixed-nav .navbar-sidenav, body.fixed-nav .sidenav-toggler, body.fixed-nav .navbar-collapse').on('mousewheel DOMMouseScroll', function(e) {
+        var e0 = e.originalEvent,
+            delta = e0.wheelDelta || -e0.detail;
+        this.scrollTop += (delta < 0 ? 1 : -1) * 30;
+        e.preventDefault();
+    });
+    </script>
+    <script type="text/javascript">
+    $(".js-select2").select2({
+        closeOnSelect: false,
+        placeholder: "Placeholder",
+        // allowHtml: true,
+        allowClear: true,
+        tags: true // создает новые опции на лету
+    });
+    </script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        var error = false;
+
+
+        $('.continuebutton').click(function() {
+            if ($('.registerhome').hasClass('selected')) {
+                if ($('#one').hasClass('active')) {
+
+                    $('.registerhome').hide();
+                    $('#one').removeClass('active');
+                    $('#two').addClass('active');
+                    $('.gymstudio-step-one').show();
+                    $('.backbutton').show();
+
+                    return error;
+
+                } else if ($('#two').hasClass('active')) {
+
+                    $('.gymstudio-step-one').hide();
+                    $('.gymstudio-step-two').show();
+                    $('#two').removeClass('active');
+                    $('#three').addClass('active');
+                    return error;
+
+                } else if ($('#three').hasClass('active')) {
+
+                    $('.gymstudio-step-two').hide();
+                    $('.gymstudio-step-three').show();
+                    $('#three').removeClass('active');
+                    $('#four').addClass('active');
+                    return error;
+
+                } else if ($('#four').hasClass('active')) {
+                    $("#register_form").submit(function(e) {
+                        // preventing from page reload and default actions
+                        e.preventDefault();
+                        // // serialize the data for sending the form data.
+                        var serializedData = $(this).serialize();
+                        console.log(serializedData);
+                        // // make POST ajax call
+                        // $.ajax({
+                        //     type: 'POST',
+                        //     url: "{% url 'register' %}",
+                        //     data: serializedData,
+                        //     success: function (response) {
+                        //         // on successfull creating object
+                        //         // 1. clear the form.
+                        //     },
+                        //     error: function (response) {
+                        //         alert(response["responseJSON"]["error"]);
+                        //     }
+
+                        // })
+
+                    })
+
+                }
+            } else {
+                alert('You must have to select type of registration');
+                return error;
+            }
+        });
+        $('.backbutton').click(function() {
+
+            if ($('#two').hasClass('active')) {
+                $('.registerhome').removeClass('selected');
+                $('#registrationtype').val('');
+                $('.registerhome').show();
+                $('.gymstudio-step-one').hide();
+                $('#one').addClass('active');
+                $('#two').removeClass('active');
+                $('.backbutton').hide();
+
+            } else if ($('#three').hasClass('active')) {
+
+                $('.gymstudio-step-one').show();
+                $('.gymstudio-step-two').hide();
+                $('#three').removeClass('active');
+                $('#two').addClass('active');
+
+            } else if ($('#four').hasClass('active')) {
+
+                $('.gymstudio-step-two').show();
+                $('.gymstudio-step-three').hide();
+                $('#three').addClass('active');
+                $('#four').removeClass('active');
+
+            }
+        });
+        $('.gymStudio').click(function() {
+            $('.registerhome').addClass('selected');
+            $('#registrationtype').val('Gym&Studio');
+
+        });
+        $('.sportsCoach').click(function() {
+            $('#registrationtype').val('Sports&Coach');
+        });
+
+    });
+    </script>

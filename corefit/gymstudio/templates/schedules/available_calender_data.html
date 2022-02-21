@@ -1,0 +1,546 @@
+{% load static %}
+{% load fetch_user %}
+
+{% block content %}
+
+
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/calendar.css' %}">
+
+    <div class="flex-cal">
+        <div>
+            <div class="emp-left">
+                <h4 class="schedule_name">{{scheduleData.schedule_name}}</h4>
+                {% if scheduleData.is_default == 1%}
+                <div class="d-she">
+                    <img src="{% static 'images/awesome-star.svg' %}">
+                    <span>Default Schedule</span>
+                </div>
+                {% endif%}
+            </div>
+
+        </div>
+        <div class=" ">
+            <div class="action-box">
+                <div class="edit-main">
+                    <a href="javascript:void(0);" class="border-btn-small edit-she-btn1">Edit Name</a>
+                    <div class="pop-schedule edit-pop-schedule1" style="display: none;">
+                        <h4 class="schedule_name">New Schedule</h4>
+                        <form class="" name='scheduleForm3' id='scheduleForm3' method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Schedule name:</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="edit_schedule_name" value="{{scheduleData.schedule_name}}" id="edit_schedule_name3" class="required" placeholder="Working hours, Exclusive hours, etc...">
+                                </div>
+                            </div>
+                            <div class="btn-btm-group">
+                                <button class="border-btn" type='button' onclick="closeSPop()">Discard</button> 
+                                <button class="btn-pink ml-10">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="clone-main">
+                    <a href="javascript:void(0);" class="btn-red-one  clone-she-btn1">Clone</a>
+
+                    <form class="" name='scheduleForm4' id='scheduleForm4' method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="pop-schedule clone-pop-schedule1" style="display: none;">
+                            <h4>New Schedule</h4>
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Schedule name:</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="clone_schedule_name" id="clone_schedule_name4" class="required" placeholder="Working hours, Exclusive hours, etc...">
+                                </div>
+                            </div>
+                            <div class="btn-btm-group">
+                                <button class="border-btn" type='button' onclick="closeSPop()">Discard</button> 
+                                <button class="btn-pink ml-10">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex-name">
+        <div class="sethr-head">Set the availability hours </div><a href="javascript:void(0);" class="btn-red-one" onclick="makeDefault()">Set as Default Schedule</a>
+    </div>
+<form class="" name='calForm' id='calForm' method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div id="calendar" class="calendar"></div>
+</form>
+
+<div class="modal fade" id="editCalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content upload-img-pop">
+            <div class="model_btn">
+                <button class="border-btn" onclick="editDate('0')">Edit <strong>date(s)</strong></button> 
+                <button class="btn-pink ml-10" onclick="editDate('1')">Edit <strong id="day_vvl">all Fridays</strong></button>
+            </div>
+            <input type="hidden" name="edit_date" id="edit_date">
+            <input type="hidden" name="edit_day" id="edit_day">
+            <button type="button" class="close-btn-pop" data-dismiss="modal"><img src="{% static 'images/material-cancel.svg'%}"></button>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .modal { overflow-y: auto !important; }
+#calendar {
+  max-width: 100%;
+}
+
+.fc-today .fc-day-number {
+    color: #ED1F57 !important;
+}
+</style>
+<script type="text/javascript">
+    
+    
+    
+    function editDate(type){ 
+        if(type == 0){
+            $('#editCalCenter').modal('hide');
+//            $('#modal-overide-date').modal('show');
+            var start_val =$('#edit_date').val();
+            
+            
+            var dates = start_val;
+            var date2 = moment(start_val).format('MM/DD/YYYY');
+            var datesArr = [date2]
+            var datesVal = [new Date(dates)]
+            
+            $('#mdp-demo').multiDatesPicker({
+                addDates: datesVal,
+                numberOfMonths: [1,2],
+                minDate: new Date(),
+                opens: 'center',
+                onSelect: function() {
+                    var values = $(this).multiDatesPicker("getDates");
+                    var style = $('#cal_set').attr('style');
+
+                    if(values.length == 1 && style == 'display: none;'){
+                        var emp_id = $('#emp_id').val();
+                        var schedule_id = $('#schedule_id').val();
+                        var token = $("[name=csrfmiddlewaretoken]").val();
+                        $.ajax({
+                            type: 'POST',
+                            url: 'checkEmpCalVal',
+                            data: {'date': values, 'emp_id':emp_id, 'schedule_id': schedule_id,csrfmiddlewaretoken: token},
+                            beforeSend: function () {
+                                $('#payloader').show();
+                            },
+                            success: function (response) {
+                                $('#payloader').hide();
+                                $('#cal_set').show();
+                                $('#cal_update').html(response);
+                            }
+                        });
+                    } else{ 
+                        if(values.length == 0){
+                            $('#cal_set').hide();
+                            $('#cal_update').html('');
+                        }                
+                    }
+                    $("#DatesLabel").val(JSON.stringify($(this).multiDatesPicker("getDates")))
+                }
+            });
+
+            $('#modal-overide-date').modal('show');
+
+            var emp_id = $('#emp_id').val();
+            var schedule_id = $('#schedule_id').val();
+            var first_date = moment(start_val).format('MM/DD/YYYY'); 
+            var token = $("[name=csrfmiddlewaretoken]").val();
+            $.ajax({
+                type: 'POST',
+                url: 'checkEmpCalVal',
+                data: {'date[]': first_date,'emp_id':emp_id, 'schedule_id': schedule_id, csrfmiddlewaretoken: token},
+                beforeSend: function () {
+                    $('#payloader').show();
+                },
+                success: function (response) {
+                    $('#payloader').hide();
+                    $('#cal_set').show();
+                    $('#cal_update').html(response);
+                }
+            });
+
+            var dateSet = JSON.stringify(datesArr);
+            $("#DatesLabel").val(dateSet)
+        } else{
+            $('#editCalCenter').modal('hide');
+//            $('#modal-overide-date').modal('show');
+            var start_val =$('#edit_date').val();
+            var day_val =$('#edit_day').val();
+            
+            
+            
+            var dates = start_val;
+            var date2 = moment(start_val).format('MM/DD/YYYY');
+            var datesArr = [date2]
+            var datesVal = [new Date(dates)]
+
+            $('#modal-overide-date-edit').modal('show');
+            $('#day_title').html(day_val+' availability');
+
+            var emp_id = $('#emp_id').val();
+            var schedule_id = $('#schedule_id').val();
+            var first_date = moment(start_val).format('MM/DD/YYYY'); 
+            var token = $("[name=csrfmiddlewaretoken]").val();
+            $.ajax({
+                type: 'POST',
+                url: 'checkEmpCalValEdit',
+                data: {'date[]': first_date,'emp_id':emp_id, 'schedule_id': schedule_id, csrfmiddlewaretoken: token},
+                beforeSend: function () {
+                    $('#payloader').show();
+                },
+                success: function (response) {
+                    $('#payloader').hide();
+                    $('#cal_set_edit').show();
+                    $('#cal_update_edit').html(response);
+                }
+            });
+
+            var dateSet = JSON.stringify(datesArr);
+            $("#DatesLabel").val(dateSet)
+        }
+        
+    }
+    
+    function editSingleDate(){
+        
+        var start_val = $('#start_cal_val_'+id).val();
+        var end_val = $('#end_cal_val_'+id).val();
+         
+        
+        if(start_val == end_val){
+            var dates = start_val;
+            var date2 = moment(start_val).format('MM/DD/YYYY');
+            var datesArr = [date2]
+            var datesVal = [new Date(dates)]
+        } else{
+            var start = new Date(start_val);
+            var end   = new Date(end_val);
+            // end - start returns difference in milliseconds 
+            var diff = new Date(end - start);
+            const dates = [];
+            const datesArrr = [];
+            // get days
+            var days = diff/1000/60/60/24;            
+            
+            var new_date = start;
+            dates.push(new Date(new_date));
+            var date2 = moment(new_date).format('MM/DD/YYYY');
+                
+            datesArrr.push(date2);
+            for(var i=0;i<days;i++){    
+                
+                new_date.setDate(start.getDate() + 1);
+                var date2 = moment(new_date).format('MM/DD/YYYY');
+                
+                datesArrr.push(date2);
+                
+                dates.push(new Date(new_date));
+            }
+            var datesVal = dates
+            var datesArr = datesArrr
+            
+        }                
+        
+        $('#mdp-demo').multiDatesPicker({
+            addDates: datesVal,
+            numberOfMonths: [1,2],
+            minDate: new Date(),
+            opens: 'center',
+            onSelect: function() {
+                var values = $(this).multiDatesPicker("getDates");
+                var style = $('#cal_set').attr('style');
+
+                if(values.length == 1 && style == 'display: none;'){
+                    var emp_id = $('#emp_id').val();
+                    var schedule_id = $('#schedule_id').val();
+                    var token = $("[name=csrfmiddlewaretoken]").val();
+                    $.ajax({
+                        type: 'POST',
+                        url: 'checkEmpCalVal',
+                        data: {'date': values, 'emp_id':emp_id, 'schedule_id': schedule_id,csrfmiddlewaretoken: token},
+                        beforeSend: function () {
+                            $('#payloader').show();
+                        },
+                        success: function (response) {
+                            $('#payloader').hide();
+                            $('#cal_set').show();
+                            $('#cal_update').html(response);
+                        }
+                    });
+                } else{ 
+                    if(values.length == 0){
+                        $('#cal_set').hide();
+                        $('#cal_update').html('');
+                    }                
+                }
+                $("#DatesLabel").val(JSON.stringify($(this).multiDatesPicker("getDates")))
+            }
+        });
+        
+        $('#modal-overide-date').modal('show');
+        
+        var emp_id = $('#emp_id').val();
+        var schedule_id = $('#schedule_id').val();
+        var first_date = moment(start_val).format('MM/DD/YYYY'); 
+        var token = $("[name=csrfmiddlewaretoken]").val();
+        $.ajax({
+            type: 'POST',
+            url: 'checkEmpCalVal',
+            data: {'date[]': first_date,'emp_id':emp_id, 'schedule_id': schedule_id, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+                $('#cal_set').show();
+                $('#cal_update').html(response);
+                
+            }
+        });
+        
+        var dateSet = JSON.stringify(datesArr);
+        $("#DatesLabel").val(dateSet)
+    }
+
+    $(".edit-she-btn1").click(function () {
+        $(".add-pop-schedule").hide();
+        $(".edit-pop-schedule1").toggle();
+        $(".clone-pop-schedule1").hide();
+    });
+
+    $(".clone-she-btn1").click(function () {
+        $(".add-pop-schedule").hide();
+        $(".edit-pop-schedule1").hide();
+        $(".clone-pop-schedule1").toggle();
+    });
+    
+    
+
+    (function () {
+        'use strict';
+        // ------------------------------------------------------- //
+        // Calendar
+        // ------------------------------------------------------ //
+        jQuery(function () {
+            // page is ready
+            jQuery('#calendar').fullCalendar({
+                themeSystem: 'bootstrap4',
+                // emphasizes business hours
+                businessHours: false,
+                defaultView: 'month',
+                titleFormat: 'MMMM YYYY',
+                displayEventTime: false,
+                // event dragging & resizing
+//                editable: true,
+//            allDaySlot: false,
+                // header
+                eventLimit: true,
+                header: {
+                    left: 'title',
+                    center: 'month',
+//                    center: 'month,agendaWeek,agendaDay',
+                    right: 'today prev,next',
+                },
+//                events: [ 
+//                    {
+//                        title: '10:30am - 11:30am',
+//                        start: '2022-01-21T10:30:00',
+//                        end: '2022-01-21T11:30:00'
+//                    }
+//                ],
+                events: function(start, end, timezone, callback) {
+                    var emp_id = $('#emp_id').val();
+                    var schedule_id = $('#schedule_id').val();
+                    
+                    var token = $("[name=csrfmiddlewaretoken]").val();
+                    $.ajax({
+                        url: 'getEventData',
+                        type: 'POST',
+                        data: {
+                            emp_id:emp_id, 
+                            schedule_id: schedule_id,
+                            start: moment(start).format('YYYY-MM-DD'),
+                            end: moment(end).format('YYYY-MM-DD'),
+                            csrfmiddlewaretoken: token
+                        },
+                        success: function(doc) {                            
+                            var events = [];
+                            var arr = $.parseJSON(doc);
+//                            console.log('err',arr)
+//                            console.log(jQuery.isEmptyObject(arr)); //false
+                            if(jQuery.isEmptyObject(arr) == false){
+                                $.each(arr,function(key,value){
+
+                                    events.push({
+                                        title: value[2],
+                                        start: value[0],
+                                        end: value[1]
+                                    });
+                                });
+                                
+                                callback(events);
+                            }
+                            
+                            
+                            
+                        }
+                  });
+                },
+//            eventRender: function(event, element) {
+//                alert(event.start);
+//                if (event.icon) {
+//                    element.find(".fc-title").prepend("<i class='fa fa-" + event.icon + "'></i>");
+//                }
+//            },
+//            dayClick: function() {
+//                jQuery('#modal-view-event-add').modal();
+//            },
+            dayClick: function(date, jsEvent, view, resource) {
+                var start = new Date();
+            
+            if (date < start){
+            swal('', "Timeslot already passed.", 'error');
+            return false;
+            }
+            
+                var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+                var date = new Date(date);
+                var day = weekday[date.getDay()];
+                $('#edit_day').val(weekday[date.getDay()]);
+                $('#edit_date').val(moment(date).format('YYYY-MM-DD'));
+                $('#day_vvl').html('all '+day+'s');
+//                console.log('error',date)
+//                console.log('event',jsEvent)
+//                console.log('view',view)
+//                console.log('resource',resource)
+                $('#editCalCenter').modal('show');
+            },
+            eventClick: function(date, jsEvent, view, resource) {
+//                console.log('view',date.start)
+//                alert(date.start)
+                var startt = new Date();
+            
+            if (date.start < startt){
+            swal('', "Timeslot already passed.", 'error');
+            return false;
+            }
+            
+                var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+                var dateVal = date.start;
+                
+                var day = moment(dateVal).format('dddd');
+//                alert(dayVal);
+//                var day = weekday[dayVal];
+//                alert(day);
+                
+                $('#edit_day').val(day);
+                $('#edit_date').val(moment(dateVal).format('YYYY-MM-DD'));
+                $('#day_vvl').html('all '+day+'s');
+//                console.log('error',date)
+//                console.log('event',jsEvent)
+//                console.log('view',view)
+//                console.log('resource',resource)
+                $('#editCalCenter').modal('show');
+            },
+//            eventClick: function(info) { 
+//                console.log('error',info)
+//                alert('Event: ' + info);
+//    alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+//    alert('View: ' + info.view.type);
+//                jQuery('.event-icon').html("<i class='fa fa-" + event.icon + "'></i>");
+//                jQuery('.event-title').html(event.title);
+//                jQuery('.event-body').html(event.description);
+//                jQuery('.eventUrl').attr('href', event.url);
+//                jQuery('#modal-view-event').modal();
+//            },
+            })
+        });
+
+    })(jQuery);
+    
+    $(document).ready(function () {
+    $("#scheduleForm3").validate({
+        submitHandler: function (form) {
+            var emp_id = $('#emp_id').val();
+            var schedule_id = $('#schedule_id').val();
+            var schedule_name = $('#edit_schedule_name3').val();
+            var token = $("[name=csrfmiddlewaretoken]").val();
+
+            $.ajax({
+                type: 'POST',
+                url: 'editSchedule',
+                data: {'schedule_name':schedule_name, 'schedule_id': schedule_id, csrfmiddlewaretoken: token},
+                beforeSend: function () {
+                    $('#payloader').show();
+                },
+                success: function (response) {
+                    $('#payloader').hide();
+                    $('.pop-schedule').hide();
+                    $('#schedule_name').val('');
+                    
+                    $('#schedule-emp-'+schedule_id).html('<span onclick="selectSchedule('+schedule_id+','+emp_id+')">'+schedule_name+' </span><img onclick="deleteSchedule('+schedule_id+')" src="{% static 'images/close-tag.svg' %}">');
+                    $('.schedule_name').html(schedule_name);
+                    Command: toastr["success"]("Changes Saved")
+                    
+//                    showCalender(s_id, emp_id);
+//                    $('#employee_list').html();
+
+                },
+                error: function (response) {
+                    $('#payloader').hide();
+                    console.log('error', response)
+                }
+            })
+
+            return false;
+        }
+    });
+    
+    $("#scheduleForm4").validate({ 
+        submitHandler: function (form) {
+            var emp_id = $('#emp_id').val();
+            var schedule_id = $('#schedule_id').val();
+            var schedule_name = $('#clone_schedule_name4').val();
+            var token = $("[name=csrfmiddlewaretoken]").val();
+
+            $.ajax({
+                type: 'POST',
+                url: 'cloneSchedule',
+                data: {'schedule_name':schedule_name, 'schedule_id': schedule_id, csrfmiddlewaretoken: token},
+                beforeSend: function () {
+                    $('#payloader').show();
+                },
+                success: function (response) { 
+                    $('#payloader').hide();
+                    $('.pop-schedule').hide();
+                    updateEmpListC(emp_id);
+                    Command: toastr["success"]("Changes Saved")
+                    
+                    selectSchedule(response['id'], emp_id);
+//                    $('#employee_list').html();
+
+                },
+                error: function (response) {
+                    $('#payloader').hide();
+                    console.log('error', response)
+                }
+            })
+
+            return false;
+        }
+    });
+    });
+    
+</script>
+{% endblock content %}

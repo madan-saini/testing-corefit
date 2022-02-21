@@ -1,0 +1,108 @@
+{% load static %}
+{% load define_action %}
+{% load split %}
+{% load change_type %}
+{% load getType %}
+<h4 class="profile-setup-inner-block-heading">Training Location 2</h4>
+
+<div class="row-new">
+    <div class="col-sm-6">
+        <div class="form-group form-field-main">
+            <label class="label-field">Country[*]</label>
+            <div class="drop-down">
+                <select class='multiple-single' name="train_country2" id="country_id3" class='required' onChange="updateCity3(this.value)">
+                    <option value="">Choose from list</option>
+                    {% for key, country in countries %}
+                    <option value="{{key}}" {% if key == basicinfo.train_country2 %} selected{% endif %}>{{country}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group form-field-main">
+            <label class="label-field">City[*]</label>
+            <div class="drop-down" id="city_section3">
+                {% if basicinfo.train_city%}
+                {% change_type basicinfo.train_city2 as city_type %}
+                <select class='multiple-single' name="train_city2" id="train_city_id2" class='required'>
+                    <option value="">Choose from list</option>
+
+                    {% for key, city in cities %}
+
+                    <option value="{{key}}" {% if key == city_type %} selected{% endif %}>{{city}}</option>
+                    {% endfor %}
+                </select>
+                {% else %}
+                <select class='multiple-single' name="train_city2" id="train_city_id2" class='required'>
+                    <option value="">Choose from list</option>
+                </select>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group form-field-main">
+            <label class="label-field">Training Location[*]</label>
+            <div class="form-field-input">
+                <div class="icon-overlay">
+                <input type="text" class='required' name="trainlocation2" id="trainlocation2" value="{{basicinfo.trainlocation2}}" placeholder="Enter location">
+                <img src="{% static 'images/LocationArrow.svg' %}">
+            </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group form-field-main">
+                {% if request.session.user_type == 'FreelanceTrainer' %}
+                <label class="label-field">Home Address[*]</label>
+                {% else %}
+                <label class="label-field">Business Address[*]</label>
+                {% endif %}
+            <div class="form-field-input">
+                <div class="icon-overlay">
+                {% if request.session.user_type == 'FreelanceTrainer' %}
+                <input type="text" class='required' name="homelocation2" id="trainBlocation2" value="{{basicinfo.homelocation2}}" placeholder="Enter location">
+                {% else %}
+                <input type="text" class='required' name="trainBlocation2" id="trainBlocation2" value="{{basicinfo.trainBlocation2}}" placeholder="Enter location">
+
+                {% endif %}
+                <img src="{% static 'images/LocationArrow.svg' %}">
+            </div>
+            </div>
+        </div>
+    </div>
+    <div class="btn-btm-group btn-left whot-bg">
+        <button onclick="updateDelte()" class="btn-gray-one" type="button"> Delete Training Location</button>
+    </div>
+</div>
+<script>
+$(document).ready(function () {
+        $location_input = $("#trainBlocation2");
+        var options = {
+        };
+        autocomplete = new google.maps.places.Autocomplete($location_input.get(0), options);
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            return false;
+        });
+    });
+    $(document).ready(function () {
+        $location_input = $("#trainlocation2");
+        var options = {
+        };
+        autocomplete = new google.maps.places.Autocomplete($location_input.get(0), options);
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            return false;
+        });
+    });
+    $('.multiple-single').multiselect({
+        nonSelectedText: "Select from list",
+        enableFiltering: true,
+        maxHeight: 250,
+        numberDisplayed: 1,
+        enableCaseInsensitiveFiltering: true,
+        onDropdownShown: function(even) {
+          this.$filter.find('.multiselect-search').focus();
+        }
+    });
+</script>

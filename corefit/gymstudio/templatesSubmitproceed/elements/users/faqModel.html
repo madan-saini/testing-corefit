@@ -1,0 +1,143 @@
+{% load static %}
+<div class="modal fade" data-backdrop="static" id="modalShowFaq" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered new-offer-dialog" role="document">
+        <div class="modal-content upload-img-pop new-offer-pop disable-text-field">
+            <form name="faqEditForm" id="faqEditForm" method="POST" enctype="multipart/form-data" >
+
+            {% csrf_token %}
+                <input type="hidden" name="typeedit" id="typeedit" value="{{viewFaq.faq_type}}">
+            <div class="row">
+                <div class="col-sm-12">
+                        <div class="form-field-main">
+                            <label>Question</label>
+                            {% if viewFaq.faq_type == "existingFaqs" %}
+                            <div class="drop-down " id="list_view">
+                                <select class="required disabledField" id="faqedit" name="faqquestionSelectEdit" disabled>
+                                   {% for exfaq in existingFaq %}
+                                    {% if exfaq.question == viewFaq.question %}
+                                    <option id="{{exfaq.id}}"  value="{{exfaq.question}}" selected>{{exfaq.question}}</option>
+                                    {% else %}
+                                    <option id="{{exfaq.id}}"  value="{{exfaq.question}}">{{exfaq.question}}</option>
+
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            {% else %}
+                            <div class="form-field-input ans-faq" id="calender_view" >
+<!--                                <input type="text" value="{{viewFaq.question}}" id="faqquestionEdit" name="faqquestionEdit" class="required disabledField" disabled placeholder="Type Question..">-->
+                                <textarea id="faqquestionEdit" placeholder="Type Question..." name="faqquestionEdit" class="required disabledField" disabled>{{viewFaq.question}}</textarea>
+
+                                <small id="faqquestion_count_edit">0 of 100 words</small>
+                            </div>
+                            {% endif %}
+
+                            <div class="ans-faq">
+                                <label>Answer</label>
+                                <textarea id="faqanswerEdit" placeholder="Type Answer..." name="faqanswerEdit" class="required disabledField" disabled>{{viewFaq.answer}}</textarea>
+                                <small id="faqanswer_count_edit">0 of 500 words</small>
+                            </div>
+                        </div>
+                    </div>
+
+                <div class="col-sm-12">
+
+                    <div class="action-box  btn-form acpt-rjt-btn action-one">
+                        <div id="" class="view_btn_faq">
+                            <button class="border-btn-small" type="button" onclick="editfaq('{{viewFaq.id}}')">Edit</button>
+                            <button class="btn-red-one" type="button"  onclick="deleteFaq('{{viewFaq.id}}')">Delete</button>
+                        </div>
+
+                        <div id="" class="edit_btn_faq" style="display: none;">
+                            <button class="border-btn" type='button' onclick="closeFaq()">Discard changes</button>
+                            <button  class="btn-pink ml-10" onclick="updatedFaq('{{viewFaq.id}}')">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="close-btn-pop" data-dismiss="modal"><img src="{% static 'images/material-cancel.svg'%}"></button>
+            </form>
+
+        </div>
+    </div>
+</div>
+<script>
+    $('#faqedit').multiselect({
+        nonSelectedText: "Select from list",
+        enableFiltering: true,
+        maxHeight: 250,
+        numberDisplayed: 1,
+        enableCaseInsensitiveFiltering: true,
+        onDropdownShown: function(even) {
+          this.$filter.find('.multiselect-search').focus();
+        }
+    });
+    $('#faqedit').multiselect('disable');
+    $( document ).ready(function() {
+        console.log( "ready!" );
+<!--        alert($("#typeedit").val())-->
+        if($("#typeedit").val() != "existingFaqs"){
+            str = $("#faqquestionEdit").val();
+            str = str.replace(/(^\s*)|(\s*$)/gi, "");
+            str = str.replace(/[ ]{2,}/gi, " ");
+            str = str.replace(/\n /, "\n");
+            words = str.split(/\s/).length;
+            $('#faqquestion_count_edit').html(words + ' of 100 words');
+
+
+        }
+
+        strs = $("#faqanswerEdit").val();
+        strs = strs.replace(/(^\s*)|(\s*$)/gi, "");
+        strs = strs.replace(/[ ]{2,}/gi, " ");
+        strs = strs.replace(/\n /, "\n");
+        wordss = strs.split(/\s/).length;
+        $('#faqanswer_count_edit').html(wordss + ' of 500 words');
+    });
+    $('#faqquestionEdit').on('keyup', function (e) {
+            str = $(this).val();
+            str = str.replace(/(^\s*)|(\s*$)/gi, "");
+            str = str.replace(/[ ]{2,}/gi, " ");
+            str = str.replace(/\n /, "\n");
+            words = str.split(/\s/).length;
+            if (words >= 1 && $(this).val() != '')
+            {
+                if (words <= 100) {
+                    $('#faqquestion_count_edit').html(words + ' of 100 words');
+                } else {
+                    if (e.which !== 8)
+                        e.preventDefault();
+                      var values = $(this).val().split(" ").splice(0,100).join(" ")
+                    $(this).val(values)
+                    var trimmed = $(this).val().split(/\s+/, 100).join(" ");
+                    // Add a space at the end to make sure more typing creates new words
+                    $(this).val(trimmed + " ");
+                }
+            } else {
+                $('#faqquestion_count_edit').html('0 of 100 words');
+            }
+     });
+      $('#faqanswerEdit').on('keyup', function (e) {
+            str = $(this).val();
+            str = str.replace(/(^\s*)|(\s*$)/gi, "");
+            str = str.replace(/[ ]{2,}/gi, " ");
+            str = str.replace(/\n /, "\n");
+            words = str.split(/\s/).length;
+            if (words >= 1 && $(this).val() != '')
+            {
+                if (words <= 500) {
+                    $('#faqanswer_count_edit').html(words + ' of 500 words');
+                } else {
+                    if (e.which !== 8)
+                        e.preventDefault();
+                    var values = $(this).val().split(" ").splice(0,500).join(" ")
+                    $(this).val(values)
+                    var trimmed = $(this).val().split(/\s+/, 500).join(" ");
+                    // Add a space at the end to make sure more typing creates new words
+                    $(this).val(trimmed + " ");
+                }
+            } else {
+                $('#faqanswer_count_edit').html('0 of 500 words');
+            }
+     });
+</script>

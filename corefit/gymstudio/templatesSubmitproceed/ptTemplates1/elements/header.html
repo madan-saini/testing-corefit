@@ -1,0 +1,51 @@
+{% load static %}
+{% load fetch_user %}
+
+
+{% fetch_user request.session.user_id as queries %}
+{% fetch_user_image request.session.user_id as userImage %}
+
+
+<nav class="navbar navbar-expand-lg  fixed-top menu-top">
+    <a class="navbar-brand logo" href="#"><img src="{% static 'images/corefit-logo.svg' %}"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>
+    </button>
+    <div class="collapse navbar-collapse mobile-flex navbarCollapse" id="navbarCollapse">
+        <ul class=" ml-auto rt-head">
+            <li class="admin-name">
+                <span>Admin</span> <a href="#">Warehouse gym</a>
+            </li>
+            <li class="info-icon-list">
+                <a href="#" class="info-top-icon"><img src="{% static 'images/message.svg' %}"></a>
+                <a href="#" class="info-top-icon"><img src="{% static 'images/notifications.svg' %}"></a>
+            </li>
+            <li class="info-top-icon">
+            </li>
+            <li class="nav-item dropdown ">
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link  login-profile-top" href="javascript:void(0);" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <div class="img-login">
+                                    {% if userImage.data%}
+                                    <img src="{% static PROFILE_URL %}{{userImage.data}}">
+                                    {% else %}
+                                    <img src="{% static 'images/Avatar.jpg' %}">
+                                    {% endif%}
+                                </div> 
+                                <span>{{queries.first_name|title}} {{queries.last_name|title}}</span>
+                            </a>
+                            <div class="dropdown-menu pro-drop" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" href="profile">View Profile</a>
+                                <a class="dropdown-item" href="javascript:void(0);">Support</a>
+                                <a class="dropdown-item" href="javascript:void(0);">FAQs</a>
+                                <a class="dropdown-item" href="javascript:void(0);">Security</a>
+                                <a class="dropdown-item" href="logout">Logout</a>
+                            </div>
+                        </li>
+                    </ul>
+            </li>
+        </ul>
+    </div>
+</nav>
+ 

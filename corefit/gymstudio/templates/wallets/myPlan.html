@@ -1,0 +1,118 @@
+{% extends 'layout/inner.html' %} 
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/daterangepicker.css' %}">
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+<script>
+
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-bottom-center",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "1000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+</script>
+
+<!-- Navigation-->
+<div class="loader" id="payloader" style="display:none"><img src="{% static 'images/loading.gif' %}" alt=""></div>
+
+{% include "layout/successerror.html" %}
+<script src="{% static 'js/jquery-ui.min.js' %}"></script>
+<script src="{% static 'js/jquery-ui.multidatespicker.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.css' %}">
+
+<div class="content-page">
+    <div class="page-head-one">
+        <h2 class="bnk-info-head">My Plan</h2>
+    </div>
+    <table class="table table-bordered table-cs table-subs b-0">
+        <thead>
+            <tr>
+                <th scope="col">Current Plan</th>
+                <th scope="col">Subscription <br> Period</th>
+                <th scope="col">Invoice Amount</th>
+                <th scope="col">Service Effective Date</th>
+                <th scope="col">Status</th>
+                <th scope="col">Next Invoice <br> Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Basic</td>
+                <td>Annual</td>
+                <td>500 AED</td>
+                <td>22/09/2020</td>
+                <td>Active</td>
+                <td>23/09/2021</td>
+            </tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><a href="#" class="btn-green-border">Upgrade</a></td>
+        </tr>
+        </tbody>
+    </table>
+    <table class="table table-bordered table-cs table-subs">
+        <thead>
+            <tr>
+                <th scope="col" width="70%">Features</th>
+                <th scope="col" width="15%" class="text-center">Current Plan</th>
+                <th scope="col" width="15%" class="text-center">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Appear in suggested tiles</td>
+                <td class="text-center"><img src="{% static 'images/close-one.svg' %}"></td>
+                <td class="text-center"><img src="{% static 'images/Line.svg' %}"></td>
+            </tr>
+            <tr>
+                <td>Appear in suggested tiles</td>
+                <td class="text-center"><img src="{% static 'images/close-one.svg' %}"></td>
+                <td class="text-center"><img src="{% static 'images/Line.svg' %}"></td>
+            </tr>
+            <tr>
+                <td>About me</td>
+                <td class="text-center"><img src="{% static 'images/line-red.svg' %}"></td>
+                <td class="text-center"><img src="{% static 'images/Line.svg' %}"></td>
+            </tr>
+            <tr>
+                <td>Appear in suggested tiles</td>
+                <td class="text-center"><img src="{% static 'images/close-one.svg' %}"></td>
+                <td class="text-center"><img src="{% static 'images/Line.svg' %}"></td>
+            </tr>
+            <tr>
+                <td>Amount:</td>
+                <td class="text-center">AED 100/weekly</td>
+                <td class="text-center">AED 200/weekly</td>
+            </tr>
+
+        </tbody>
+    </table>
+    <div class="btn-btm-group bg-border">
+        <a href="available-subscription-plans" class="up-plan">View All Plans</a>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,68 @@
+<div class="card-main-accord">
+    <div class="card-header collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapsefour">
+        <a class="card-title">
+            Association Details
+        </a>
+    </div>
+    <div id="collapsefour" class="collapse" data-parent="#accordion">
+        <form class="" name='associationForm' id='associationForm' method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="media-main">
+                <div class="row-new">
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Gym Branch or PT Company Name</label>
+                            <div class="form-field-input">
+                                <input type="text" class="required" name="name" value="test1" placeholder="" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-field-main">
+                            <label class="label-field">Gym Branch or PT Company Address</label>
+                            <div class="form-field-input">
+                                <input type="text" class="required" name="address" value="test12" placeholder="" disabled>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" value="0" name="disassociate_id">
+                <div class="btn-btm-group spece-btwn">
+                    <div></div>
+                    <div> <button class="btn-pink ml-10">Request to disassociate</button></div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+<script>
+
+$("#associationForm").validate({
+            submitHandler: function (form, event) {
+                var form = document.querySelector("#associationForm");
+                var token = $("[name=csrfmiddlewaretoken]").val();
+                var formData = new FormData(form);
+                formData.append("csrfmiddlewaretoken", token);
+
+                $.ajax({
+                    type: "POST",
+                    url: "ptassociation",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function (xhr) {
+                      $("#payloader").show();
+                    },
+                    success: function (response) {
+                      $("#payloader").hide();
+                        Command: toastr["success"]("Changes Saved")
+                    },
+                    error: function (response) {
+                      $("#payloader").hide();
+                    },
+                  });
+                  return false;
+                  }
+        });
+</script>

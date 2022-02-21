@@ -1,0 +1,51 @@
+{% load static %}
+{% load fetch_user %}
+
+<h5>Add date overrides</h5>
+<p>Add dates when your availability <br> changes from your weekly hours</p>
+<div class="btn-group-one">
+    <button type="button" class="btn-gray-one mb-3 open-cal" onclick="openPopup()">Add a date override</button>
+</div>
+{% check_emp_over_avail userId schedule_id as over_queries %}      
+
+{% for val in over_queries %}     
+
+{% get_emp_over_avail userId schedule_id val.0 val.1 as over_queries_all %}
+
+{% for qq in over_queries_all%}
+{% convert_json qq.start_time as json_val1 %}
+{% convert_json qq.end_time as json_val2 %}
+
+<div class="date-over-box">
+    <div class=" over-box"  onclick="editOver('{{qq.id}}')">
+        <h5>
+            {% if qq.mindate == qq.maxdate%}
+            {% change_date qq.mindate as date_val %}
+            {{date_val}}
+            <input type="hidden" value="{{date_val}}" name="s_val" id="start_cal_val_{{qq.id}}">
+            <input type="hidden" value="{{date_val}}" name="e_val" id="end_cal_val_{{qq.id}}">
+
+            {% else %}
+            {% change_date1 qq.mindate as date_val1 %}
+            {% change_date qq.mindate as date_val3 %}
+            {% change_date qq.maxdate as date_val2 %}
+            {{date_val1}} - {{date_val2}}
+
+            <input type="hidden" value="{{date_val3}}" name="s_val" id="start_cal_val_{{qq.id}}">
+            <input type="hidden" value="{{date_val2}}" name="e_val" id="end_cal_val_{{qq.id}}">
+            {% endif %}
+
+        </h5>
+        {%for start_val, end_val in json_val1|zip:json_val2 %}
+        <p>{{start_val}} to {{end_val}}</p>
+        {% endfor %}
+    </div>
+    <a href="javascript:void()" title="Remove interval" onclick="deleteOver('{{qq.id}}')">
+        <img src="{% static 'images/material-delete(2).svg' %}">
+    </a>
+</div>
+{% endfor %}
+
+
+{% endfor %}
+

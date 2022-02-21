@@ -1,0 +1,896 @@
+{% extends 'layout/inner.html' %} 
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
+<style>
+    .tag-sch.active{
+        color: #ee3668 !important;
+    }
+</style>
+<script>
+
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-bottom-center",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "1000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+</script>
+
+<script>
+    
+    $(document).mouseup(function(e) 
+{
+    var container = $(".pop-schedule");
+
+    // if the target of the click isn't the container nor a descendant of the container
+    if (!container.is(e.target) && container.has(e.target).length === 0) 
+    {
+        container.hide();
+    }
+});
+
+    var makeid1 = function (length) {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
+
+    function addSetCal(checked) {
+        var count = $('.cal_sett').length;
+        var vall = $('.cal_sett').html();
+        if (checked == true) {
+            var rand = makeid1(5);
+            if (count == 0 || (count == 1 && vall == '<p>Unavailable</p>')) {
+
+                var nav = '<div class="check-date-input cal_sett" id="cal_sett_' + rand + '"><div><input type="text" id="over_start_time_' + rand + '" name="over_start_time[]" class="o_start_timepicker">';
+                nav += '<span class="space">-</span>';
+                nav += '<input type="text" id="over_end_time_' + rand + '" name="over_end_time[]" class="o_end_timepicker">';
+                nav += '<a href="javascript:void(0);" title="Remove interval" class="trash-check-avail " id="delete_lnk_o_' + rand + '">';
+                nav += '<img src="/static/images/material-delete.svg">';
+                nav += '</a></div></div>';
+
+                $('#delete_lnk_o_' + rand).attr("onclick", "removeSetCalAdd('" + rand + "')");
+
+                $('#cal_update').html(nav);
+                $('#cal_set').show();
+
+                setNumberingCal('9', '17');
+
+            } else {
+                checkValidationCal(rand);
+            }
+//                saveAvailability();
+        } else {
+            $('.cal_sett').html('<p>Unavailable</p>');
+//
+//            saveAvailability();
+        }
+    }
+
+    function editSetCal(checked) {
+        var count = $('.cal_settt').length;
+        var vall = $('.cal_settt').html();
+        if (checked == true) {
+            var rand = makeid1(5);
+            if (count == 0 || (count == 1 && vall == '<p>Unavailable</p>')) {
+
+                var nav = '<div class="check-date-input cal_settt" id="cal_settt_' + rand + '"><div><input type="text" id="over_start_time_' + rand + '" name="over_start_time_edit[]" class="e_start_timepicker">';
+                nav += '<span class="space">-</span>';
+                nav += '<input type="text" id="over_end_time_' + rand + '" name="over_end_time_edit[]" class="e_end_timepicker">';
+                nav += '<a href="javascript:void(0);" title="Remove interval" class="trash-check-avail " id="delete_lnk_o_' + rand + '">';
+                nav += '<img src="/static/images/material-delete.svg">';
+                nav += '</a></div></div>';
+
+                $('#delete_lnk_o_' + rand).attr("onclick", "removeSetCalEdit('" + rand + "')");
+
+                $('#cal_update_edit').html(nav);
+                $('#cal_set_edit').show();
+
+                setNumberingCalEdit('9', '17');
+
+            } else {
+                checkValidationCalEdit(rand);
+            }
+//                saveAvailability();
+        } else {
+            $('.cal_settt').html('<p>Unavailable</p>');
+//
+//            saveAvailability();
+        }
+    }
+
+    function checkValidationCalEdit(rand) {
+        var start_var = document.getElementsByName("over_start_time_edit[]");
+        var end_var = document.getElementsByName("over_end_time_edit[]");
+
+        for (var i = 0; i < start_var.length; i++) {
+            var inp = start_var[i];
+//            alert("start_time[" + i + "].value=" + inp.value);
+        }
+        for (var i = 0; i < end_var.length; i++) {
+            var inp = end_var[i];
+            var lst_val = inp.value;
+        }
+
+        if (lst_val != '') {
+//            var next_start_val = lst_val;
+            var time_val = lst_val.split(' ')[0];
+            var time_ex = lst_val.split(' ')[1];
+            var hour_time = time_val.split(':')[0];
+            var min_time = time_val.split(':')[1];
+
+            if (time_ex == 'PM') {
+                hour_time = parseInt(hour_time) + 12;
+            }
+
+            var cont_val1 = (parseInt(hour_time) + 1);
+            var cont_val2 = (parseInt(hour_time) + 2);
+
+//            alert(cont_val1);
+//            alert(cont_val2);
+
+            var prec1 = ' AM';
+            if (cont_val1 >= 12 && cont_val1 < 24) {
+                prec1 = ' PM';
+            }
+            var hours1 = cont_val1 % 12 || 12;
+
+            var prec2 = ' AM';
+            if (cont_val2 >= 12 && cont_val2 < 24) {
+                prec2 = ' PM';
+            }
+            var hours2 = cont_val2 % 12 || 12;
+
+            var fnl_val = hours1 + ':' + min_time + prec1;
+            var fnl_end_val = hours2 + ':' + min_time + prec2;
+
+        }
+
+        var nav = '<div class="check-date-input cal_settt" id="cal_settt_' + rand + '"><div><input type="text" id="over_start_time_' + rand + '" name="over_start_time_edit[]" class="e_start_timepicker">';
+        nav += '<span class="space">-</span>';
+        nav += '<input type="text" id="over_end_time_' + rand + '" name="over_end_time_edit[]" class="e_end_timepicker">';
+        nav += '<a href="javascript:void(0);" title="Remove interval" class="trash-check-avail " id="delete_lnk_o_' + rand + '">';
+        nav += '<img src="/static/images/material-delete.svg">';
+        nav += '</a></div></div>';
+
+
+        $('#cal_update_edit').append(nav);
+
+        $('#delete_lnk_o_' + rand).attr("onclick", "removeSetCalEdit('" + rand + "')");
+
+        setNumberingCalEdit(fnl_val.toString(), fnl_end_val.toString());
+
+    }
+
+    function checkValidationCal(rand) {
+        var start_var = document.getElementsByName("over_start_time[]");
+        var end_var = document.getElementsByName("over_end_time[]");
+
+        for (var i = 0; i < start_var.length; i++) {
+            var inp = start_var[i];
+//            alert("start_time[" + i + "].value=" + inp.value);
+        }
+        for (var i = 0; i < end_var.length; i++) {
+            var inp = end_var[i];
+            var lst_val = inp.value;
+        }
+
+        if (lst_val != '') {
+//            var next_start_val = lst_val;
+            var time_val = lst_val.split(' ')[0];
+            var time_ex = lst_val.split(' ')[1];
+            var hour_time = time_val.split(':')[0];
+            var min_time = time_val.split(':')[1];
+
+            if (time_ex == 'PM') {
+                hour_time = parseInt(hour_time) + 12;
+            }
+
+            var cont_val1 = (parseInt(hour_time) + 1);
+            var cont_val2 = (parseInt(hour_time) + 2);
+
+//            alert(cont_val1);
+//            alert(cont_val2);
+
+            var prec1 = ' AM';
+            if (cont_val1 >= 12 && cont_val1 < 24) {
+                prec1 = ' PM';
+            }
+            var hours1 = cont_val1 % 12 || 12;
+
+            var prec2 = ' AM';
+            if (cont_val2 >= 12 && cont_val2 < 24) {
+                prec2 = ' PM';
+            }
+            var hours2 = cont_val2 % 12 || 12;
+
+            var fnl_val = hours1 + ':' + min_time + prec1;
+            var fnl_end_val = hours2 + ':' + min_time + prec2;
+
+        }
+
+        var nav = '<div class="check-date-input cal_sett" id="cal_sett_' + rand + '"><div><input type="text" id="over_start_time_' + rand + '" name="over_start_time[]" class="o_start_timepicker">';
+        nav += '<span class="space">-</span>';
+        nav += '<input type="text" id="over_end_time_' + rand + '" name="over_end_time[]" class="o_end_timepicker">';
+        nav += '<a href="javascript:void(0);" class="trash-check-avail " id="delete_lnk_o_' + rand + '">';
+        nav += '<img src="/static/images/material-delete.svg">';
+        nav += '</a></div></div>';
+
+
+        $('#cal_update').append(nav);
+
+        $('#delete_lnk_o_' + rand).attr("onclick", "removeSetCalAdd('" + rand + "')");
+
+        setNumberingCal(fnl_val.toString(), fnl_end_val.toString());
+
+    }
+
+    function setNumberingCal(time, endTime) {
+        $('.o_start_timepicker').timepicker({
+            timeFormat: 'h:mm p',
+            interval: 15,
+            minTime: '00',
+            maxTime: '11:45pm',
+            defaultTime: time,
+            startTime: '00:00',
+            dynamic: false,
+            dropdown: true,
+            scrollbar: true,
+            change: checkValidCal
+        });
+        $('.o_end_timepicker').timepicker({
+            timeFormat: 'h:mm p',
+            interval: 15,
+            minTime: '00',
+            maxTime: '11:45pm',
+            defaultTime: endTime,
+            startTime: '00:00',
+            dynamic: false,
+            dropdown: true,
+            scrollbar: true,
+            change: checkValidCal
+        });
+    }
+
+    function setNumberingCalEdit(time, endTime) {
+        $('.e_start_timepicker').timepicker({
+            timeFormat: 'h:mm p',
+            interval: 15,
+            minTime: '00',
+            maxTime: '11:45pm',
+            defaultTime: time,
+            startTime: '00:00',
+            dynamic: false,
+            dropdown: true,
+            scrollbar: true,
+            change: checkValidCalEdit
+        });
+        $('.e_end_timepicker').timepicker({
+            timeFormat: 'h:mm p',
+            interval: 15,
+            minTime: '00',
+            maxTime: '11:45pm',
+            defaultTime: endTime,
+            startTime: '00:00',
+            dynamic: false,
+            dropdown: true,
+            scrollbar: true,
+            change: checkValidCalEdit
+        });
+    }
+
+    function checkValidCal() {
+        var is_error = 0;
+        var start_var = document.getElementsByName("over_start_time[]");
+        var end_var = document.getElementsByName("over_end_time[]");
+
+        var start_array = new Array();
+        var end_array = new Array();
+
+        for (var i = 0; i < start_var.length; i++) {
+            var from = start_var[i].value;
+            var to = end_var[i].value;
+
+            if (moment(from, 'hh:mm a') > moment(to, 'hh:mm a')) {
+                if (!$('#' + end_var[i].id).hasClass('error_range_o1')) {
+                    is_error = 1;
+                    $('#error_set_' + end_var[i].id).remove();
+                    $('#' + start_var[i].id).removeClass('error_range1');
+                    $('#' + end_var[i].id).addClass('error_range1');
+                    $('#' + end_var[i].id).addClass('error_range_o1');
+                    $('#' + end_var[i].id).parent().parent().append('<p id="error_set1_' + end_var[i].id + '" class="error_box">Choose an end time later than the start time.</p>');
+                }
+
+            } else {
+                $('#' + start_var[i].id).removeClass('error_range1');
+                $('#' + end_var[i].id).removeClass('error_range1');
+                $('#' + end_var[i].id).removeClass('error_range_o1');
+                $('#error_set1_' + end_var[i].id).remove();
+//                is_error = is_error - 1;
+            }
+        }
+
+        for (var i = 0; i < start_var.length; i++) {
+            var inp_start = start_var[i];
+            start_array.push(inp_start.value);
+        }
+        for (var i = 0; i < end_var.length; i++) {
+            var inp_end = end_var[i];
+            end_array.push(inp_end.value);
+        }
+
+        $.each(start_array, function (index) {
+            var arr_len = start_array.length;
+            var first_val = start_array[index];
+
+            for (var i = 0; i < start_array.length; i++) {
+                if (i != index) {
+                    if (moment(first_val, 'hh:mm a') >= moment(start_array[i], 'hh:mm a')) {
+                        if (moment(first_val, 'hh:mm a') < moment(end_array[i], 'hh:mm a')) {
+
+                            if (!$('#' + end_var[index].id).hasClass('error_range1')) {
+                                is_error = 1;
+                                $('#' + start_var[index].id).addClass('error_range1');
+                                $('#' + end_var[index].id).addClass('error_range1');
+
+                                $('#' + end_var[index].id).parent().parent().append('<p id="error_set1_' + end_var[index].id + '" class="error_box">Times overlap with another set of times.</p>');
+
+                            }
+
+                            if (!$('#' + end_var[i].id).hasClass('error_range1')) {
+                                is_error = 1;
+                                $('#' + start_var[i].id).addClass('error_range1');
+                                $('#' + end_var[i].id).addClass('error_range1');
+
+                                $('#' + end_var[i].id).parent().parent().append('<p id="error_set1_' + end_var[i].id + '" class="error_box">Times overlap with another set of times.</p>');
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        $('#is_error').val(is_error);
+//            if (is_error == 0) {
+//                saveAvailability()
+//            }
+    }
+
+    function checkValidCalEdit() {
+        var is_error = 0;
+        var start_var = document.getElementsByName("over_start_time_edit[]");
+        var end_var = document.getElementsByName("over_end_time_edit[]");
+
+        var start_array = new Array();
+        var end_array = new Array();
+
+        for (var i = 0; i < start_var.length; i++) {
+            var from = start_var[i].value;
+            var to = end_var[i].value;
+
+            if (moment(from, 'hh:mm a') > moment(to, 'hh:mm a')) {
+                if (!$('#' + end_var[i].id).hasClass('error_range_e')) {
+                    is_error = 1;
+                    $('#error_set_' + end_var[i].id).remove();
+                    $('#' + start_var[i].id).removeClass('error_range2');
+                    $('#' + end_var[i].id).addClass('error_range2');
+                    $('#' + end_var[i].id).addClass('error_range_e');
+                    $('#' + end_var[i].id).parent().parent().append('<p id="error_set1_' + end_var[i].id + '" class="error_box">Choose an end time later than the start time.</p>');
+                }
+
+            } else {
+                $('#' + start_var[i].id).removeClass('error_range2');
+                $('#' + end_var[i].id).removeClass('error_range2');
+                $('#' + end_var[i].id).removeClass('error_range_e');
+                $('#error_set1_' + end_var[i].id).remove();
+//                is_error = is_error - 1;
+            }
+        }
+
+        for (var i = 0; i < start_var.length; i++) {
+            var inp_start = start_var[i];
+            start_array.push(inp_start.value);
+        }
+        for (var i = 0; i < end_var.length; i++) {
+            var inp_end = end_var[i];
+            end_array.push(inp_end.value);
+        }
+
+        $.each(start_array, function (index) {
+            var arr_len = start_array.length;
+            var first_val = start_array[index];
+
+            for (var i = 0; i < start_array.length; i++) {
+                if (i != index) {
+                    if (moment(first_val, 'hh:mm a') >= moment(start_array[i], 'hh:mm a')) {
+                        if (moment(first_val, 'hh:mm a') < moment(end_array[i], 'hh:mm a')) {
+
+                            if (!$('#' + end_var[index].id).hasClass('error_range2')) {
+                                is_error = 1;
+                                $('#' + start_var[index].id).addClass('error_range2');
+                                $('#' + end_var[index].id).addClass('error_range2');
+
+                                $('#' + end_var[index].id).parent().parent().append('<p id="error_set1_' + end_var[index].id + '" class="error_box">Times overlap with another set of times.</p>');
+
+                            }
+
+                            if (!$('#' + end_var[i].id).hasClass('error_range2')) {
+                                is_error = 1;
+                                $('#' + start_var[i].id).addClass('error_range2');
+                                $('#' + end_var[i].id).addClass('error_range2');
+
+                                $('#' + end_var[i].id).parent().parent().append('<p id="error_set1_' + end_var[i].id + '" class="error_box">Times overlap with another set of times.</p>');
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        $('#is_error_edit').val(is_error);
+//            if (is_error == 0) {
+//                saveAvailability()
+//            }
+    }
+
+</script>
+
+<!-- Navigation-->
+<div class="loader" id="payloader" style="display:none"><img src="{% static 'images/loading.gif' %}" alt=""></div>
+
+{% include "layout/successerror.html" %}
+<script src="{% static 'js/jquery-ui.min.js' %}"></script>
+<script src="{% static 'js/jquery-ui.multidatespicker.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.css' %}">
+
+<div class="content-page">
+    <div class="page-head-one">
+        <h2>Set Your Availability</h2>
+        <div class="taeb-switch left text-center taeb-switch1">
+            <div class="taeb list_cls taeb1 active" taeb-direction="left" onclick="changeView('list')">List View</div>
+            <div class="taeb calender_cls taeb1" taeb-direction="right" onclick="changeView('calendar')">Calendar</div>
+        </div>
+    </div>
+
+    <form class="" name='scheduleForm' id='scheduleForm' method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="list-field-bar">
+            <div class="drop-down dropemp">
+                <select name="employee_id" id="employee_id" class='multiple-single' onchange='updateEmpList(this.value)'>
+                    <option value="">Select one</option>
+                    {% for id, first_name, last_name in employees %}
+                    <option value="{{id}}">{{first_name}} {{last_name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div id="employee_list" class="emp-list-set">               
+            </div>
+            <div class="shed-main-sort">
+                <a style="width: 212px" href="javascript:void(0);" class="btn-green-border ad-she-btn"><img src="{% static 'images/feather-plus-one.svg' %}">Add New Schedule</a>
+                <div class="pop-schedule add-pop-schedule" style="display: none;">
+                    <h4>New Schedule</h4>
+                    <div class="form-group form-field-main">
+                        <label class="label-field">Schedule name:</label>
+                        <div class="form-field-input">
+                            <input type="text" name="schedule_name" id="schedule_name" class="required" placeholder="Working hours, Exclusive hours, etc...">
+                        </div>
+                    </div>
+                    <div class="btn-btm-group">
+                        <button class="border-btn" type='button' onclick="closeSPop()">Discard</button> 
+                        <button class="btn-pink ml-10">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>    
+    <div class="change-tab" id="calender_view" style="display:none;">
+
+    </div>
+    <div class="change-tab" id="list_view">
+
+    </div>    
+</div>
+
+<div class="modal modal-top fade calendar-modal modal-overide-date" id="modal-overide-date" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <form class="" name='calenderForm1' id='calenderForm1' method="POST">
+        {% csrf_token %}
+        <div class="modal-dialog modal-dialog-centered new-offer-dialog" role="document">
+            <div class="modal-content modal-date">
+                <div class="">
+                    <h4 class="selct-text text-center col-sm-12">Select the date(s) you want to assign specific hours</h4>
+                    <div class="cal-show-al">
+                        <div id="mdp-demo"></div>
+                        <!--<input name="calender_Val" id="mdp-demo">-->
+                        <!--<input type="button" name="" class="btn-cal choose-date-pik">-->
+
+                    </div>
+                    <div class="set-time-left new-pop-set" id="cal_set" style="display: none;">
+                        <div class="col-sm-8 d-flex">
+                            <div class="check-time-add" id="cal_update">
+
+
+                            </div>
+                        </div>
+                        <div class="col-sm-4 text-right rt-avail-icon">
+                            <a href="javascript:void(0);" title="Add interval" onclick="addSetCal(true)"><img src="{% static 'images/feather-plus.svg' %}"></a>
+                        </div>
+                    </div>
+                    <div class="action-box text-right pop-btn">
+                        <input type="hidden" name="is_error" id="is_error" value="0">
+                        <input type="hidden" name="selected_values" id="DatesLabel">
+                        <input type="hidden" name="schedule_id" id="cal_schedule_id">
+                        <input type="hidden" name="emp_id" id="cal_emp_id">
+                        <a href="javascript:void(0);" onclick="closePop()" class="border-btn-small">Cancel</a>
+                        <a href="javascript:void(0);" class="btn-red-one" onclick="calenderPost()">Apply</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal modal-top fade calendar-modal modal-overide-date" id="modal-overide-date-edit" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <form class="" name='calenderForm3' id='calenderForm3' method="POST">
+        {% csrf_token %}
+        <div class="modal-dialog modal-dialog-centered new-offer-dialog" role="document">
+            <div class="modal-content modal-date">
+                <div class="">
+                    <h4 class="selct-text text-center col-sm-12" id="day_title"></h4>
+                    <div class="set-time-left new-pop-set" id="cal_set_edit" style="display: none;">
+                        <div class="col-sm-8 d-flex">
+                            <div class="check-time-add" id="cal_update_edit">
+
+
+                            </div>
+                        </div>
+                        <div class="col-sm-4 text-right rt-avail-icon">
+                            <a href="javascript:void(0);" title="Add interval" onclick="editSetCal(true)"><img src="{% static 'images/feather-plus.svg' %}"></a>
+                        </div>
+                    </div>
+                    <div class="action-box text-right pop-btn">
+                        <input type="hidden" name="is_error_edit" id="is_error_edit" value="0">
+                        <a href="javascript:void(0);" onclick="closePop()" class="border-btn-small">Cancel</a>
+                        <a href="javascript:void(0);" class="btn-red-one" onclick="calenderPostEdit()">Apply</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    function changeView(type) {
+        if (type == 'list') {
+            $('#calender_view').hide();
+            $('#list_view').show();
+        } else {
+            $('#calender_view').show();
+            $('#list_view').hide();
+            var emp_id = $('#cal_emp_id').val();
+            var schedule_id = $('#cal_schedule_id').val();
+            if (schedule_id != '') {
+                showCalender(schedule_id, emp_id);
+            }
+
+        }
+    }
+
+    $(".ad-she-btn").click(function () {
+        $(".add-pop-schedule").toggle();
+        $(".edit-pop-schedule").hide();
+        $(".clone-pop-schedule").hide();
+    });
+
+    function closeSPop() {
+        $(".add-pop-schedule").hide();
+        $(".edit-pop-schedule").hide();
+        $(".edit-pop-schedule1").hide();
+        $(".clone-pop-schedule").hide();
+        $(".clone-pop-schedule1").hide();
+    }
+</script>
+<script type="text/javascript">
+    function closePop() {
+        $('#overwrite_section').html();
+        $('#modal-overide-date').modal('hide');
+        $('#modal-overide-date-edit').modal('hide');
+        $('#mdp-demo').multiDatesPicker('resetDates');
+        
+
+        $('#cal_set').hide();
+        $('#cal_update').html('');
+    }
+    
+    function removeSetCalAdd(val) { 
+        var count = $('.cal_sett').length;
+        if (count == 1) {
+            $('.cal_sett').html('<p>Unavailable</p>');
+        } else {
+            $('#cal_sett_' + val).remove();
+            checkValidCal()
+        }
+        $('.ui-timepicker-standard').hide();
+    }
+</script>
+
+<script>
+    function updateEmpList(empId) {
+        var token = $("[name=csrfmiddlewaretoken]").val();
+        $.ajax({
+            type: 'POST',
+            url: 'getEmployee',
+            data: {'empId': empId, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+                if (response == 1) {
+                    $('#employee_list').html('');
+                    $('#calender_view').html('');
+                    $('#list_view').html('');
+                } else {
+                    $('#employee_list').html(response);
+                }
+            },
+            error: function (response) {
+                $('#payloader').hide();
+            }
+        })
+    }
+    
+    function updateEmpListC(empId) {
+        var token = $("[name=csrfmiddlewaretoken]").val();
+        $.ajax({
+            type: 'POST',
+            url: 'getEmployeeCal',
+            data: {'empId': empId, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+                if (response == 1) {
+                    $('#employee_list').html('');
+                    $('#calender_view').html('');
+                    $('#list_view').html('');
+                } else {
+                    $('#employee_list').html(response);
+                }
+            },
+            error: function (response) {
+                $('#payloader').hide();
+            }
+        })
+    }
+
+    function deleteSchedule(id) {
+        var emp_id = $('#emp_id').val();
+        swal({
+            title: "Are you sure?",
+            text: "You want to delete this record!",
+            icon: "warning",
+            buttons: [
+                'No',
+                'Yes'
+            ],
+            dangerMode: true,
+        }).then(function (isConfirm) {
+            if(isConfirm){
+            var token = $("[name=csrfmiddlewaretoken]").val();
+            $.ajax({
+                type: 'POST',
+                url: 'deleteSchedule',
+                data: {'id': id,'emp_id': emp_id, csrfmiddlewaretoken: token},
+                beforeSend: function () {
+                    $('#payloader').show();
+                },
+                success: function (response) {
+                    $('#payloader').hide();
+                    $('#schedule-emp-' + id).remove();
+                    
+                    var schedule_id = $('#schedule_id').val();
+                    updateEmpList(emp_id);
+                    Command: toastr["success"]("Schedule Deleted")
+                },
+                error: function (response) {
+                    $('#payloader').hide();
+                }
+            })
+        }
+        });
+    }
+
+    $("#scheduleForm").validate({
+        submitHandler: function (form) {
+            var empVal = $('#employee_id').val();
+            if (empVal == '') {
+                swal('', "Please select employee first.", 'error');
+            } else {
+                var token = $("[name=csrfmiddlewaretoken]").val();
+                var form = document.querySelector('#scheduleForm');
+                var formData = new FormData(form);
+                formData.append('csrfmiddlewaretoken', token);
+                $.ajax({
+                    type: 'POST',
+                    url: 'saveSchedule',
+                    contentType: false,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    //                data: {'serializedData': serializedData, csrfmiddlewaretoken: token},
+                    beforeSend: function () {
+                        $('#payloader').show();
+                    },
+                    success: function (response) {
+                        $('#payloader').hide();
+                        $('.pop-schedule').hide();
+                        $('#schedule_name').val('');
+                        var s_id = response["id"];
+                        var name = response['name'];
+                        var emp_id = response['emp_id'];
+                        showCalender(s_id, emp_id);
+                        
+                        
+                        $('#employee_list').append('<div class="tag-sch" id="schedule-emp-' + s_id + '" ><span onclick="selectSchedule(' + s_id + ',' + emp_id + ')">' + name + ' </span><img onclick="deleteSchedule(' + s_id + ')" src="{% static "images/close-tag.svg" %}"></div>');
+                        Command: toastr["success"]("Changes Saved");
+                        
+                        $('.tag-sch').removeClass('active');
+                        $('#schedule-emp-'+s_id).addClass('active');
+                    },
+                    error: function (response) {
+                        $('#payloader').hide();
+                    }
+                })
+
+                return false;
+            }
+        }
+    });
+
+//    $(".datepickerr").click(function(){
+    $('.datepickerr').datepicker({
+        clearBtn: false,
+        weekStart: 1,
+        maxDate: new Date(),
+        orientation: "bottom",
+        dateFormat: "dd/mm/yy"
+    });
+//    });
+    var today = new Date();
+
+    $('#mdp-demo').multiDatesPicker({
+//        addDates: [new Date('2022-01-26'),new Date('2022-01-27')],
+        numberOfMonths: [1, 2],
+        minDate: new Date(Date.now()+1*24*60*60*1000),
+        opens: 'center',
+        onSelect: function () {
+            var values = $(this).multiDatesPicker("getDates");
+            var style = $('#cal_set').attr('style');
+            if (values.length == 1 && style == 'display: none;') {
+                var emp_id = $('#emp_id').val();
+                var schedule_id = $('#schedule_id').val();
+                var token = $("[name=csrfmiddlewaretoken]").val();
+                $.ajax({
+                    type: 'POST',
+                    url: 'checkEmpCalVal',
+                    data: {'date': values, 'emp_id': emp_id, 'schedule_id': schedule_id, csrfmiddlewaretoken: token},
+                    beforeSend: function () {
+                        $('#payloader').show();
+                    },
+                    success: function (response) {
+                        $('#payloader').hide();
+                        $('#cal_set').show();
+                        $('#cal_update').html(response);
+                    }
+                });
+            } else {
+                if (values.length == 0) {
+                    $('#cal_set').hide();
+                    $('#cal_update').html('');
+                }
+            }
+            $("#DatesLabel").val(JSON.stringify($(this).multiDatesPicker("getDates")))
+
+        }
+    });
+
+    $(document).ready(function () {
+        $('.multiple-single').multiselect({
+            nonSelectedText: "Select from list",
+            enableFiltering: true,
+            maxHeight: 250,
+            enableCaseInsensitiveFiltering: true,
+            onDropdownShown: function (even) {
+                this.$filter.find('.multiselect-search').focus();
+            }
+        });
+    });
+
+    function showCalender(s_id, emp_id) {
+        var token = $("[name=csrfmiddlewaretoken]").val();
+        $.ajax({
+            type: 'POST',
+            url: 'showCalender',
+            data: {'s_id': s_id, 'emp_id': emp_id, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+                $('#list_view').html(response);
+                $('#emp_id').val(emp_id);
+                $('#schedule_id').val(s_id);
+                $('#cal_emp_id').val(emp_id);
+                $('#cal_schedule_id').val(s_id);
+
+                showCalenderView(s_id, emp_id);
+//                showCalenderView(s_id, emp_id);
+            },
+            error: function (response) {
+                $('#payloader').hide();
+            }
+        });
+
+
+    }
+
+    function showCalenderView(s_id, emp_id) {
+        var token = $("[name=csrfmiddlewaretoken]").val();
+        $.ajax({
+            type: 'POST',
+            url: 'showCalenderView',
+            data: {'s_id': s_id, 'emp_id': emp_id, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+                $('#calender_view').html(response);
+                $('#emp_id').val(emp_id);
+                $('#schedule_id').val(s_id);
+                $('#cal_emp_id').val(emp_id);
+                $('#cal_schedule_id').val(s_id);
+
+//                selectSchedule(s_id, emp_id)
+            },
+            error: function (response) {
+                $('#payloader').hide();
+            }
+        });
+    }
+
+    function selectSchedule(id, emp_id) { 
+        showCalender(id, emp_id);
+        $('.tag-sch').removeClass('active');
+        $('#schedule-emp-'+id).addClass('active');
+    }
+
+
+
+
+
+</script>
+
+{% endblock content %}

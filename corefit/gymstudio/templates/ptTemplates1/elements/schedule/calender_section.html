@@ -1,0 +1,110 @@
+{% load static %}
+{% load fetch_user %}
+
+<script>
+    function removeSetCal(val) {
+        var count = $('.cal_sett').length;
+        if (count == 1) {
+            $('.cal_sett').html('<p>Unavailable</p>');
+        } else {
+            $('#cal_sett_' + val).remove();
+            checkValidCal()
+        }
+    }
+
+    {% comment %} function setNumberingCal(val) { 
+        var total_requirement = $('.cal_sett_' + val).length;
+        for (var r = 0; r < total_requirement; r++) {
+            var r_no = r + 1;
+            $(".cal_sett_" + val + ":eq(" + r + ")").addClass('cal_set_' + val + r_no);
+            $(".delete_lnk_o_" + val + ":eq(" + r + ")").attr("onclick", "removeSetCal(" + val + "," + val + r_no + ")");
+        }
+    } {% endcomment %}
+
+    var makeidd = function (length) {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
+</script>
+
+{% if queries == 0%}
+
+<div class="check-date-input cal_sett" id='cal_sett_5555'>
+    <div>
+    <input type="text" id="start_time_5555" value="09:00 AM" name="over_start_time[]" class="o_start_timepicker"><span class="space">-</span><input type="text" id="end_time_5555" value="05:00 PM" name="over_end_time[]" class="o_end_timepicker"><a href="javascript:void(0);" class="trash-check-avail " id='delete_lnk_o_5555'><img src='/static/images/material-delete.svg'></a>
+    </div>
+    <script>
+        var rand = makeidd(5);
+        $('#start_time_5555').attr('id', 'start_time_' + rand);
+        $('#end_time_5555').attr('id', 'end_time_' + rand);
+    
+        $('#cal_sett_5555').attr('id', 'cal_sett_' + rand);
+        $('#delete_lnk_o_5555').attr('id', 'delete_lnk_o_' + rand);
+    
+        $('#delete_lnk_o_'+rand).attr("onclick", "removeSetCal('" + rand + "')");
+    
+        {% comment %} setNumberingCal(rand); {% endcomment %}
+    
+    </script>
+
+    
+</div>
+
+{% else %}
+{% for val in queries %}
+{% convert_json val.start_time as json_val1 %}
+{% convert_json val.end_time as json_val2 %}
+{%for start_val, end_val in json_val1|zip:json_val2 %}
+<div class="check-date-input cal_sett" id='cal_sett_5555'>
+<div>
+    <input type="text" id="start_time_5555" value="{{start_val}}" name="over_start_time[]" class="o_start_timepicker"><span class="space">-</span><input type="text" id="end_time_5555" value="{{end_val}}" name="over_end_time[]" class="o_end_timepicker"><a href="javascript:void(0);" class="trash-check-avail delete_lnk" id='delete_lnk_o_5555'><img src='/static/images/material-delete.svg'></a>
+</div>
+    <script>
+        var rand = makeidd(5);
+        $('#start_time_5555').attr('id', 'start_time_' + rand);
+        $('#end_time_5555').attr('id', 'end_time_' + rand);
+    
+        $('#cal_sett_5555').attr('id', 'cal_sett_' + rand);
+        $('#delete_lnk_o_5555').attr('id', 'delete_lnk_o_' + rand);
+    
+        $('#delete_lnk_o_'+rand).attr("onclick", "removeSetCal('" + rand + "')");
+    
+        {% comment %} setNumberingCal(rand); {% endcomment %}
+    
+    </script>
+</div>
+
+
+{% endfor%}
+{% endfor %}
+
+{% endif %}
+
+<script>
+    $('.o_start_timepicker').timepicker({
+        timeFormat: 'h:mm p',
+        interval: 15,
+        minTime: '00',
+        maxTime: '11:45pm',
+        startTime: '00:00',
+        dynamic: false,
+        dropdown: true,
+        scrollbar: true
+    });
+    $('.o_end_timepicker').timepicker({
+        timeFormat: 'h:mm p',
+        interval: 15,
+        minTime: '00',
+        maxTime: '11:45pm',
+        startTime: '00:00',
+        dynamic: false,
+        dropdown: true,
+        scrollbar: true
+    });
+</script>
+

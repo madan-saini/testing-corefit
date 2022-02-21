@@ -1,0 +1,188 @@
+{% load static %}
+{% load fetch_user %}
+
+{% block content %}
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/calendar.css' %}">
+
+    <div class="flex-cal">
+        <div>
+            <div class="emp-left">
+                <h4 class="schedule_name">{{scheduleData.schedule_name}}</h4>
+                {% if scheduleData.is_default == 1%}
+                <div class="d-she">
+                    <img src="{% static 'images/awesome-star.svg' %}">
+                    <span>Default Schedule</span>
+                </div>
+                {% endif%}
+            </div>
+
+        </div>
+        <div class=" text-right">
+            <div class="action-box">
+                <div class="edit-main">
+                    <a href="javascript:void(0);" class="border-btn-small edit-she-btn1">Edit Name</a>
+                    <div class="pop-schedule edit-pop-schedule1" style="display: none;">
+                        <h4 class="schedule_name">New Schedule</h4>
+                        <form class="" name='scheduleForm3' id='scheduleForm3' method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Schedule name:</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="edit_schedule_name" value="{{scheduleData.schedule_name}}" id="edit_schedule_name3" class="required" placeholder="Working hours, Exclusive hours, etc...">
+                                </div>
+                            </div>
+                            <div class="btn-btm-group">
+                                <button class="border-btn" type='button' onclick="closeSPop()">Discard</button> 
+                                <button class="btn-pink ml-10">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="clone-main">
+                    <a href="javascript:void(0);" class="btn-red-one  clone-she-btn1">Clone</a>
+
+                    <form class="" name='scheduleForm4' id='scheduleForm4' method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="pop-schedule clone-pop-schedule1" style="display: none;">
+                            <h4>New Schedule</h4>
+                            <div class="form-group form-field-main">
+                                <label class="label-field">Schedule name:</label>
+                                <div class="form-field-input">
+                                    <input type="text" name="clone_schedule_name" id="clone_schedule_name4" class="required" placeholder="Working hours, Exclusive hours, etc...">
+                                </div>
+                            </div>
+                            <div class="btn-btm-group">
+                                <button class="border-btn" type='button' onclick="closeSPop()">Discard</button> 
+                                <button class="btn-pink ml-10">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex-name">
+        <div class="sethr-head">Set the availability hours </div><a href="javascript:void(0);" class="btn-red-one" onclick="makeDefault()">Set as Default Schedule</a>
+    </div>
+<form class="" name='calForm' id='calForm' method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div id="calendar" class="calendar"></div>
+</form>
+
+<script type="text/javascript">
+    
+
+    $(".edit-she-btn1").click(function () {
+        $(".add-pop-schedule").hide();
+        $(".edit-pop-schedule1").toggle();
+        $(".clone-pop-schedule1").hide();
+    });
+
+    $(".clone-she-btn1").click(function () {
+        $(".add-pop-schedule").hide();
+        $(".edit-pop-schedule1").hide();
+        $(".clone-pop-schedule1").toggle();
+    });
+    
+    
+    
+    function myFunction(item, index) {
+  text += index + ": " + item + "<br>"; 
+}
+
+    (function () {
+        'use strict';
+        // ------------------------------------------------------- //
+        // Calendar
+        // ------------------------------------------------------ //
+        jQuery(function () {
+            // page is ready
+            jQuery('#calendar').fullCalendar({
+                themeSystem: 'bootstrap4',
+                // emphasizes business hours
+                businessHours: false,
+                defaultView: 'month',
+                height: 600,
+                titleFormat: 'MMMM YYYY',
+                displayEventTime: false,
+                // event dragging & resizing
+                editable: true,
+//            allDaySlot: false,
+                // header
+                header: {
+                    left: 'title',
+                    center: 'month,agendaWeek,agendaDay',
+                    right: 'today prev,next',
+                },
+//                events: [ 
+//                    {
+//                        title: '10:30am - 11:30am',
+//                        start: '2022-01-21T10:30:00',
+//                        end: '2022-01-21T11:30:00'
+//                    }
+//                ],
+                events: function(start, end, timezone, callback) {
+                    var emp_id = $('#emp_id').val();
+                    var schedule_id = $('#schedule_id').val();
+                    
+                    var token = $("[name=csrfmiddlewaretoken]").val();
+                    $.ajax({
+                        url: 'getEventData',
+                        type: 'POST',
+                        data: {
+                            emp_id:emp_id, 
+                            schedule_id: schedule_id,
+                            start: moment(start).format('YYYY-MM-DD'),
+                            end: moment(end).format('YYYY-MM-DD'),
+                            csrfmiddlewaretoken: token
+                        },
+                        success: function(doc) {                            
+                            var events = [];
+                            var arr = $.parseJSON(doc);
+                            $.each(arr,function(key,value){
+                                events.push({
+                                    title: value[2],
+                                    start: value[0],
+                                    end: value[1]
+                                });
+                            });
+                            
+                            callback(events);
+                        }
+                  });
+                },
+//            eventRender: function(event, element) {
+//                alert(event.start);
+//                if (event.icon) {
+//                    element.find(".fc-title").prepend("<i class='fa fa-" + event.icon + "'></i>");
+//                }
+//            },
+//            dayClick: function() {
+//                jQuery('#modal-view-event-add').modal();
+//            },
+dayClick: function(date, jsEvent, view, resource) {
+      alert('clicked ' + date.format() + ' on resource ');
+    },
+//            eventClick: function(info) { 
+//                console.log('error',info)
+//                alert('Event: ' + info);
+//    alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+//    alert('View: ' + info.view.type);
+//                jQuery('.event-icon').html("<i class='fa fa-" + event.icon + "'></i>");
+//                jQuery('.event-title').html(event.title);
+//                jQuery('.event-body').html(event.description);
+//                jQuery('.eventUrl').attr('href', event.url);
+//                jQuery('#modal-view-event').modal();
+//            },
+            })
+        });
+
+    })(jQuery);
+    
+</script>
+{% endblock content %}

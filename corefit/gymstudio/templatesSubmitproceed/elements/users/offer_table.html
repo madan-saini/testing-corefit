@@ -1,0 +1,162 @@
+{% load static %}
+{% load fetch_user %}
+{% if offerRecords %}
+
+                <table class="table table-bordered table-stip">
+                    <thead>
+                        <tr>
+                            <th scope="col" width="16.66%">Type</th>
+                            <th scope="col" width="16.66%">Service</th>
+                            <th scope="col" width="16.66%">Price Before</th>
+                            <th scope="col" width="16.66%">Discount</th>
+                            <th scope="col" width="16.66%">After Discount</th>
+                            <th scope="col" width="16.66%">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="offer-box">
+                        {% for offer in offerRecords%}
+                        {% get_service offer.type_of_service as result %}  
+                        
+                        {% if result != None%}
+                        <tr  id="offer-{{offer.id}}">
+                            <td>                    
+                                {% for key, cat in promotion_type.items%}
+                                    {% if key == offer.promotion_type%}
+                                        {{cat}}
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td> 
+                                
+                                {% for val in result%}
+                                {{val | capfirst}} <br>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% if offer.before_price != ''%}
+                                {{offer.before_price|floatformat:2}} {{offer.currency}}
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                            <td> 
+                            {% if offer.discount != 0.00%}
+                                {{offer.discount|floatformat:2}}
+                                {% if offer.promotion_type == 1 or offer.promotion_type == 3%}
+                                    %
+                                {% else %}
+                                  {{offer.currency}}
+                                {% endif %}
+                                
+                            {% else %}
+                            -
+                            {% endif %}
+                            </td>
+                            <td> 
+                            {% if offer.after_price != ''%}
+                                {{offer.after_price|floatformat:2}} {{offer.currency}}
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="action-box">
+                                    <div class="action-box">
+                                        <a class="border-btn-small" href="javascript:void(0);" onclick="viewOffer('{{offer.id}}')">View</a>
+                                        <a class="btn-red-one" href="javascript:void(0);" onclick="deleteOffer('{{offer.id}}')">Delete</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                        
+                    </tbody>
+                </table>
+
+<script>
+    
+    
+        
+        
+    function closePrice(id) {
+        $('#price_view_btn').show();
+        $('#price_edit_btn').hide();
+        $('#viewOfferModel').modal('hide');
+    }
+    
+    function editPrice() {
+        $('.disabledField').removeAttr("disabled");
+        $('#viewOfferModel .multiselect').prop("disabled", false);
+//        $('.disabledDv').addClass("taeb-switch-11");
+        $('#price_view_btn').hide();
+        $('#price_edit_btn').show();
+        $('.price_view_img').hide();
+        $('.price_edit_img').show();
+    }
+    
+    function viewOffer(id) {
+        
+        var token = $("[name=csrfmiddlewaretoken]").val();
+        
+        $.ajax({
+            type: 'POST',
+            url: 'viewOffer',
+            data: {'id': id, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) { 
+                $('#payloader').hide();
+                $('#offer_model').html(response);
+                $('#viewOfferModel').modal('show');
+                $('.disabledField').prop("disabled", true);
+                $('.price_view_img').show();
+                $('#viewOfferModel .multiselect').prop("disabled", true);
+                $('.price_edit_img').hide();
+            },
+            error: function (response) {
+                $('#payloader').hide();
+                console.log('error', response)
+            }
+        });
+    }
+    
+    function deleteOffer(id){
+        swal({
+            title: "Are you sure?",
+            text: "You want to delete this record!",
+            icon: "warning",
+            buttons: [
+              'No',
+              'Yes'
+            ],
+            dangerMode: true,
+        }).then(function(isConfirm) {
+        if(isConfirm){
+        var token = $("[name=csrfmiddlewaretoken]").val();
+        
+        $.ajax({
+            type: 'POST',
+            url: 'deleteOffer',
+            data: {'id': id, csrfmiddlewaretoken: token},
+            beforeSend: function () {
+                $('#payloader').show();
+            },
+            success: function (response) {
+                $('#payloader').hide();
+                $('#offer-'+id).remove();
+                $('#viewOfferModel').modal('hide');
+                Command: toastr["success"]("Changes Saved")
+            },
+            error: function (response) {
+                $('#payloader').hide();
+                console.log('error', response)
+            }
+        })
+            }
+        })
+    }
+</script>
+{% endif%}
+
